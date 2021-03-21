@@ -3,6 +3,7 @@ import axios from 'axios';
 import { setUserSession } from './Utils/Common';
 import {NavLink, Route} from "react-router-dom";
 import ChangePassword from "./ChangePassword";
+import Register from "./Register";
 
 function Login(props) {
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,8 @@ function Login(props) {
       <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br /><br />
       <NavLink exact activeClassName="active" to="/ChangePassword">He olvidado mi contraseña</NavLink><br /><br />
       <Route exact path="/ChangePassword" component={ChangePassword} />
-      <input type="button" value={loading ? 'Loading...' : '¿No tienes cuenta? Regístrate!'} onClick={handleLogin} disabled={loading} /><br /><br />
+        <NavLink exact activeClassName="active" to="/Register">¿No tienes cuenta? Regístrate!</NavLink>/><br /><br />
+        <Route exact path="/Register" component={Register} />
       Si solo quieres jugar
         <br />
         <input type="button" value={loading ? 'Loading...' : 'Accede como invitado'} onClick={handleLogin} disabled={loading} /><br />

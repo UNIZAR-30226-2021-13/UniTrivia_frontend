@@ -10,6 +10,8 @@ import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './Utils/Common';
 import ChangePassword from "./ChangePassword";
+import Register from "./Register";
+
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
@@ -41,6 +43,7 @@ function App() {
             <NavLink exact activeClassName="active" to="/">Home</NavLink>
             <NavLink activeClassName="active" to="/login">Login</NavLink><small>(Access without token only)</small>
             <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink><small>(Access with token only)</small>
+            <NavLink activeClassName="active" to="/Register">Register</NavLink>
           </div>
           <div className="content">
             <Switch>
@@ -48,6 +51,7 @@ function App() {
               <PublicRoute path="/login" component={Login} />
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
+              <Route path="/register" component={Register}/>
             </Switch>
           </div>
         </div>
