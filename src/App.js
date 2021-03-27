@@ -11,6 +11,7 @@ import PublicRoute from './Utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './Utils/Common';
 import ChangePassword from "./ChangePassword";
 import Register from "./Register";
+import Menu from "./Menu";
 
 
 function App() {
@@ -44,6 +45,8 @@ function App() {
             <NavLink activeClassName="active" to="/login">Login</NavLink><small>(Access without token only)</small>
             <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink><small>(Access with token only)</small>
             <NavLink activeClassName="active" to="/Register">Register</NavLink>
+            <NavLink activeClassName="active" to="/Menu">Menu</NavLink>
+
           </div>
           <div className="content">
             <Switch>
@@ -52,6 +55,7 @@ function App() {
               <PrivateRoute path="/dashboard" component={Dashboard} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
+              <Route path="/Menu" component={Menu}/>
             </Switch>
           </div>
         </div>
