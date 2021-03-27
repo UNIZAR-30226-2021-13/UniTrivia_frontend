@@ -13,7 +13,7 @@ function ChangePassword(props) {
     const handleModify = () => {
         setError(null);
         setLoading(true);
-        axios.post('https://unitrivi.com/api/profile/modify/password/'+{username}, { username: username.value, new_password: newPassword.value , old_Password: password.value }).then(response => {
+        axios.post('https://unitrivia.com/api/profile/modify/password/'+{username}, { username: username.value, new_password: newPassword.value , old_Password: password.value }).then(response => {
             setLoading(false);
             //setUserSession(response.data.token, response.data.user);
             props.history.push('/login');
@@ -31,7 +31,22 @@ function ChangePassword(props) {
             <div>
                 Usuario<br/>
                 <input type="text" {...username}  autoComplete="new-password"/>
+
             </div>
+            <input type="button" value={loading ? 'Loading...' : 'Recuperar pregunta'} onClick={handleModify} disabled={loading} /><br />
+
+            <div style={{marginTop: 10}}>
+                Pregunta<br/>
+                <input  {...password}  autoComplete="new-password"/>
+            </div>
+            <div style={{marginTop: 10}}>
+                Respuesta<br/>
+                <input  {...newPassword}  autoComplete="new-password" placeholder={"respuesta"}/>
+
+            </div>
+            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+            <input type="button" value={loading ? 'Loading...' : 'Verificar'} onClick={handleModify} disabled={loading} /><br />
+
             <div style={{marginTop: 10}}>
                 Actual contraseña<br/>
                 <input type="password" {...password}  autoComplete="new-password"/>

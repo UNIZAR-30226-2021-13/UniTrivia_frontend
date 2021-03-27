@@ -41,7 +41,7 @@ function Login(props) {
       <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br /><br />
       <NavLink exact activeClassName="active" to="/ChangePassword">He olvidado mi contraseña</NavLink><br /><br />
       <Route exact path="/ChangePassword" component={ChangePassword} />
-        <NavLink exact activeClassName="active" to="/Register">¿No tienes cuenta? Regístrate!</NavLink>/><br /><br />
+        <NavLink exact activeClassName="active" to="/Register">¿No tienes cuenta? Regístrate!</NavLink><br /><br />
         <Route exact path="/Register" component={Register} />
       Si solo quieres jugar
         <br />

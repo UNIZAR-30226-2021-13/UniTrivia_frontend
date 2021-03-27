@@ -2,6 +2,24 @@ import React, {useState} from 'react'
 import axios from "axios";
 import {setUserSession} from "./Utils/Common";
 import styled from "styled-components";
+import Popup from 'reactjs-popup';
+
+const But=styled.button`
+  background-color: #fce2e2;
+  font-size: 32px;
+  color: #6c6ce3;
+`;
+
+const Div=styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: 2em auto;
+
+  @media screen and (min-width: 1180px) {
+    width: 50%;
+  }
+`;
 
 class Menu extends React.Component {
     render() {
@@ -10,7 +28,7 @@ class Menu extends React.Component {
 
         return (
 
-            <div>
+            <Div>
                 <h3>UniTrivia</h3>
                 MENÚ<br/><br/>
                 <div>
@@ -21,11 +39,18 @@ class Menu extends React.Component {
                 </div>
                 <div style={{marginTop: 10}}>
                     <input type="button" value={'Ajustes'} /><br />
-                    <button>hola</button>
+
 
                 </div>
+                {/*<But>hole</But>
+                <Popup trigger={<button> Trigger</button>} position="top center">
+                    <div>Popup content here !!</div>
+                </Popup>
 
-            </div>
+                */}
+
+
+            </Div>
         );
     }
 }
