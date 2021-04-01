@@ -1,6 +1,50 @@
 import React, {useState} from 'react'
 import axios from "axios";
-import {setUserSession} from "./Utils/Common";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Avatar from "@material-ui/core/Avatar";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+
+import { makeStyles } from '@material-ui/core/styles';
+
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="https://material-ui.com/">
+                UniGames
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}));
 
 function ChangePassword(props) {
     const [loading, setLoading] = useState(false);
@@ -8,6 +52,8 @@ function ChangePassword(props) {
     const password = useFormInput('');
     const newPassword = useFormInput('');
     const [error, setError] = useState(null);
+    const classes = useStyles();
+
 
     // handle button click of login form
     const handleModify = () => {
@@ -26,39 +72,117 @@ function ChangePassword(props) {
 
 
     return (
-        <div>
-            Recupera la contraseña<br/><br/>
-            <div>
-                Usuario<br/>
-                <input type="text" {...username}  autoComplete="new-password"/>
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <div className={classes.paper}>
+                <Typography component="h1" variant="h2">
+                    UniTrivia
+                </Typography>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    He olvidado mi contraseña
+                </Typography>
+                <form className={classes.form} noValidate>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} spacing={2}>
+                            <TextField
+                                autoComplete="fname"
+                                name="username"
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Usuario"
+                                autoFocus
+                            />
 
-            </div>
-            <input type="button" value={loading ? 'Loading...' : 'Recuperar pregunta'} onClick={handleModify} disabled={loading} /><br />
+                        </Grid>
+                        <Grid item xs={12}  spacing={2}>
+                        <Button
 
-            <div style={{marginTop: 10}}>
-                Pregunta<br/>
-                <input  {...password}  autoComplete="new-password"/>
-            </div>
-            <div style={{marginTop: 10}}>
-                Respuesta<br/>
-                <input  {...newPassword}  autoComplete="new-password" placeholder={"respuesta"}/>
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                        >
+                            Recuperar pregunta
+                        </Button>
+                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="question"
+                                label="Pregunta de seguridad"
+                                name="question"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="answer"
+                                label="Respuesta a la pregunta"
+                                name="answer"
+                            />
+                        </Grid>
+                        <Grid item xs={12}  spacing={2}>
+                            <Button
 
-            </div>
-            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-            <input type="button" value={loading ? 'Loading...' : 'Verificar'} onClick={handleModify} disabled={loading} /><br />
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                            >
+                                Verificar
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Actual contraseña"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Nueva contraseña"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                        </Grid>
 
-            <div style={{marginTop: 10}}>
-                Actual contraseña<br/>
-                <input type="password" {...password}  autoComplete="new-password"/>
-            </div>
-            <div style={{marginTop: 10}}>
-                Nueva contraseña<br/>
-                <input type="password" {...newPassword}  autoComplete="new-password"/>
+                        <Grid item xs={12}>
 
+                        </Grid>
+                    </Grid>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        href={'/login'}
+                    >
+                        Confirmar
+                    </Button>
+
+                </form>
             </div>
-            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-            <input type="button" value={loading ? 'Loading...' : 'Confirmar'} onClick={handleModify} disabled={loading} /><br />
-        </div>
+            <Box mt={5}>
+                <Copyright />
+            </Box>
+        </Container>
     );
 }
 

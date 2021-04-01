@@ -177,6 +177,7 @@ export default function Register() {
                         variant="contained"
                         color="primary"
                         onClick={handleReg}
+                        href={'/login'}
                     >
                         Registrarse
                     </Button>
