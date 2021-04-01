@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
-import axios from "axios";
-import {setUserSession} from "./Utils/Common";
+import React from 'react'
 import styled from "styled-components";
-import Popup from 'reactjs-popup';
+import Button from "@material-ui/core/Button";
+import {makeStyles} from "@material-ui/core/styles";
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -21,28 +20,84 @@ const Div=styled.div`
   }
 `;
 
-class Menu extends React.Component {
-    render() {
+const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '100vh',
+    },
+    image: {
+        backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
+        backgroundRepeat: 'no-repeat',
+        backgroundColor:
+            theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
+    paper: {
+        margin: theme.spacing(8, 4),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}));
+
+function Menu() {
+    const classes = useStyles();
 
 
+    return (
 
-        return (
+        <Div>
+            <h3>UniTrivia</h3>
+            MENÚ<br/><br/>
+            <div>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                >
+                    Jugar
+                </Button>
+            </div>
+            <div style={{marginTop: 10}}>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    href={'/profile'}
+                >
+                    Perfil
+                </Button>
+            </div>
+            <div style={{marginTop: 10}}>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                >
+                    Ajustes
+                </Button>
 
-            <Div>
-                <h3>UniTrivia</h3>
-                MENÚ<br/><br/>
-                <div>
-                    <input type="button" value={'Jugar'} /><br />
-                </div>
-                <div style={{marginTop: 10}}>
-                    <input type="button" value={'Perfil'} /><br />
-                </div>
-                <div style={{marginTop: 10}}>
-                    <input type="button" value={'Ajustes'} /><br />
 
+            </div>
 
-                </div>
-                {/*<But>hole</But>
+            {/*<But>hole</But>
                 <Popup trigger={<button> Trigger</button>} position="top center">
                     <div>Popup content here !!</div>
                 </Popup>
@@ -50,13 +105,9 @@ class Menu extends React.Component {
                 */}
 
 
-            </Div>
-        );
-    }
+        </Div>
+    );
 }
-
-
-
 
 
 export default Menu;

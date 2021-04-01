@@ -12,6 +12,7 @@ import { getToken, removeUserSession, setUserSession } from './Utils/Common';
 import ChangePassword from "./ChangePassword";
 import Register from "./Register";
 import Menu from "./Menu";
+import Profile from './profile';
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
               <Route path="/Menu" component={Menu}/>
+              <Route path="/Profile" component={Profile}/>
             </Switch>
           </div>
         </div>
