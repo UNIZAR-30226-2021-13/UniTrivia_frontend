@@ -41,19 +41,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <div>
-          <div className="header">
-            <NavLink exact activeClassName="active" to="/">Home</NavLink>
-            <NavLink activeClassName="active" to="/login">Login</NavLink><small>(Access without token only)</small>
-            <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink><small>(Access with token only)</small>
-            <NavLink activeClassName="active" to="/Register">Register</NavLink>
-            <NavLink activeClassName="active" to="/Menu">Menu</NavLink>
-
-          </div>
           <div className="content">
             <Switch>
-              <Route exact path="/" component={Home} />
               <PublicRoute path="/login" component={Login} />
-              <PrivateRoute path="/dashboard" component={Dashboard} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
               <Route path="/Menu" component={Menu}/>
@@ -65,5 +55,7 @@ function App() {
     </div>
   );
 }
+/*
 
+*/
 export default App;

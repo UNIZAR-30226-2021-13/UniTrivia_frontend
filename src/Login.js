@@ -34,15 +34,16 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        height: '80vh'
     },
     image: {
         backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
-        backgroundRepeat: 'no-repeat',
+        backgroundRepeat: 'repeat-x',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        width: '100%'
     },
     paper: {
         margin: theme.spacing(8, 4),
@@ -61,6 +62,14 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    fondo:{
+        margin: theme.spacing(2,2,5),
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        marginTop: theme.spacing(1),
+        boxShadow: "0px 0px 5px 2px #9E9E9E",
+    }
 }));
 
 function Login(props) {
@@ -90,8 +99,10 @@ function Login(props) {
   return (
       <Grid container component="main" className={classes.root}>
           <CssBaseline />
-          <Grid item xs={false} sm={4} md={7} className={classes.image} />
-          <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Grid item xs={false} className={classes.image} />
+          <div className={classes.fondo} >
+
+          
               <div className={classes.paper}>
                   <Avatar className={classes.avatar}>
                       <LockOutlinedIcon />
@@ -165,8 +176,9 @@ function Login(props) {
                       </Box>
                   </form>
               </div>
+              </div>
           </Grid>
-      </Grid>
+      
   );
 }
 
