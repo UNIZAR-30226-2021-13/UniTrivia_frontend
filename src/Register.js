@@ -27,8 +27,22 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '80vh'
+    },
+    image: {
+        backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
+        backgroundRepeat: 'repeat-x',
+        backgroundRepeat: 'repeat-y',
+        backgroundColor:
+            theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '110%',
+        width: '200%'
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(8, 4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -39,11 +53,19 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(1),
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    fondo:{
+        margin: theme.spacing(2,2,5),
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        marginTop: theme.spacing(1),
+        boxShadow: "0px 0px 5px 2px #9E9E9E",
+    }
 }));
 
 const useFormInput = initialValue => {
@@ -75,125 +97,123 @@ export default function Register() {
     const answer = useFormInput('');
 
 
-
-
-
-
-
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Typography component="h1" variant="h2">
-                    UniTrivia
-                </Typography>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Regístrate
-                </Typography>
-                <form className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} >
-                            <TextField
-                                autoComplete="fname"
-                                name="username"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="username"
-                                label="Usuario"
-                                autoFocus
-                                {...firstname}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                {...email}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Contraseña"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                {...password}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Repetir contraseña"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                {...reppassword}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="question"
-                                label="Pregunta de seguridad"
-                                name="question"
-                                {...question}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="answer"
-                                label="Respuesta a la pregunta"
-                                name="answer"
-                                {...answer}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
+        <Grid container component="main" className={classes.root}>
+            <Grid item xs={false} className={classes.image} />
+                <div className={classes.fondo}> 
+                    <div className={classes.paper}>
+                        <Typography component="h1" variant="h2">
+                            UniTrivia
+                        </Typography>
+                        <Avatar className={classes.avatar}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Regístrate
+                        </Typography>
+                        <form className={classes.form} noValidate>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} >
+                                    <TextField
+                                        autoComplete="fname"
+                                        name="username"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="username"
+                                        label="Usuario"
+                                        autoFocus
+                                        {...firstname}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="email"
+                                        label="Email Address"
+                                        name="email"
+                                        autoComplete="email"
+                                        {...email}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Contraseña"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        {...password}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Repetir contraseña"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        {...reppassword}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="question"
+                                        label="Pregunta de seguridad"
+                                        name="question"
+                                        {...question}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="answer"
+                                        label="Respuesta a la pregunta"
+                                        name="answer"
+                                        {...answer}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
 
-                        </Grid>
-                    </Grid>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={handleReg}
-                        href={'/login'}
-                    >
-                        Registrarse
-                    </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link href="/login" variant="body2">
-                                Ya tienes una cuenta? Accede
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
+                                </Grid>
+                            </Grid>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={handleReg}
+                                href={'/login'}
+                            >
+                                Registrarse
+                            </Button>
+                            <Grid container justify="flex-end">
+                                <Grid item>
+                                    <Link href="/login" variant="body2">
+                                        Ya tienes una cuenta? Accede
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
+                </div>
+            
             <Box mt={5}>
                 <Copyright />
             </Box>
-        </Container>
+        </Grid>
     );
 }
 

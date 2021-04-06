@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     image: {
         backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
         backgroundRepeat: 'repeat-x',
+        backgroundRepeat: 'repeat-y',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
         backgroundSize: 'cover',
@@ -101,8 +102,6 @@ function Login(props) {
           <CssBaseline />
           <Grid item xs={false} className={classes.image} />
           <div className={classes.fondo} >
-
-          
               <div className={classes.paper}>
                   <Avatar className={classes.avatar}>
                       <LockOutlinedIcon />

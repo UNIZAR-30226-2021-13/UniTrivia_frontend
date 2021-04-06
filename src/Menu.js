@@ -90,6 +90,7 @@ function Menu() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    href={'/Settings'}
                 >
                     Ajustes
                 </Button>

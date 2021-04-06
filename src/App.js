@@ -13,6 +13,7 @@ import ChangePassword from "./ChangePassword";
 import Register from "./Register";
 import Menu from "./Menu";
 import Profile from './profile';
+import Settings from './Settings';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
               <Route path="/Menu" component={Menu}/>
+              <Route path="/Settings" component={Settings}/>
               <Route path="/Profile" component={Profile}/>
             </Switch>
           </div>
