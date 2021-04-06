@@ -85,7 +85,10 @@ function Login(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://localhost:4000/users/signin', { username: username.value, password: password.value }).then(response => {
+    axios.post('https://unitrivia.herokuapp.com/api/login', { headers:{
+        username: username.value, 
+        password: password.value 
+    }}).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/menu');
@@ -143,7 +146,7 @@ function Login(props) {
                           variant="contained"
                           color="primary"
                           className={classes.submit}
-                          href={'/menu'}
+                          onClick={handleLogin}
                       >
                           Acceder
                       </Button>

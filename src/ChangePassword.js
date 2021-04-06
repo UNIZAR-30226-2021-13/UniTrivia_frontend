@@ -172,7 +172,7 @@ function ChangePassword(props) {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        href={'/login'}
+                        onClick={handleModify}
                     >
                         Confirmar
                     </Button>
