@@ -12,6 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import axios from 'axios';
+import { setUserSession } from './Utils/Common';
+
 
 function Copyright() {
     return (
@@ -33,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     image: {
         backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
         backgroundRepeat: 'repeat-x',
-        backgroundRepeat: 'repeat-y',
         backgroundColor:
             theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
         backgroundSize: 'cover',
@@ -80,21 +82,49 @@ const useFormInput = initialValue => {
     }
 }
 
-export default function Register() {
+export default function Register(props) {
 
-    const handleReg = () => {
-        alert(firstname)
-        console.log(firstname)
-    }
-    const classes = useStyles();
-    // eslint-disable-next-line no-undef
-    const firstname = useFormInput('');
-    const lastname = useFormInput('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const username = useFormInput('');
     const email = useFormInput('');
     const password = useFormInput('');
     const reppassword = useFormInput('');
     const question = useFormInput('');
     const answer = useFormInput('');
+
+    const handleRegister = () => {
+        const user = {username}
+        setError(null);
+        setLoading(true);
+        axios.post('https://unitrivia.herokuapp.com/api/register',{},{headers: {
+                'username': username.value,
+                'password': password.value,
+                'email': email.value,
+                'preg': question.value,
+                'res': answer.value
+            }}).then((response) => {
+            console.log(response.data)
+            console.log(response)
+            setLoading(false);
+            setUserSession(response.data.token, response.data.user);
+            props.history.push('/login');
+        }).catch((code,message) => {
+            setLoading(false);
+            console.log(code.response)
+            /*if (error.response.status === 200) {
+                setError(error.response.data.message);
+                alert('usuario existente')
+            }else {
+                setError("Something went wrong. Please try again later.");
+            }*/
+        });
+    }
+
+
+    const classes = useStyles();
+    // eslint-disable-next-line no-undef
+
 
 
     return (
@@ -123,7 +153,7 @@ export default function Register() {
                                         id="username"
                                         label="Usuario"
                                         autoFocus
-                                        {...firstname}
+                                        {...username}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -156,10 +186,10 @@ export default function Register() {
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        name="password"
+                                        name="reppassword"
                                         label="Repetir contraseña"
                                         type="password"
-                                        id="password"
+                                        id="reppassword"
                                         autoComplete="current-password"
                                         {...reppassword}
                                     />
@@ -194,8 +224,8 @@ export default function Register() {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                onClick={handleReg}
-                                href={'/login'}
+                                onClick={handleRegister}
+
                             >
                                 Registrarse
                             </Button>

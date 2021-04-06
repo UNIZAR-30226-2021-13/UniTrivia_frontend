@@ -3,7 +3,6 @@ import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 import Login from './Login';
-import Dashboard from './Dashboard';
 import Home from './Home';
 
 import PrivateRoute from './Utils/PrivateRoute';
@@ -44,7 +43,7 @@ function App() {
         <div>
           <div className="content">
             <Switch>
-              <PublicRoute path="/login" component={Login} />
+              <Route path="/login" component={Login} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
               <Route path="/Menu" component={Menu}/>
