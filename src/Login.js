@@ -69,6 +69,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'white',
         marginTop: theme.spacing(1),
         boxShadow: "0px 0px 5px 2px #9E9E9E",
+    },
+    error: {
+        width: '100%', 
+        position: 'absolute', textAlign:'center',
+        color: 'white',
+		backgroundColor: 'red',
     }
 }));
 
@@ -76,6 +82,7 @@ function Login(props) {
   const [loading, setLoading] = useState(false);
   const username = useFormInput('');
   const password = useFormInput('');
+  const [loginError,setLoginError]=useState(false);
   const [error, setError] = useState(null);
     const [noUser, setUser] = useState(false);
     const [noPass, setPass] = useState(false);
@@ -99,9 +106,9 @@ function Login(props) {
             props.history.push('/menu');
         }).catch(error => {
             setLoading(false);
-            alert(error.message)
-            if (error.response.status === 401) setError(error.response.data.message);
-            else setError("Something went wrong. Please try again later.");
+            //alert(error.message)
+            if (error.response.status === 401){setLoginError(true); setError("El Ususario o la contraseña se han instroducido incorrectamente");} //setError(error.response.data.message);
+            else{setLoginError(true); setError("El Ususario o la contraseña se han instroducido incorrectamente");}
         });
     }else{
         if(username.value==''){
@@ -126,17 +133,28 @@ function Login(props) {
             props.history.push('/menu');
         }).catch(error => {
             setLoading(false);
-            alert(error.message)
-            if (error.response.status === 401) setError(error.response.data.message);
-            else setError("Something went wrong. Please try again later.");
+            alert(error.message);
+            if (error.response.status === 401) { setError(error.response.data.message); console.log(error)}
+            else {setLoginError(true); setError("Something went wrong. Please try again later.");console.log(error)}
         });
 
 
     }
-
+    const showError= () =>{
+        console.log(loginError);
+        console.log(error);
+        if(!loginError) return null;
+        return(
+            <div className={classes.error}>
+                {error}
+            </div>
+        );
+        
+    }
   return (
       <Grid container component="main" className={classes.root}>
           <CssBaseline />
+            {showError()}
           <Grid item xs={false} className={classes.image} />
           <div className={classes.fondo} >
               <div className={classes.paper}>
