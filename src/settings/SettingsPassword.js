@@ -30,12 +30,15 @@ const SettingsPassword = (props) => {
 
   const handleModifyPassword= () => {
     alert(values.confirm)
-    sessionStorage.setItem('user', 'oscargo');
-    var jwt=sessionStorage.getItem('token')
-    alert(sessionStorage.getItem('user'))
-    alert(jwt)
+    if(!getToken()){
+      alert('no hay token')
+    }else{
+      alert(' hay token')
+    }
+    alert(getToken())
+    alert(values.password)
     axios.post('https://unitrivia.herokuapp.com/api/profile/modify/password', { headers:{
-        'jwt': getToken,
+        'jwt': getToken(),
         newpassword: values.password.value,
         oldpassword: '1234'
       }}).then(response => {

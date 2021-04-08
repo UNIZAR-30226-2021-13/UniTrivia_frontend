@@ -107,7 +107,7 @@ export default function Register(props) {
             console.log(response.data)
             console.log(response)
             setLoading(false);
-            setUserSession(response.data.token, response.data.user);
+            //setUserSession(response.data.token, response.data.user);
             props.history.push('/login');
         }).catch((code,message) => {
             setLoading(false);

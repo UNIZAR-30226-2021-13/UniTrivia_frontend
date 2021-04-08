@@ -13,6 +13,8 @@ import AccountProfileDetails from './account/AccountProfileDetails';
 import SettingsPassword from './settings/SettingsPassword';
 import Stats from './account/Stats'
 import Items from './account/Items'
+import axios from "axios";
+import {setUserSession,getToken,removeUserSession} from "./Utils/Common";
 
 
 
@@ -47,9 +49,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Profile() {
+function Profile(props) {
     const classes = useStyles();
 
+    const handleDeleteUser = () => {
+
+        axios.delete('https://unitrivia.herokuapp.com/api/profile', { headers:{
+                'jwt': getToken()
+            }}).then(response => {
+            console.log(response)
+            removeUserSession();
+            props.history.push('/login');
+        }).catch(error => {
+            alert(error.message)
+            console.log(error)
+        });
+
+    }
 
     return (
         <>
@@ -113,6 +129,7 @@ function Profile() {
                         <Button
                             color="primary"
                             variant="contained"
+                            onClick={handleDeleteUser}
                         >
                             Borrar usuario
                         </Button>

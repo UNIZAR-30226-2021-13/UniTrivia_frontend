@@ -141,8 +141,8 @@ function Login(props) {
 
     }
     const showError= () =>{
-        console.log(loginError);
-        console.log(error);
+        //console.log(loginError);
+        //console.log(error);
         if(!loginError) return null;
         return(
             <div className={classes.error}>

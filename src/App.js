@@ -15,7 +15,7 @@ import Profile from './profile';
 import Settings from './Settings';
 
 
-function App() {
+function App(props) {
   const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
@@ -28,13 +28,13 @@ function App() {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {
-      removeUserSession();
+      //removeUserSession();
       setAuthLoading(false);
     });
   }, []);
 
   if (authLoading && getToken()) {
-    return <div className="content">Checking Authentication...</div>
+    return <div className="content" >Checking Authentication...</div>
   }
 
   return (
@@ -46,9 +46,9 @@ function App() {
               <Route path="/login" component={Login} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
-              <Route path="/Menu" component={Menu}/>
-              <Route path="/Settings" component={Settings}/>
-              <Route path="/Profile" component={Profile}/>
+              <PrivateRoute path="/Menu" component={Menu}/>
+              <PrivateRoute path="/Settings" component={Settings}/>
+              <PrivateRoute path="/Profile" component={Profile}/>
             </Switch>
           </div>
         </div>
