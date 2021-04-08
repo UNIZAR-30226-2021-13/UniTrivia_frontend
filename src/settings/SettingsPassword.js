@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import React from 'react'
+import { getToken } from '../Utils/Common';
+
 
 import {
   Box,
@@ -10,6 +12,8 @@ import {
   Divider,
   TextField
 } from '@material-ui/core';
+import axios from "axios";
+import {setUserSession} from "../Utils/Common";
 
 const SettingsPassword = (props) => {
   const [values, setValues] = useState({
@@ -24,8 +28,31 @@ const SettingsPassword = (props) => {
     });
   };
 
+  const handleModifyPassword= () => {
+    alert(values.confirm)
+    sessionStorage.setItem('user', 'oscargo');
+    var jwt=sessionStorage.getItem('token')
+    alert(sessionStorage.getItem('user'))
+    alert(jwt)
+    axios.post('https://unitrivia.herokuapp.com/api/profile/modify/password', { headers:{
+        'jwt': getToken,
+        newpassword: values.password.value,
+        oldpassword: '1234'
+      }}).then(response => {
+      console.log(response)
+      //setUserSession(response.data);
+      //props.history.push('/menu');
+    }).catch(error => {
+      alert(error.message)
+      /*if (error.response.status === 401) setError(error.response.data.message);
+      else setError("Something went wrong. Please try again later.");*/
+    });
+
+
+  }
+
   return (
-    <form {...props}>
+    <form {...props} onSubmit={handleModifyPassword}>
       <Card>
         <CardHeader
           subheader="Update password"
@@ -65,6 +92,7 @@ const SettingsPassword = (props) => {
           <Button
             color="primary"
             variant="contained"
+            onClick={handleModifyPassword}
           >
             Update
           </Button>

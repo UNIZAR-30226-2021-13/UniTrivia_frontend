@@ -77,6 +77,9 @@ function Login(props) {
   const username = useFormInput('');
   const password = useFormInput('');
   const [error, setError] = useState(null);
+    const [noUser, setUser] = useState(false);
+    const [noPass, setPass] = useState(false);
+
 
     const classes = useStyles();
 
@@ -85,19 +88,51 @@ function Login(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('https://unitrivia.herokuapp.com/api/login', { headers:{
-        username: username.value, 
-        password: password.value 
-    }}).then(response => {
-      setLoading(false);
-      setUserSession(response.data.token, response.data.user);
-      props.history.push('/menu');
-    }).catch(error => {
-      setLoading(false);
-      if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Something went wrong. Please try again later.");
-    });
+    if(username.value!='' && password.value != ''){
+        axios.get('https://unitrivia.herokuapp.com/api/login', { headers:{
+                username: username.value,
+                password: password.value
+            }}).then(response => {
+            setLoading(false);
+            console.log(response)
+            setUserSession(response.data, username.value);
+            props.history.push('/menu');
+        }).catch(error => {
+            setLoading(false);
+            alert(error.message)
+            if (error.response.status === 401) setError(error.response.data.message);
+            else setError("Something went wrong. Please try again later.");
+        });
+    }else{
+        if(username.value==''){
+            setUser(true);
+        }
+        if(password.value == ''){
+            setPass(true);
+        }
+    }
+
   }
+
+    const handleLogAsGuest = () => {
+        setError(null);
+        setLoading(true);
+
+        axios.get('https://unitrivia.herokuapp.com/api/logAsGuest'
+            ).then(response => {
+            setLoading(false);
+            console.log(response)
+            setUserSession(response.data);
+            props.history.push('/menu');
+        }).catch(error => {
+            setLoading(false);
+            alert(error.message)
+            if (error.response.status === 401) setError(error.response.data.message);
+            else setError("Something went wrong. Please try again later.");
+        });
+
+
+    }
 
   return (
       <Grid container component="main" className={classes.root}>
@@ -113,6 +148,7 @@ function Login(props) {
                   </Typography>
                   <form className={classes.form} noValidate>
                       <TextField
+                          error={noUser === true}
                           variant="outlined"
                           margin="normal"
                           required
@@ -123,8 +159,10 @@ function Login(props) {
                           autoComplete="username"
                           autoFocus
                           {...username}
+                          helperText={noUser ? 'introduce el usario' : ''}
                       />
                       <TextField
+                          error={noPass === true}
                           variant="outlined"
                           margin="normal"
                           required
@@ -133,7 +171,7 @@ function Login(props) {
                           label="Contraseña"
                           type="password"
                           id="password"
-                          autoComplete="current-password"
+                          helperText={noPass ? 'introduce la contraseña' : ''}
                           {...password}
                       />
                       <FormControlLabel
@@ -141,11 +179,9 @@ function Login(props) {
                           label="Remember me"
                       />
                       <Button
-                          type="submit"
                           fullWidth
                           variant="contained"
                           color="primary"
-                          className={classes.submit}
                           onClick={handleLogin}
                       >
                           Acceder
@@ -163,12 +199,10 @@ function Login(props) {
                           </Grid>
                       </Grid>
                       <Button
-                          type="submit"
                           fullWidth
                           variant="contained"
                           color="primary"
-                          className={classes.submit}
-                          href={'/menu'}
+                          onClick={handleLogAsGuest}
                       >
                           Acceder como invitado
                       </Button>
