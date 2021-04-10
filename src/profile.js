@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
@@ -50,7 +50,54 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Profile(props) {
+
     const classes = useStyles();
+    let [preg, setPreg] = useState(null);
+    let [res, setRes] = useState();
+    let [coins, setCoins] = useState(null);
+    let [wins, setWins] = useState(null);
+    let [ficha, setFicha] = useState(null);
+    let [banner, setBanner] = useState(null);
+    let [comprados, setComprados] = useState(null);
+    let [avatar, setAvatar] = useState(null);
+    let [njugadas, setNjugadas] = useState(null);
+    let [email, setEmail] = useState(null);
+    const [username, setUsername] = useState(null);
+
+
+    useEffect(() => {
+        console.log(getToken())
+
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+                jwt: getToken()
+            }}).then((response) => {
+            setPreg=(response.data.preg);
+            setRes=(response.data.res);
+            setCoins=(response.data.cns);
+            setWins=(response.data.ng);
+            setFicha=(response.data.fich);
+            setBanner(response.data.bnr);
+            setComprados(response.data.rfs);
+            setAvatar(response.data.avtr);
+            setNjugadas(response.data.nj);
+
+            setEmail(response.data.mail);
+            //username=response.data._id;
+            setUsername(response.data._id);
+
+            console.log(response.data)
+            console.log(response)
+            //setUserSession(response.data.token, response.data.user);
+        }).catch((code,message) => {
+            console.log(code.response)
+            /*if (error.response.status === 200) {
+                setError(error.response.data.message);
+                alert('usuario existente')
+            }else {
+                setError("Something went wrong. Please try again later.");
+            }*/
+        });
+    }, []);
 
     const handleDeleteUser = () => {
 
@@ -90,7 +137,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfile />
+                            <AccountProfile user={username} mail={email}/>
                         </Grid>
                         <Grid
                             item
@@ -98,7 +145,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfileDetails />
+                            <AccountProfileDetails user={username} mail={email} preg={preg} res={res} />
                         </Grid>
                         <Grid
                             item
