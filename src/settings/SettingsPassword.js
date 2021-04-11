@@ -17,6 +17,7 @@ import {setUserSession} from "../Utils/Common";
 
 const SettingsPassword = (props) => {
   const [values, setValues] = useState({
+    oldpassword: '',
     password: '',
     confirm: ''
   });
@@ -29,26 +30,15 @@ const SettingsPassword = (props) => {
   };
 
   const handleModifyPassword= () => {
-    alert(values.confirm)
-    if(!getToken()){
-      alert('no hay token')
-    }else{
-      alert(' hay token')
-    }
-    alert(getToken())
-    alert(values.password)
-    axios.post('https://unitrivia.herokuapp.com/api/profile/modify/password', { headers:{
+    axios.post('https://unitrivia.herokuapp.com/api/profile/modify/password',{} ,{ headers:{
         'jwt': getToken(),
-        newpassword: values.password.value,
-        oldpassword: '1234'
+        newpassword: values.password,
+        oldpassword: values.oldpassword
       }}).then(response => {
       console.log(response)
-      //setUserSession(response.data);
-      //props.history.push('/menu');
+      alert('contraseña cambiada exitosamente')
     }).catch(error => {
       alert(error.message)
-      /*if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Something went wrong. Please try again later.");*/
     });
 
 
@@ -63,6 +53,16 @@ const SettingsPassword = (props) => {
         />
         <Divider />
         <CardContent>
+          <TextField
+              fullWidth
+              label="Old password"
+              margin="normal"
+              name="oldpassword"
+              onChange={handleChange}
+              type="password"
+              value={values.oldpassword}
+              variant="outlined"
+          />
           <TextField
             fullWidth
             label="Password"

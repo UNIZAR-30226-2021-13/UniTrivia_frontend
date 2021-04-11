@@ -1,16 +1,6 @@
-import { useState } from 'react';
-import React from 'react'
+import React, {useState} from 'react';
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  TextField
-} from '@material-ui/core';
+import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 
 const states = [
   {
@@ -27,97 +17,87 @@ const states = [
   }
 ];
 
-const Stats = (props) => {
-  const [values, setValues] = useState({
-    played: '6',
-    wins: '3',
-    ncoins: '67'
-  });
+function Stats(props) {
+  const profile=props
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+
+
 
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      {...props}
-    >
-      <Card>
-        <CardHeader
-          subheader="Estadísticas del usuario"
-          title="Estadísticas"
-        />
-        <Divider />
-        <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
+      <form
+          autoComplete="off"
+          noValidate
+          {...props}
+      >
+        <Card>
+          <CardHeader
+              subheader="Estadísticas del usuario"
+              title="Estadísticas"
+          />
+          <Divider/>
+          <CardContent>
             <Grid
-              item
-              md={6}
-              xs={12}
+                container
+                spacing={3}
             >
-              <TextField
-                fullWidth
-                label="Partidas jugadas"
-                name="firstName"
-                onChange={handleChange}
-                value={values.played}
-                variant="outlined"
-                disabled={true}
-              />
+              <Grid
+                  item
+                  md={6}
+                  xs={12}
+              >
+                <TextField
+                    fullWidth
+                    label="Partidas jugadas"
+                    name="firstName"
+                    defaultValue={'0'}
+                    value={profile.jugadas}
+                    variant="outlined"
+                    disabled={true}
+                />
+              </Grid>
+
+              <Grid
+                  item
+                  md={6}
+                  xs={12}
+              >
+                <TextField
+                    fullWidth
+                    label="Partidas ganadas"
+                    name="email"
+                    defaultValue={'0'}
+                    value={profile.ganadas}
+                    variant="outlined"
+                    disabled={true}
+                />
+              </Grid>
+              <Grid
+                  item
+                  md={6}
+                  xs={12}
+              >
+                <TextField
+                    fullWidth
+                    label="Monedas obtenidas"
+                    name="question"
+                    value={profile.coins}
+                    defaultValue={'0'}
+                    variant="outlined"
+                    disabled={true}
+                />
+              </Grid>
+
             </Grid>
-
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Partidas ganadas"
-                name="email"
-                onChange={handleChange}
-
-                value={values.wins}
-                variant="outlined"
-                disabled={true}
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Monedas obtenidas"
-                name="question"
-                onChange={handleChange}
-                value={values.ncoins}
-                variant="outlined"
-                disabled={true}
-              />
-            </Grid>
-
-          </Grid>
-        </CardContent>
-        <Divider />
+          </CardContent>
+          <Divider/>
 
 
-      </Card>
+        </Card>
 
 
-
-    </form>
+      </form>
 
   );
-};
+}
 
 export default Stats;

@@ -1,6 +1,12 @@
 import moment from 'moment';
 import React, {useEffect} from 'react'
 //{`${profiles.mail} ${user.country}`}
+//<Typography
+//                         color="textSecondary"
+//                         variant="body1"
+//                     >
+//                         {`${moment().format('hh:mm A')} ${user.timezone}`}
+//                     </Typography>
 import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Typography} from '@material-ui/core';
 
 const user = {
@@ -48,12 +54,7 @@ function AccountProfile(props) {
                     >
                         {`${profiles.mail} `}
                     </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="body1"
-                    >
-                        {`${moment().format('hh:mm A')} ${user.timezone}`}
-                    </Typography>
+
                 </Box>
             </CardContent>
             <Divider/>

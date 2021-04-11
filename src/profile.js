@@ -62,7 +62,7 @@ function Profile(props) {
     let [avatar, setAvatar] = useState(null);
     let [njugadas, setNjugadas] = useState(null);
     let [email, setEmail] = useState(null);
-    const [username, setUsername] = useState(null);
+    let [username, setUsername] = useState(null);
 
 
     useEffect(() => {
@@ -71,11 +71,11 @@ function Profile(props) {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
-            setPreg=(response.data.preg);
-            setRes=(response.data.res);
-            setCoins=(response.data.cns);
-            setWins=(response.data.ng);
-            setFicha=(response.data.fich);
+            setPreg(response.data.preg);
+            setRes(response.data.res);
+            setCoins(response.data.cns);
+            setWins(response.data.ng);
+            setFicha(response.data.fich);
             setBanner(response.data.bnr);
             setComprados(response.data.rfs);
             setAvatar(response.data.avtr);
@@ -145,7 +145,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfileDetails user={username} mail={email} preg={preg} res={res} />
+                            <AccountProfileDetails user={username} mail={email} pregu={preg} resu={res} />
                         </Grid>
                         <Grid
                             item
@@ -153,7 +153,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <Stats />
+                            <Stats jugadas={njugadas} ganadas={wins} coins={coins}/>
                         </Grid>
                         <Grid
                             item
@@ -161,7 +161,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <Items />
+                            <Items comprados={comprados} />
                         </Grid>
                         <Grid
                             item

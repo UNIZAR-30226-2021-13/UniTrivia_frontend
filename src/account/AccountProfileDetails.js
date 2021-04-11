@@ -21,6 +21,8 @@ function AccountProfileDetails(props) {
   const profile=props;
 
 
+
+
   const handleChange = (event) => {
 
   };
@@ -49,12 +51,12 @@ function AccountProfileDetails(props) {
               >
                 <TextField
                     fullWidth
-                    label="First name"
-                    name="firstName"
-                    onChange={handleChange}
                     value={profile.user}
+                    disabled
+                    id="outlined-disabled"
+                    label="Usuario"
+                    defaultValue="Hello World"
                     variant="outlined"
-                    required
                 />
               </Grid>
 
@@ -65,13 +67,12 @@ function AccountProfileDetails(props) {
               >
                 <TextField
                     fullWidth
-                    label="Email Address"
-                    name="email"
-                    onChange={handleChange}
-
                     value={profile.mail}
+                    disabled
+                    id="outlined-disabled"
+                    label="Email"
+                    defaultValue="Hello World"
                     variant="outlined"
-                    disabled={true}
                 />
               </Grid>
               <Grid
@@ -81,12 +82,12 @@ function AccountProfileDetails(props) {
               >
                 <TextField
                     fullWidth
+                    value={profile.pregu}
+                    disabled
+                    id="outlined-disabled"
                     label="Pregunta de seguridad"
-                    name="question"
-                    onChange={handleChange}
-                    value={profile.preg}
+                    defaultValue="Hello World"
                     variant="outlined"
-                    disabled={true}
                 />
               </Grid>
               <Grid
@@ -96,12 +97,12 @@ function AccountProfileDetails(props) {
               >
                 <TextField
                     fullWidth
+                    value={profile.resu}
+                    disabled
+                    id="outlined-disabled"
                     label="Respuesta"
-                    name="answer"
-                    onChange={handleChange}
-                    value={profile.res}
+                    defaultValue="Hello World"
                     variant="outlined"
-                    disabled={true}
                 />
               </Grid>
               <Grid
