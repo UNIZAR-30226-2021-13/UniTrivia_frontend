@@ -137,7 +137,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfile user={username} mail={email}/>
+                            <AccountProfile user={username} mail={email} avatar={avatar}/>
                         </Grid>
                         <Grid
                             item

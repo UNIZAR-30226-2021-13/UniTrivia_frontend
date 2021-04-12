@@ -44,6 +44,7 @@ function App(props) {
         <div>
           <div className="content">
             <Switch>
+              <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
