@@ -36,7 +36,8 @@ const SettingsPassword = (props) => {
         oldpassword: values.oldpassword
       }}).then(response => {
       console.log(response)
-      alert('contraseña cambiada exitosamente')
+      alert('Contraseña cambiada exitosamente');
+      window.location.reload(true);
     }).catch(error => {
       alert(error.message)
     });
@@ -65,7 +66,7 @@ const SettingsPassword = (props) => {
           />
           <TextField
             fullWidth
-            label="Password"
+            label="New Password"
             margin="normal"
             name="password"
             onChange={handleChange}
@@ -75,7 +76,7 @@ const SettingsPassword = (props) => {
           />
           <TextField
             fullWidth
-            label="Confirm password"
+            label="Confirm new password"
             margin="normal"
             name="confirm"
             onChange={handleChange}
