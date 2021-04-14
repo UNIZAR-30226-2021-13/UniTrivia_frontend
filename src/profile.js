@@ -100,17 +100,27 @@ function Profile(props) {
     }, []);
 
     const handleDeleteUser = () => {
+        try {
+            var aceptar = window.confirm("Presione en OK para borrar cuenta para siempre");
+            if(aceptar === true) {
 
-        axios.delete('https://unitrivia.herokuapp.com/api/profile', { headers:{
-                'jwt': getToken()
-            }}).then(response => {
-            console.log(response)
-            removeUserSession();
-            props.history.push('/login');
-        }).catch(error => {
-            alert(error.message)
-            console.log(error)
-        });
+
+                axios.delete('https://unitrivia.herokuapp.com/api/profile', {
+                    headers: {
+                        'jwt': getToken()
+                    }
+                }).then(response => {
+                    console.log(response)
+                    removeUserSession();
+                    props.history.push('/login');
+                }).catch(error => {
+                    alert(error.message)
+                    console.log(error)
+                });
+            }
+        }catch (e) {
+            alert(e.message);
+        }
 
     }
 
