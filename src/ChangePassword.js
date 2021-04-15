@@ -49,31 +49,85 @@ const useStyles = makeStyles((theme) => ({
 function ChangePassword(props) {
     const [loading, setLoading] = useState(false);
     const username = useFormInput('');
-    const password = useFormInput('');
+    const answer = useFormInput('');
     const newPassword = useFormInput('');
-    const [error, setError] = useState(null);
+    const [error, setErrorMsg] = useState(null);
+    const [Error,setError]=useState(false);
     const classes = useStyles();
+    let [preg, setPreg] = useState(null);
 
+
+    // handle button click of recover question
+    const handleRecoverQuestion = () => {
+        try{
+            axios.get('https://unitrivia.herokuapp.com/api/login/recover/question',{ headers:{
+                    username: username.value,
+                }}).then(response => {
+                    setError(null);
+                console.log(response)
+                setPreg(response.data)
+
+
+            }).catch(error => {
+                setError(true);
+                setPreg('---');
+                if(error.response.data.code == 2){
+
+                    setErrorMsg("El usuario no existe");
+                }else{
+
+                    setErrorMsg("Error desconocido");
+                    alert(error.message);
+                }
+
+
+            });
+        }catch (e) {
+            setError(e);
+        }
+    }
 
     // handle button click of login form
     const handleModify = () => {
-        setError(null);
-        setLoading(true);
-        axios.post('https://unitrivia.com/api/profile/modify/password/'+{username}, { username: username.value, new_password: newPassword.value , old_Password: password.value }).then(response => {
-            setLoading(false);
-            //setUserSession(response.data.token, response.data.user);
-            props.history.push('/login');
-        }).catch(error => {
-            setLoading(false);
-            if (error.response.status === 401) setError(error.response.data.message);
-            else setError("Something went wrong. Please try again later.");
-        });
+        try {
+
+
+
+
+            axios.post('https://unitrivia.herokuapp.com/api/login/recover/password',{}, { headers: {
+                    username: username.value,
+                    res: answer.value,
+                    newpassword: newPassword.value
+                }}).then(response => {
+                setError(null);
+                //setUserSession(response.data.token, response.data.user);
+                props.history.push('/login');
+            }).catch(error => {
+                setError(true);
+                alert(error.message);
+            });
+        }catch (e) {
+            setError(e);
+        }
     }
 
+    const showError= () =>{
+        //console.log(loginError);
+        //console.log(error);
+        if(!Error) return null;
+        return(
+            <div className={classes.error}>
+                {error}
+            </div>
+        );
+
+    }
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" className={classes.root}>
             <CssBaseline />
+            {showError()}
+            <Grid item xs={false} className={classes.image} />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h2">
                     UniTrivia
@@ -96,6 +150,7 @@ function ChangePassword(props) {
                                 id="username"
                                 label="Usuario"
                                 autoFocus
+                                {...username}
                             />
 
                         </Grid>
@@ -105,6 +160,7 @@ function ChangePassword(props) {
                             fullWidth
                             variant="contained"
                             color="primary"
+                            onClick={handleRecoverQuestion}
                         >
                             Recuperar pregunta
                         </Button>
@@ -112,11 +168,14 @@ function ChangePassword(props) {
                         <Grid item xs={12}>
                             <TextField
                                 variant="outlined"
-                                required
+                                disabled
                                 fullWidth
+                                value={preg}
                                 id="question"
-                                label="Pregunta de seguridad"
                                 name="question"
+                                defaultValue="---"
+                                label="Pregunta de seguridad"
+
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -127,28 +186,8 @@ function ChangePassword(props) {
                                 id="answer"
                                 label="Respuesta a la pregunta"
                                 name="answer"
-                            />
-                        </Grid>
-                        <Grid item xs={12}  spacing={2}>
-                            <Button
 
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                            >
-                                Verificar
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Actual contraseña"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
+                                {...answer}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -160,7 +199,9 @@ function ChangePassword(props) {
                                 label="Nueva contraseña"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
+
+                                {...newPassword}
+
                             />
                         </Grid>
 

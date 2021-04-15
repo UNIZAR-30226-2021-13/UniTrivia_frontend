@@ -66,6 +66,22 @@ function AccountProfile(props) {
                 >
                     Modificar avatar
                 </Button>
+
+                <Button
+                    color="primary"
+                    fullWidth
+                    variant="text"
+                >
+                    Modificar banner
+                </Button>
+
+                <Button
+                    color="primary"
+                    fullWidth
+                    variant="text"
+                >
+                    Modificar forma de ficha
+                </Button>
             </CardActions>
         </Card>
     );
