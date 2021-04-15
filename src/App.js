@@ -13,6 +13,7 @@ import Register from "./Register";
 import Menu from "./Menu";
 import Profile from './profile';
 import Settings from './Settings';
+import NoGuestRoute from "./Utils/NoGuestRoute";
 
 
 function App(props) {
@@ -50,7 +51,7 @@ function App(props) {
               <Route path="/register" component={Register}/>
               <PrivateRoute path="/Menu" component={Menu}/>
               <PrivateRoute path="/Settings" component={Settings}/>
-              <PrivateRoute path="/Profile" component={Profile}/>
+              <NoGuestRoute path="/Profile" component={Profile}/>
             </Switch>
           </div>
         </div>

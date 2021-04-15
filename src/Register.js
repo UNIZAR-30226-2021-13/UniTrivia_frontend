@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import { setUserSession } from './Utils/Common';
+import { useForm } from 'react-hook-form';
 
 
 function Copyright() {
@@ -75,6 +76,7 @@ const useFormInput = initialValue => {
 
     const handleChange = e => {
         setValue(e.target.value);
+
     }
     return {
         value,
@@ -84,6 +86,7 @@ const useFormInput = initialValue => {
 
 export default function Register(props) {
 
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const username = useFormInput('');
@@ -92,33 +95,74 @@ export default function Register(props) {
     const reppassword = useFormInput('');
     const question = useFormInput('');
     const answer = useFormInput('');
+    
+
+
+    const [noUser, setUser] = useState(false);
+    const [noPass, setPass] = useState(false);
+    const [noEmail, setEmail] = useState(false);
+    const [noQuestion, setQuestion] = useState(false);
+    const [noAns, setAns] = useState(false);
+    const [dist, setDist] = useState(false);
+    const [Rep, setNoRep] = useState(false);
+    const [err, setErr] = useState(null);
+    const emailRegex = new RegExp('/\S+@\S+\.\S+/');
+
+
 
     const handleRegister = () => {
         const user = {username}
         setError(null);
         setLoading(true);
-        axios.post('https://unitrivia.herokuapp.com/api/register',{},{headers: {
-                'username': username.value,
-                'password': password.value,
-                'email': email.value,
-                'preg': question.value,
-                'res': answer.value
-            }}).then((response) => {
-            console.log(response.data)
-            console.log(response)
-            setLoading(false);
-            //setUserSession(response.data.token, response.data.user);
-            props.history.push('/login');
-        }).catch((code,message) => {
-            setLoading(false);
-            console.log(code.response)
-            /*if (error.response.status === 200) {
-                setError(error.response.data.message);
-                alert('usuario existente')
-            }else {
-                setError("Something went wrong. Please try again later.");
-            }*/
-        });
+
+        username.value == '' ? setUser(true) : setUser(false);
+        password.value == '' ? setPass(true) : setPass(false);
+        email.value == '' ? setEmail(true) : setEmail(false);
+        question.value == '' ? setQuestion(true) : setQuestion(false);
+        answer.value == '' ? setAns(true) : setAns(false);
+        if(reppassword.value == ''){
+            setNoRep(true)
+            setErr('introduce la contraseña')
+        }else{
+            setNoRep(false)
+        }
+        if(password.value!=reppassword.value){
+            setDist(true)
+            setErr('las contraseñas no coinciden')
+        }else{
+            setDist(false)
+        }
+
+
+
+        if(username.value!='' && password.value!='' && email.value!='' && question.value!=''&& answer.value!='' && password.value==reppassword.value) {
+
+
+            axios.post('https://unitrivia.herokuapp.com/api/register', {}, {
+                headers: {
+                    'username': username.value,
+                    'password': password.value,
+                    'email': email.value,
+                    'preg': question.value,
+                    'res': answer.value
+                }
+            }).then((response) => {
+                console.log(response.data)
+                console.log(response)
+                setLoading(false);
+                //setUserSession(response.data.token, response.data.user);
+                props.history.push('/login');
+            }).catch((error) => {
+                setLoading(false);
+                console.log(error.response)
+                if (error.response.status === 400) {
+                    setError(error.response.data.message);
+                    alert('usuario existente')
+                }else {
+                    setError("Something went wrong. Please try again later.");
+                }
+            });
+        }
     }
 
 
@@ -141,10 +185,12 @@ export default function Register(props) {
                         <Typography component="h1" variant="h5">
                             Regístrate
                         </Typography>
+
                         <form className={classes.form} noValidate>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} >
                                     <TextField
+                                        error={noUser === true}
                                         autoComplete="fname"
                                         name="username"
                                         variant="outlined"
@@ -154,22 +200,30 @@ export default function Register(props) {
                                         label="Usuario"
                                         autoFocus
                                         {...username}
+
+                                        helperText={noUser ? 'introduce el usario' : ''}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
+                                        error={noEmail === true}
                                         variant="outlined"
                                         required
                                         fullWidth
                                         id="email"
                                         label="Email Address"
+                                        type="email"
                                         name="email"
                                         autoComplete="email"
                                         {...email}
+                                        helperText={noEmail ? 'introduce el email' : ''}
+
+
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
+                                        error={noPass === true}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -179,10 +233,13 @@ export default function Register(props) {
                                         id="password"
                                         autoComplete="current-password"
                                         {...password}
+                                        helperText={noPass ? 'introduce la contraseña' : ''}
+
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
+                                        error={dist === true || Rep === true}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -192,10 +249,12 @@ export default function Register(props) {
                                         id="reppassword"
                                         autoComplete="current-password"
                                         {...reppassword}
+                                        helperText={dist === true || Rep === true ? err: ''}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
+                                        error={noQuestion === true}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -203,10 +262,13 @@ export default function Register(props) {
                                         label="Pregunta de seguridad"
                                         name="question"
                                         {...question}
+                                        helperText={noQuestion ? 'introduce la pregunta de seguridad' : ''}
+
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
+                                        error={noAns === true}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -214,6 +276,7 @@ export default function Register(props) {
                                         label="Respuesta a la pregunta"
                                         name="answer"
                                         {...answer}
+                                        helperText={noAns ? 'introduce la respuesta a la pregunta de seguridad' : ''}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>

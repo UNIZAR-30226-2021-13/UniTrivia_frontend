@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { setUserSession } from './Utils/Common';
+import {setToken, setUserSession} from './Utils/Common';
 import {NavLink, Route} from "react-router-dom";
 import ChangePassword from "./ChangePassword";
 import Register from "./Register";
@@ -95,6 +95,19 @@ function Login(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
+
+      if(username.value==''){
+          setUser(true);
+      }else{
+          setUser(false);
+      }
+      if(password.value == ''){
+          setPass(true);
+      }else{
+          setPass(false);
+      }
+
+
     if(username.value!='' && password.value != ''){
         axios.get('https://unitrivia.herokuapp.com/api/login', { headers:{
                 username: username.value,
@@ -107,16 +120,9 @@ function Login(props) {
         }).catch(error => {
             setLoading(false);
             //alert(error.message)
-            if (error.response.status === 401){setLoginError(true); setError("El Ususario o la contraseña se han instroducido incorrectamente");} //setError(error.response.data.message);
-            else{setLoginError(true); setError("El Ususario o la contraseña se han instroducido incorrectamente");}
+            if (error.response.status === 401){setLoginError(true); setError("El Ususario o la contraseña se han introducido incorrectamente");} //setError(error.response.data.message);
+            else{setLoginError(true); setError("El Ususario o la contraseña se han introducido incorrectamente");}
         });
-    }else{
-        if(username.value==''){
-            setUser(true);
-        }
-        if(password.value == ''){
-            setPass(true);
-        }
     }
 
   }
@@ -128,8 +134,8 @@ function Login(props) {
         axios.get('https://unitrivia.herokuapp.com/api/logAsGuest'
             ).then(response => {
             setLoading(false);
-            console.log(response)
-            setUserSession(response.data);
+
+            setToken(response.data);
             props.history.push('/menu');
         }).catch(error => {
             setLoading(false);
