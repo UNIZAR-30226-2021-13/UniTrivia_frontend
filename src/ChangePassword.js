@@ -47,87 +47,98 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ChangePassword(props) {
-    const [loading, setLoading] = useState(false);
     const username = useFormInput('');
     const answer = useFormInput('');
     const newPassword = useFormInput('');
-    const [error, setErrorMsg] = useState(null);
-    const [Error,setError]=useState(false);
-    const classes = useStyles();
     let [preg, setPreg] = useState(null);
+    const [noUser, setUser] = useState(false);
+    const [noNewP, setNewP] = useState(false);
+    const [noRes, setRes] = useState(false);
+
+
+    const classes = useStyles();
+
 
 
     // handle button click of recover question
     const handleRecoverQuestion = () => {
         try{
-            axios.get('https://unitrivia.herokuapp.com/api/login/recover/question',{ headers:{
-                    username: username.value,
-                }}).then(response => {
-                    setError(null);
-                console.log(response)
-                setPreg(response.data)
+            if(username.value == ''){
+                setUser(true);
+            }else {
+                setUser(false);
+                axios.get('https://unitrivia.herokuapp.com/api/login/recover/question', {
+                    headers: {
+                        username: username.value,
+                    }
+                }).then(response => {
+
+                    console.log(response)
+                    setPreg(response.data)
 
 
-            }).catch(error => {
-                setError(true);
-                setPreg('---');
-                if(error.response.data.code == 2){
-
-                    setErrorMsg("El usuario no existe");
-                }else{
-
-                    setErrorMsg("Error desconocido");
-                    alert(error.message);
-                }
+                }).catch(error => {
+                    alert('Error al recuperar pregunta, usuario no existe');
 
 
-            });
+                });
+            }
         }catch (e) {
-            setError(e);
+            alert(e.message);
         }
     }
 
     // handle button click of login form
     const handleModify = () => {
         try {
+            if(username.value == '' || answer.value == '' || newPassword.value == ''){
+                if(username.value == ''){
+                    setUser(true);
+                }else{
+                    setUser(false);
+                }
 
+                if(answer.value == ''){
+                    setRes(true);
+                }else{
+                    setRes(false);
+                }
 
+                if(newPassword.value == ''){
+                    setNewP(true);
+                }else{
+                    setNewP(false);
+                }
+            }else {
+                setUser(false);
+                setRes(false);
+                setNewP(false);
 
+                axios.post('https://unitrivia.herokuapp.com/api/login/recover/password', {}, {
+                    headers: {
+                        username: username.value,
+                        res: answer.value,
+                        newpassword: newPassword.value
+                    }
+                }).then(response => {
 
-            axios.post('https://unitrivia.herokuapp.com/api/login/recover/password',{}, { headers: {
-                    username: username.value,
-                    res: answer.value,
-                    newpassword: newPassword.value
-                }}).then(response => {
-                setError(null);
-                //setUserSession(response.data.token, response.data.user);
-                props.history.push('/login');
-            }).catch(error => {
-                setError(true);
-                alert(error.message);
-            });
+                    //setUserSession(response.data.token, response.data.user);
+                    props.history.push('/login');
+                }).catch(error => {
+
+                    alert('Error al validar respuesta, revise la respuesta introducida');
+                });
+            }
         }catch (e) {
-            setError(e);
+            alert(e.message);
         }
     }
 
-    const showError= () =>{
-        //console.log(loginError);
-        //console.log(error);
-        if(!Error) return null;
-        return(
-            <div className={classes.error}>
-                {error}
-            </div>
-        );
 
-    }
 
     return (
         <Container component="main" maxWidth="xs" className={classes.root}>
             <CssBaseline />
-            {showError()}
-            <Grid item xs={false} className={classes.image} />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h2">
                     UniTrivia
@@ -142,6 +153,7 @@ function ChangePassword(props) {
                     <Grid container spacing={2}>
                         <Grid item xs={12} spacing={2}>
                             <TextField
+                                error = {noUser}
                                 autoComplete="fname"
                                 name="username"
                                 variant="outlined"
@@ -151,6 +163,7 @@ function ChangePassword(props) {
                                 label="Usuario"
                                 autoFocus
                                 {...username}
+                                helperText = {noUser ? 'Introduzca el usuario' : ''}
                             />
 
                         </Grid>
@@ -176,10 +189,12 @@ function ChangePassword(props) {
                                 defaultValue="---"
                                 label="Pregunta de seguridad"
 
+
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error = {noRes}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -188,10 +203,12 @@ function ChangePassword(props) {
                                 name="answer"
 
                                 {...answer}
+                                helperText = {noRes ? 'Introduzca la respuesta' : ''}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error = {noNewP}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -201,6 +218,7 @@ function ChangePassword(props) {
                                 id="password"
 
                                 {...newPassword}
+                                helperText = {noNewP ? 'Introduzca la nueva contraseña' : ''}
 
                             />
                         </Grid>
