@@ -21,3 +21,8 @@ export const setUserSession = (token, user) => {
   localStorage.setItem('token', token);
   localStorage.setItem('user', JSON.stringify(user));
 }
+
+// set the token and user from the session storage
+export const setToken = (token) => {
+  localStorage.setItem('token', token);
+}
