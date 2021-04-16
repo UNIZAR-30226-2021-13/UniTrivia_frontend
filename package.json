@@ -19,8 +19,11 @@
     "react-scripts": "3.4.1",
     "reactjs-popup": "^2.0.4",
     "styled-components": "^5.2.1",
-    "swagger-ui-express": "^4.1.6",
-    "serve": "^11.3.2"
+    "serve": "^11.3.2",
+    "@material-ui/icons": "^4.11.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "js-yaml": "^4.0.0"
   },
   "scripts": {
     "start": "npm run build && serve -s build -l $PORT",
@@ -44,10 +47,5 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/icons": "^4.11.2",
-    "cookie-parser": "^1.4.5",
-    "cors": "^2.8.5",
-    "express-openapi-validator": "^4.12.6",
-    "js-yaml": "^4.0.0"
   }
 }
