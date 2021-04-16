@@ -14,6 +14,8 @@ import Menu from "./Menu";
 import Profile from './profile';
 import Settings from './Settings';
 import NoGuestRoute from "./Utils/NoGuestRoute";
+import Play from "./Play";
+import Game from "./Game";
 
 
 function App(props) {
@@ -51,6 +53,8 @@ function App(props) {
               <Route path="/register" component={Register}/>
               <PrivateRoute path="/Menu" component={Menu}/>
               <PrivateRoute path="/Settings" component={Settings}/>
+              <PrivateRoute path="/Play" component={Play}/>
+              <PrivateRoute path="/Game" component={Game}/>
               <NoGuestRoute path="/Profile" component={Profile}/>
             </Switch>
           </div>
