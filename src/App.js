@@ -16,6 +16,7 @@ import Settings from './Settings';
 import NoGuestRoute from "./Utils/NoGuestRoute";
 import Play from "./Play";
 import Game from "./Game";
+import CrearSala from "./CrearSala";
 
 
 function App(props) {
@@ -55,6 +56,7 @@ function App(props) {
               <PrivateRoute path="/Settings" component={Settings}/>
               <PrivateRoute path="/Play" component={Play}/>
               <PrivateRoute path="/Game" component={Game}/>
+              <PrivateRoute path="/CrearSala" component={CrearSala}/>
               <NoGuestRoute path="/Profile" component={Profile}/>
             </Switch>
           </div>
