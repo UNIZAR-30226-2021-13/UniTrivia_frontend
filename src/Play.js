@@ -68,7 +68,7 @@ function Play() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/Game'}
+                    href={'/Sala'}
                 >
                     Partida aleatoria
                 </Button>

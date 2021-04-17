@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import TextField from '@material-ui/core/TextField';
+import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -54,41 +54,27 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function UnirseSala() {
+function Sala() {
     const classes = useStyles();
-    const codigo = useFormInput('');
+    
+    const imprimirCodigoSala=()=>{
+        return (<h6>XWDWED</h6>)
+    }
+    const imprimirJugadoresSala=(num)=>{
+        return (<h7>Jugador {num}</h7>)
+    }
     return (
+
         <Div>
-            <h3>Unirse a Sala</h3>
-            Introduce el código de la sala<br/><br/>
-            <div>
-            <div>
-            <TextField
-                          variant="outlined"
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="codigo"
-                          label="Codigo"
-                          name="codigo"
-                          autoComplete="codigo"
-                          autoFocus
-                          {...codigo}
-                          label="Código de la sala"
-                      />
-            </div>
-            </div>
-            <div style={{marginTop: 10}}>
-            <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Sala'}
-                >
-                    Unirme
-                </Button>
-            </div>
+            <h3>Sala {imprimirCodigoSala()} </h3>
+            <br/><br/>
+            
+            <br></br>
+            {imprimirJugadoresSala(1)}
+            {imprimirJugadoresSala(2)}
+            {imprimirJugadoresSala(3)}
+            {imprimirJugadoresSala(4)}
+            
             <div style={{marginTop: 100}}>
                 
                 <Button
@@ -98,23 +84,12 @@ function UnirseSala() {
                     color="primary"
                     href={'/Play'}
                 >
-                    Atrás
+                    Salirse
                 </Button>
             </div>
         </Div>
     );
 }
 
-const useFormInput = initialValue => {
-    const [value, setValue] = useState(initialValue);
-  
-    const handleChange = e => {
-    console.log(value)
-      setValue(e.target.value);
-    }
-    return {
-      value,
-      onChange: handleChange
-    }
-  }
-export default UnirseSala;
+
+export default Sala;
