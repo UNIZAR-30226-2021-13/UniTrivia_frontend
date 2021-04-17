@@ -12,13 +12,14 @@ const But=styled.button`
 `;
 
 const Div=styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  margin: 2em auto;
+display: flex;
+align-items: center;
+flex-direction: column;
+width: 150%;
+margin: 2em auto;
 
   @media screen and (min-width: 1180px) {
-    width: 50%;
+    width: 70%;
   }
 `;
 
@@ -73,7 +74,7 @@ function CrearSala() {
             {imprimirCodigoSala()}
             <Dropdown justifyContent='center' isOpen={dropdown} toggle={abrirCerrarDropDown}>
                 <DropdownToggle caret>
-                    DropdownEjemplo
+                    Jugadores en línea
                 </DropdownToggle>
                 <DropdownMenu>
                     <DropdownItem header>Encabezado</DropdownItem>
@@ -83,12 +84,24 @@ function CrearSala() {
                     <DropdownItem>Accion 4</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
+            <br></br>
             {imprimirJugadoresSala(1)}
             {imprimirJugadoresSala(2)}
             {imprimirJugadoresSala(3)}
             {imprimirJugadoresSala(4)}
-
             <div style={{marginTop: 100}}>
+            <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    href={'/Game'}
+                >
+                    Empezar Partida
+                </Button>
+            </div>
+            <div style={{marginTop: 100}}>
+                
                 <Button
                     type="submit"
                     fullWidth
