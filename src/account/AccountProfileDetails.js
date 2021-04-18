@@ -105,31 +105,7 @@ function AccountProfileDetails(props) {
                     variant="outlined"
                 />
               </Grid>
-              <Grid
-                  item
-                  md={6}
-                  xs={12}
-              >
-                <TextField
-                    fullWidth
-                    label="Select State"
-                    name="state"
-                    onChange={handleChange}
-                    required
-                    select
-                    SelectProps={{native: true}}
-                    variant="outlined"
-                >
-                  {states.map((option) => (
-                      <option
-                          key={option.value}
-                          value={option.value}
-                      >
-                        {option.label}
-                      </option>
-                  ))}
-                </TextField>
-              </Grid>
+
             </Grid>
           </CardContent>
           <Divider/>
