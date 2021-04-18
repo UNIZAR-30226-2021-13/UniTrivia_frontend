@@ -2,7 +2,9 @@ import React from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getUser, removeUserSession} from "./Utils/Common";
+import {getToken, getUser, removeUserSession} from "./Utils/Common";
+import {io,socketIOClient} from "socket.io-client";
+const ENDPOINT = "http://localhost:3000/api/partida";
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -51,7 +53,49 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
+let conn = undefined;
+function sleep(milliseconds){
+    const date=Date.now();
+    let currentDAte=null;
+    do{
+        currentDAte=Date.now();
 
+    }while(currentDAte-date<milliseconds);
+}
+async function crearSala(){
+    console.log("comienza crearSala");
+    conn = io(ENDPOINT,{
+        extraHeaders:{
+            jwt:getToken(),
+            operacion: "crearSala",
+            priv:"true"
+        }
+    });
+    console.log(conn);
+    /*conn.emit("crearSala",(code)=>{
+        console.log("Al crear sala: "+code.toString());
+    })*/
+    if(!conn.disconnected){
+        return(this.props.history.push("/CrearSala"));
+    }else{
+        return(alert("Error al crear la sala"));
+    }
+    return(true);
+}
+function abandonarSala(){
+    console.log("comienza abandonarSala");
+    conn = io(ENDPOINT,{
+        extraHeaders:{
+            jwt:getToken(),
+            operacion: "abandonarSala",
+            priv:"true"
+        }
+    });
+    console.log(conn);
+    /*conn.emit("abandonarSala",(code)=>{
+        console.log("Al abandonar sala: "+code.toString());
+    })*/
+}
 function Play() {
     const classes = useStyles();
 
@@ -80,10 +124,22 @@ function Play() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/CrearSala'}
+                    onClick={crearSala}
+                    href={'/Game'}
                 >
                     Crear sala
                 </Button>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={abandonarSala}
+                >
+                    Salirse de la  sala
+                </Button>
+
             </div>
             <div style={{marginTop: 10}}>
                 <Button
