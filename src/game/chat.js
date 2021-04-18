@@ -48,22 +48,30 @@ function ChatWindow(){
     }
 
     return(
-        <div className="d-flex flex-column flex-grow-1">
-            <div className="flex-grow-1 overflow-auto">
+        <div >
+            <div >
+
             </div>
-                Chat Window
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group className="m-2">
-                        <InputGroup>
-                            <Form.Control
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <InputGroup>
+                        <Form.Control
+
                                 as="textarea"
                                 required
                                 value={text}
                                 onChange={e => setText(e.target.value)}
                                 style={{ height: '75px', resize: 'none'}}
-                            />
-                            <InputGroup.Append>
-                                <Button type="submit" className={classes.submit}>Send</Button>
+                        />
+                        <InputGroup.Append>
+                                <Button
+                                    type="submit"
+                                    className={classes.submit}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Send
+                                </Button>
                         </InputGroup.Append>
                     </InputGroup>
                 </Form.Group>
