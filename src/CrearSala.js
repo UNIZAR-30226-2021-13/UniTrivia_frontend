@@ -1,8 +1,9 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getUser, removeUserSession} from "./Utils/Common";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -11,13 +12,14 @@ const But=styled.button`
 `;
 
 const Div=styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  margin: 2em auto;
+display: flex;
+align-items: center;
+flex-direction: column;
+width: 150%;
+margin: 2em auto;
 
   @media screen and (min-width: 1180px) {
-    width: 50%;
+    width: 70%;
   }
 `;
 
@@ -52,78 +54,67 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Play() {
+function CrearSala() {
     const classes = useStyles();
-
-
+    const [dropdown,setDropdown]=useState(false);
+    const abrirCerrarDropDown=()=>{
+        setDropdown(!dropdown);
+    }
+    const imprimirCodigoSala=()=>{
+        return (<h6>XWDWED</h6>)
+    }
+    const imprimirJugadoresSala=(num)=>{
+        return (<h7>Jugador {num}</h7>)
+    }
     return (
 
         <Div>
-            <h3>UniTrivia</h3>
-            JUGAR<br/><br/>
-            <div>
-                <Button
+            <h3>Crear Sala</h3>
+            Codigo de la Sala<br/><br/>
+            {imprimirCodigoSala()}
+            <Dropdown justifyContent='center' isOpen={dropdown} toggle={abrirCerrarDropDown}>
+                <DropdownToggle caret>
+                    Jugadores en línea
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem header>Encabezado</DropdownItem>
+                    <DropdownItem>Accion 1</DropdownItem>
+                    <DropdownItem>Accion 2</DropdownItem>
+                    <DropdownItem>Accion 3</DropdownItem>
+                    <DropdownItem>Accion 4</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
+            <br></br>
+            {imprimirJugadoresSala(1)}
+            {imprimirJugadoresSala(2)}
+            {imprimirJugadoresSala(3)}
+            {imprimirJugadoresSala(4)}
+            <div style={{marginTop: 100}}>
+            <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={classes.submit}
-                    href={'/Sala'}
+                    href={'/Game'}
                 >
-                    Partida aleatoria
+                    Empezar Partida
                 </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/CrearSala'}
-                >
-                    Crear sala
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/UnirseSala'}
-                >
-                    Unirse a sala
-                </Button>
-
-
             </div>
             <div style={{marginTop: 100}}>
+                
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
-                    href={'/Menu'}
+                    href={'/Play'}
                 >
                     Atrás
                 </Button>
-
-
             </div>
-
-            {/*<But>hole</But>
-                <Popup trigger={<button> Trigger</button>} position="top center">
-                    <div>Popup content here !!</div>
-                </Popup>
-
-                */}
-
-
         </Div>
     );
 }
 
 
-export default Play;
+export default CrearSala;
