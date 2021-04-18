@@ -53,52 +53,40 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
-let conn = undefined;
-function sleep(milliseconds){
-    const date=Date.now();
-    let currentDAte=null;
-    do{
-        currentDAte=Date.now();
 
-    }while(currentDAte-date<milliseconds);
-}
-async function crearSala(){
-    console.log("comienza crearSala");
-    conn = io(ENDPOINT,{
-        extraHeaders:{
-            jwt:getToken(),
-            operacion: "crearSala",
-            priv:"true"
-        }
-    });
-    console.log(conn);
-    /*conn.emit("crearSala",(code)=>{
-        console.log("Al crear sala: "+code.toString());
-    })*/
-    if(!conn.disconnected){
-        return(this.props.history.push("/CrearSala"));
-    }else{
-        return(alert("Error al crear la sala"));
-    }
-    return(true);
-}
-function abandonarSala(){
-    console.log("comienza abandonarSala");
-    conn = io(ENDPOINT,{
-        extraHeaders:{
-            jwt:getToken(),
-            operacion: "abandonarSala",
-            priv:"true"
-        }
-    });
-    console.log(conn);
-    /*conn.emit("abandonarSala",(code)=>{
-        console.log("Al abandonar sala: "+code.toString());
-    })*/
-}
-function Play() {
+function Play(props) {
     const classes = useStyles();
+    let conn = undefined;
 
+    const crearSala = ()=>{
+        console.log("comienza crearSala");
+        let sala=undefined;
+        let conectado=false;
+        conn = io(ENDPOINT,{
+            extraHeaders:{
+                jwt:getToken(),
+                operacion: "crearSala",
+                priv:"true"
+            }
+        });
+
+
+       conn.on("connect",()=>{
+           conectado=conn.connected;
+           console.log(conn.connected);
+           console.log(conectado);
+           console.log(conn.disconnected);
+           console.log(conn.nsp);
+           console.log(conn);
+           if(conectado==true){
+               console.log("Conectado");
+               props.history.push('/Game');
+           }else{
+               console.log("no conectado");
+               alert("Fallo al crear sala");
+           }
+        })
+    }
 
     return (
 
@@ -125,21 +113,9 @@ function Play() {
                     color="primary"
                     className={classes.submit}
                     onClick={crearSala}
-                    href={'/Game'}
                 >
                     Crear sala
                 </Button>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={abandonarSala}
-                >
-                    Salirse de la  sala
-                </Button>
-
             </div>
             <div style={{marginTop: 10}}>
                 <Button
