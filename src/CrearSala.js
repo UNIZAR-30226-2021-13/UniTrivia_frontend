@@ -2,8 +2,8 @@ import React,{useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -56,10 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CrearSala() {
     const classes = useStyles();
-    const [dropdown,setDropdown]=useState(false);
-    const abrirCerrarDropDown=()=>{
-        setDropdown(!dropdown);
-    }
+
     const imprimirCodigoSala=()=>{
         return (<h6>XWDWED</h6>)
     }
@@ -72,18 +69,7 @@ function CrearSala() {
             <h3>Crear Sala</h3>
             Codigo de la Sala<br/><br/>
             {imprimirCodigoSala()}
-            <Dropdown justifyContent='center' isOpen={dropdown} toggle={abrirCerrarDropDown}>
-                <DropdownToggle caret>
-                    Jugadores en línea
-                </DropdownToggle>
-                <DropdownMenu>
-                    <DropdownItem header>Encabezado</DropdownItem>
-                    <DropdownItem>Accion 1</DropdownItem>
-                    <DropdownItem>Accion 2</DropdownItem>
-                    <DropdownItem>Accion 3</DropdownItem>
-                    <DropdownItem>Accion 4</DropdownItem>
-                </DropdownMenu>
-            </Dropdown>
+
             <br></br>
             {imprimirJugadoresSala(1)}
             {imprimirJugadoresSala(2)}

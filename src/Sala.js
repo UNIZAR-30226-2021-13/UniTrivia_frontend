@@ -2,8 +2,8 @@ import React,{useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import {Dropdown,DropdownItem,DropdownMenu,DropdownToggle} from 'reactstrap';
 
 const But=styled.button`
   background-color: #fce2e2;
