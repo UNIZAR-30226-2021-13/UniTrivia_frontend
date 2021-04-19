@@ -1,8 +1,9 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getUser, removeUserSession} from "./Utils/Common";
+//import 'bootstrap/dist/css/bootstrap.min.css';
+import TextField from '@material-ui/core/TextField';
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -11,13 +12,14 @@ const But=styled.button`
 `;
 
 const Div=styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 70%;
-  margin: 2em auto;
+display: flex;
+align-items: center;
+flex-direction: column;
+width: 150%;
+margin: 2em auto;
 
   @media screen and (min-width: 1180px) {
-    width: 50%;
+    width: 70%;
   }
 `;
 
@@ -52,80 +54,67 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Menu() {
+function UnirseSala() {
     const classes = useStyles();
-
-
+    const codigo = useFormInput('');
     return (
-
         <Div>
-            <h3>UniTrivia</h3>
-            MENÚ<br/><br/>
+            <h3>Unirse a Sala</h3>
+            Introduce el código de la sala<br/><br/>
             <div>
+            <div>
+            <TextField
+                          variant="outlined"
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="codigo"
+                          label="Codigo"
+                          name="codigo"
+                          autoComplete="codigo"
+                          autoFocus
+                          {...codigo}
+                          label="Código de la sala"
+                      />
+            </div>
+            </div>
+            <div style={{marginTop: 10}}>
+            <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    href={'/Sala'}
+                >
+                    Unirme
+                </Button>
+            </div>
+            <div style={{marginTop: 100}}>
+                
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
                     href={'/Play'}
-                    className={classes.submit}
                 >
-                    Jugar
+                    Atrás
                 </Button>
             </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/profile'}
-                    disabled={getUser() == null}
-                >
-                    Perfil
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/Settings'}
-                >
-                    Ajustes
-                </Button>
-
-
-            </div>
-            <div style={{marginTop: 100}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Login'}
-                    onClick={removeUserSession}
-                >
-                    Cerrar sesión
-                </Button>
-
-
-            </div>
-
-            {/*<But>hole</But>
-                <Popup trigger={<button> Trigger</button>} position="top center">
-                    <div>Popup content here !!</div>
-                </Popup>
-
-                */}
-
-
         </Div>
     );
 }
 
-
-export default Menu;
+const useFormInput = initialValue => {
+    const [value, setValue] = useState(initialValue);
+  
+    const handleChange = e => {
+    console.log(value)
+      setValue(e.target.value);
+    }
+    return {
+      value,
+      onChange: handleChange
+    }
+  }
+export default UnirseSala;

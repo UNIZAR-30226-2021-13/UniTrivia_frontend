@@ -14,7 +14,11 @@ import Menu from "./Menu";
 import Profile from './profile';
 import Settings from './Settings';
 import NoGuestRoute from "./Utils/NoGuestRoute";
-
+import Play from "./Play";
+import Game from "./Game";
+import CrearSala from "./CrearSala";
+import UnirseSala from "./UnirseSala";
+import Sala from "./Sala";
 
 function App(props) {
   const [authLoading, setAuthLoading] = useState(true);
@@ -51,6 +55,11 @@ function App(props) {
               <Route path="/register" component={Register}/>
               <PrivateRoute path="/Menu" component={Menu}/>
               <PrivateRoute path="/Settings" component={Settings}/>
+              <PrivateRoute path="/Play" component={Play}/>
+              <PrivateRoute path="/Game" component={Game}/>
+              <PrivateRoute path="/CrearSala" component={CrearSala}/>
+              <PrivateRoute path="/UnirseSala" component={UnirseSala}/>
+              <PrivateRoute path="/Sala" component={Sala}/>
               <NoGuestRoute path="/Profile" component={Profile}/>
             </Switch>
           </div>

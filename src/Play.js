@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Menu() {
+function Play() {
     const classes = useStyles();
 
 
@@ -60,17 +60,17 @@ function Menu() {
 
         <Div>
             <h3>UniTrivia</h3>
-            MENÚ<br/><br/>
+            JUGAR<br/><br/>
             <div>
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
-                    href={'/Play'}
                     className={classes.submit}
+                    href={'/Sala'}
                 >
-                    Jugar
+                    Partida aleatoria
                 </Button>
             </div>
             <div style={{marginTop: 10}}>
@@ -80,10 +80,9 @@ function Menu() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/profile'}
-                    disabled={getUser() == null}
+                    href={'/CrearSala'}
                 >
-                    Perfil
+                    Crear sala
                 </Button>
             </div>
             <div style={{marginTop: 10}}>
@@ -93,9 +92,9 @@ function Menu() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/Settings'}
+                    href={'/UnirseSala'}
                 >
-                    Ajustes
+                    Unirse a sala
                 </Button>
 
 
@@ -106,10 +105,9 @@ function Menu() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    href={'/Login'}
-                    onClick={removeUserSession}
+                    href={'/Menu'}
                 >
-                    Cerrar sesión
+                    Atrás
                 </Button>
 
 
@@ -128,4 +126,4 @@ function Menu() {
 }
 
 
-export default Menu;
+export default Play;
