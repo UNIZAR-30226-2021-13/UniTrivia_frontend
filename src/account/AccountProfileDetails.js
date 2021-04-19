@@ -109,21 +109,6 @@ function AccountProfileDetails(props) {
             </Grid>
           </CardContent>
           <Divider/>
-          <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                p: 2
-              }}
-          >
-            <Button
-                color="primary"
-                variant="contained"
-            >
-              Save details
-            </Button>
-          </Box>
-
         </Card>
 
 
