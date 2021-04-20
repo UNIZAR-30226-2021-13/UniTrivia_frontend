@@ -19,7 +19,7 @@ import Game from "./Game";
 import CrearSala from "./CrearSala";
 import UnirseSala from "./UnirseSala";
 import Sala from "./Sala";
-import ChatWindow from "./game/chat";
+import Chat from "./game/chat";
 
 function App(props) {
   const [authLoading, setAuthLoading] = useState(true);
@@ -50,7 +50,7 @@ function App(props) {
         <div>
           <div className="content">
             <Switch>
-              <Route exact path="/ChatWindow" component={ChatWindow} />
+              <Route exact path="/Chat" component={Chat} />
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
               <Route exact path="/ChangePassword" component={ChangePassword} />
