@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {getToken, getUser, removeUserSession} from "./Utils/Common";
 import {io,socketIOClient} from "socket.io-client";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
+import TextField from "@material-ui/core/TextField";
+
 const ENDPOINT = "http://localhost:3000/api/partida";
 
 const But=styled.button`
@@ -57,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
 function Play(props) {
     const classes = useStyles();
     let conn = undefined;
+    const [modalAbierto ,modalAbiertoState] = useState(false);
+
+    const code = useFormInput('');
 
     const crearSala = ()=>{
         console.log("comienza crearSala");
@@ -88,8 +95,13 @@ function Play(props) {
         })
     }
 
+    const abrirModal = () =>{
+        modalAbiertoState(!modalAbierto);
+    }
+
     const unirseSala = ()=>{
-        
+        let sala = undefined;
+        console.log(code.value);
     }
 
     return (
@@ -128,11 +140,58 @@ function Play(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={unirseSala}
+                    onClick={abrirModal}
                 >
                     Unirse a sala
                 </Button>
 
+                <Modal isOpen={modalAbierto == true}>
+                    <ModalHeader>
+                        Escriba el código de sala
+                    </ModalHeader>
+                    <ModalBody>
+
+                        <form className={classes.form} noValidate>
+                            <TextField
+
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="code"
+                                label="Código"
+                                name="code"
+                                autoComplete="Codigo"
+                                autoFocus
+                                {...code}
+
+                            />
+                        </form>
+
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={unirseSala}
+
+                        >
+                            Confirmar Código
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            onClick={abrirModal}
+
+                        >
+                            Cerrar
+                        </Button>
+
+                    </ModalFooter>
+                </Modal>
 
             </div>
             <div style={{marginTop: 100}}>
@@ -149,16 +208,25 @@ function Play(props) {
 
             </div>
 
-            {/*<But>hole</But>
-                <Popup trigger={<button> Trigger</button>} position="top center">
-                    <div>Popup content here !!</div>
-                </Popup>
 
-                */}
+
+
 
 
         </Div>
     );
+}
+
+const useFormInput = initialValue => {
+    const [value, setValue] = useState(initialValue);
+
+    const handleChange = e => {
+        setValue(e.target.value);
+    }
+    return {
+        value,
+        onChange: handleChange
+    }
 }
 
 
