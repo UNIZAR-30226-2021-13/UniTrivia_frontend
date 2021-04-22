@@ -5,6 +5,8 @@ import {green} from "@material-ui/core/colors";
 import {Card, CardContent, Grid} from "@material-ui/core";
 //style={{ color: green[500] }}
 import Room from "./game/room";
+import Board from "./game/Board";
+
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 
@@ -36,7 +38,7 @@ class Game extends React.Component {
                                     <h1>Pedazo de juego</h1>
                                     <img src={'/images/tablero/tablero.png'} height={500} align={'center'}/>
                                 </div>
-
+                                <Board></Board>
                             </Grid>
                              </CardContent>
                          </Card>
