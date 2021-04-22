@@ -88,6 +88,10 @@ function Play(props) {
         })
     }
 
+    const unirseSala = ()=>{
+        
+    }
+
     return (
 
         <Div>
@@ -124,7 +128,7 @@ function Play(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/UnirseSala'}
+                    onClick={unirseSala}
                 >
                     Unirse a sala
                 </Button>
