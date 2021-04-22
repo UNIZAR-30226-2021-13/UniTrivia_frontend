@@ -2,7 +2,9 @@ import React from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getUser, removeUserSession} from "./Utils/Common";
+import {getToken, getUser, removeUserSession} from "./Utils/Common";
+import {io,socketIOClient} from "socket.io-client";
+const ENDPOINT = "http://localhost:3000/api/partida";
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -52,9 +54,39 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Play() {
+function Play(props) {
     const classes = useStyles();
+    let conn = undefined;
 
+    const crearSala = ()=>{
+        console.log("comienza crearSala");
+        let sala=undefined;
+        let conectado=false;
+        conn = io(ENDPOINT,{
+            extraHeaders:{
+                jwt:getToken(),
+                operacion: "crearSala",
+                priv:"true"
+            }
+        });
+
+
+       conn.on("connect",()=>{
+           conectado=conn.connected;
+           console.log(conn.connected);
+           console.log(conectado);
+           console.log(conn.disconnected);
+           console.log(conn.nsp);
+           console.log(conn);
+           if(conectado==true){
+               console.log("Conectado");
+               props.history.push('/Game');
+           }else{
+               console.log("no conectado");
+               alert("Fallo al crear sala");
+           }
+        })
+    }
 
     return (
 
@@ -80,7 +112,7 @@ function Play() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/CrearSala'}
+                    onClick={crearSala}
                 >
                     Crear sala
                 </Button>
