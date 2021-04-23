@@ -20,6 +20,7 @@ const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
 
 class ColourWheel extends Component {
+
   constructor () {
     super()
 
@@ -28,7 +29,8 @@ class ColourWheel extends Component {
       innerWheelOpen: false,
       centerCircleOpen: false,
       numPlayers: 0,
-      positions: [0,0,0,0,0,0]
+      positionsX: [50,50,50,50,50,50],
+      positionsY: [50,60,70,80,90,100]
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -50,6 +52,7 @@ class ColourWheel extends Component {
     this.onCanvasHover = this.onCanvasHover.bind(this)
     this.onCanvasClick = this.onCanvasClick.bind(this)
   }
+
 
   // MARK - Common:
   getRelativeMousePos (clientX, clientY) {
@@ -79,6 +82,7 @@ class ColourWheel extends Component {
   }
 
   initCanvas () {
+    this.state.numPlayers=this.props.numPlayers
     const { radius } = this.props
 
     const width = radius * 2
@@ -89,7 +93,7 @@ class ColourWheel extends Component {
     this.drawOuterWheel(1)
     this.drawSpacers()
     //this.drawCenterCircle()
-    this.drawPlayers()
+    //this.drawPlayers()
   }
 
   // MARK - Life-cycle methods:
@@ -190,7 +194,8 @@ class ColourWheel extends Component {
 
     // returns an rgba array of the pixel-clicked.
     const rgbaArr = this.ctx.getImageData(evtPos.x, evtPos.y, 1, 1).data
-    const [r, g, b] = rgbaArr
+    const [r, g, b,opac] = rgbaArr
+    console.log('opac='+opac)
 
     const rgb = { r, g, b }
 
@@ -200,11 +205,12 @@ class ColourWheel extends Component {
     this.props.onColourSelected(rgbArg)
     let opa
     console.log(rgbaArr)
-    if (r == 255 && g == 255 && b == 255) {
+    /*if (r == 255 && g == 255 && b == 255) {
       opa = 0.1
     } else {
       opa = 1
-    }
+    }*/
+    opa=1
 
     console.log(getCasillaNumber(r, g, b))
     console.log(colours[7])
@@ -218,10 +224,17 @@ class ColourWheel extends Component {
       },
       () => {
 
-        this.drawInnerWheel()
-        this.drawOuterWheel(opa)
-        this.drawCenterCircle()
-        this.drawPosition(evtPos.x, evtPos.y)
+
+        if(opac===255){
+          this.drawInnerWheel()
+          this.drawOuterWheel(opa)
+          this.changePosition(evtPos.x, evtPos.y)
+          this.drawCenterCircle()
+
+
+        }else{
+
+        }
       }
     )
   }
@@ -263,6 +276,7 @@ class ColourWheel extends Component {
     )
   }
 
+
   jugada (callback = false) {
     this.setState(
       {
@@ -273,10 +287,48 @@ class ColourWheel extends Component {
       () => {
         // Reset state & re-draw.
         //this.initCanvas()
+
         this.drawInnerWheel()
-        this.drawOuterWheel(1,[1,7])
+        const num1=Math.floor(Math.random() * 24) + 1;
+        const num2 = Math.floor(Math.random() * 24) + 1;
+        this.drawOuterWheel(1,[num1,num2])
         this.drawCenterCircle()
+        //this.drawPosition()
         if (callback) callback()
+      }
+    )
+
+  }
+
+
+  partida (callback = false) {
+    const { radius } = this.props
+
+    const height = radius * 2
+    const width = radius * 2
+    this.setState(
+      {
+        rgb: '#ffffff',
+        innerWheelOpen: false,
+        centerCircleOpen: false,
+        numPlayers: this.props.numPlayers,
+        positionsX: [width / 2,
+          width / 2,
+          width / 2,
+          width / 2,
+          width / 2,
+          width / 2
+        ],
+        positionsY: [height / 2 +0*10,
+          height / 2 +1*10,
+          height / 2 +2*10,
+          height / 2 +3*10,
+          height / 2 +4*10,
+          height / 2 +5*10]
+      },
+      () => {
+        // Reset state & re-draw.
+        this.jugada()
       }
     )
 
@@ -405,16 +457,16 @@ class ColourWheel extends Component {
     this.ctx.closePath()
   }
 
-  drawPosition (x,y) {
+  changePosition(x,y,player=0) {
     // raf setup.
-    this.ctx.beginPath()
-    this.ctx.fillRect(x,
-      y,
-      100,
-      100)
+    /*this.ctx.beginPath()
+    this.ctx.fillText('PLAYER',x,
+      y)*/
     //this.ctx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
-    this.ctx.stroke()
-    this.ctx.closePath()
+    this.state.positionsX[player]=x
+    this.state.positionsY[player]=y
+    /*this.ctx.stroke()
+    this.ctx.closePath()*/
   }
 
   drawInnerWheel (animationPercentage = 0) {
@@ -548,12 +600,13 @@ class ColourWheel extends Component {
     this.ctx.beginPath()
 
     this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
-    this.state.numPlayers=3
+
     for(var i=0;i<this.state.numPlayers;i++){
+
       this.ctx.fillText(
         'player'+i,
-        width / 2,
-        height / 2 +i*10
+        this.state.positionsX[i],
+        this.state.positionsY[i]
       )
     }
 
@@ -567,13 +620,16 @@ class ColourWheel extends Component {
     const { radius, dynamicCursor } = this.props
 
     return dynamicCursor ? (
-      <canvas
-        id="colour-picker"
-        onClick={this.onCanvasClick}
-        onMouseMove={this.onCanvasHover}
-        width={`${radius * 2}px`}
-        height={`${radius * 2}px`}
-      />
+      <div>
+        <canvas
+          id="colour-picker"
+          onClick={this.onCanvasClick}
+          onMouseMove={this.onCanvasHover}
+          width={`${radius * 2}px`}
+          height={`${radius * 2}px`}
+        />
+        <button>Responder pregunta</button>
+      </div>
     ) : (
       <canvas
         id="colour-picker"
@@ -581,11 +637,13 @@ class ColourWheel extends Component {
         width={`${radius * 2}px`}
         height={`${radius * 2}px`}
       />
+
     )
   }
 }
 
 ColourWheel.propTypes = {
+  numPlayers: PropTypes.number,
   radius: PropTypes.number.isRequired,
   lineWidth: PropTypes.number.isRequired,
   colours: PropTypes.array,

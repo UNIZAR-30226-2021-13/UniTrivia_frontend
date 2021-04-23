@@ -17,6 +17,13 @@ class App extends Component {
     })
   }
 
+  partida = () => {
+    this.colourWheel.partida(() => {
+      // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
+      this.setState({ selectedColour: yourDefaultColour })
+    })
+  }
+
   jugada = () => {
     this.colourWheel.jugada(() => {
       // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
@@ -45,6 +52,7 @@ class App extends Component {
         </div>
 
         <ColourWheel
+
           radius={250}
           padding={10}
           lineWidth={50}
@@ -58,6 +66,7 @@ class App extends Component {
           preset // You can set this bool depending on whether you have a pre-selected colour in state.
           presetColour={this.state.selectedColour}
           animated
+          numPlayers={4}
         />
 
         <div
@@ -70,6 +79,17 @@ class App extends Component {
             marginTop: 20
           }}>
           clear
+        </div>
+        <div
+          onClick={this.partida}
+          style={{
+            cursor: 'pointer',
+            fontSize: 20,
+            fontWeight: '500',
+            color: '#FFFFFF',
+            marginTop: 20
+          }}>
+          Iniciar partida
         </div>
         <div
           onClick={this.jugada}
