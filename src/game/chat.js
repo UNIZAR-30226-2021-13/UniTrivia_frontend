@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Widget, addResponseMessage  } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
-import {setUserSession,getToken,removeUserSession} from "../Utils/Common";
+import {getConn} from "../Utils/Common";
 
 const io = require("socket.io-client");
 const http = require("http");
@@ -14,7 +14,7 @@ const ENDPOINT = "http://localhost:3000/api/partida";
 
 
 function Chat(props){
-    let conn = props.socket;
+    let conn = getConn();
 
     /*let connTest1 = io(ENDPOINT,{
         extraHeaders:{

@@ -4,13 +4,15 @@ import {ArrowBack} from "@material-ui/icons";
 import {green} from "@material-ui/core/colors";
 import {Card, CardContent, Grid} from "@material-ui/core";
 //style={{ color: green[500] }}
+import Chat from "./game/chat";
 import Room from "./game/room";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
+import {getConn} from "./Utils/Common";
 
 
-class Game extends React.Component {
-    render() {
+function Game(props) {
+        let conn = getConn();
         //const classes = useStyles();
 
 
@@ -40,11 +42,14 @@ class Game extends React.Component {
                             </Grid>
                              </CardContent>
                          </Card>
+                        <Chat socket={conn}></Chat>
                     </Grid>
                 </Container>
+
             </Box>
+
         );
-    }
+
 }
 
 

@@ -26,3 +26,13 @@ export const setUserSession = (token, user) => {
 export const setToken = (token) => {
   localStorage.setItem('token', token);
 }
+
+// set the socket io connexion from the session storage
+export const setConn = (conn) => {
+  localStorage.setItem('conn', conn)
+}
+
+// set the socket io connexion from the session storage
+export const getConn = () => {
+  return localStorage.getItem('conn') || null;
+}

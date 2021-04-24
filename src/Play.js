@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getToken, getUser, removeUserSession} from "./Utils/Common";
+import {getToken, getUser, removeUserSession, setConn} from "./Utils/Common";
 import {io,socketIOClient} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 function Play(props) {
     const classes = useStyles();
     let conn = undefined;
+    const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
 
     const code = useFormInput('');
@@ -87,6 +88,7 @@ function Play(props) {
            console.log(conn);
            if(conectado==true){
                console.log("Conectado");
+               setConn(conn);
                props.history.push('/Game');
            }else{
                console.log("no conectado");
@@ -100,8 +102,29 @@ function Play(props) {
     }
 
     const unirseSala = ()=>{
-        let sala = undefined;
-        console.log(code.value);
+        let salaAct = code.value;
+        let conectado = undefined;
+        console.log(salaAct);
+
+        conn = io(ENDPOINT,{
+            extraHeaders:{
+                jwt:getToken(),
+                operacion: "unirseSala",
+                sala: salaAct
+            }
+        });
+
+        conn.on("connect",()=>{
+            conectado=conn.connected;
+            if(conectado==true){
+                console.log("Conectado");
+                setConn(conn);
+                props.history.push('/Game');
+            }else{
+                console.log("no conectado");
+                alert("Fallo al unirse a sala");
+            }
+        })
     }
 
     return (
