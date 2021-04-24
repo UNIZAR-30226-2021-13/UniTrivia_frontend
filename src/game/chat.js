@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Widget, addResponseMessage  } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
-import {getConn} from "../Utils/Common";
+import {conn} from "../Play";
 
 const io = require("socket.io-client");
 const http = require("http");
@@ -14,7 +14,8 @@ const ENDPOINT = "http://localhost:3000/api/partida";
 
 
 function Chat(props){
-    let conn = getConn();
+    console.log("estoy en chat");
+    console.log(conn);
 
     /*let connTest1 = io(ENDPOINT,{
         extraHeaders:{
@@ -24,8 +25,8 @@ function Chat(props){
         }
     });*/
 
-    conn.on('chat', ({user, msg})=>{
-        let msgFull = '(' + user + ')' + msg;
+    conn.on('chat', ({usuario, msg})=>{
+        let msgFull = 'Mensaje de ' + usuario + ': ' + msg;
         addResponseMessage(msgFull);
     })
 
@@ -33,7 +34,7 @@ function Chat(props){
     const handleNewUserMessage = (newMessage) => {
         console.log(`New message incomig! ${newMessage}`);
         // Now send the message throught the backend API
-        conn.emit("mensaje", {newMessage});
+        conn.emit("mensaje", `${newMessage}`);
         //end backend
         //addResponseMessage("que tal");
     }

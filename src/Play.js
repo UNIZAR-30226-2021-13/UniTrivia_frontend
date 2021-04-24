@@ -2,13 +2,15 @@ import React, { useState } from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getToken, getUser, removeUserSession, setConn} from "./Utils/Common";
+import {getToken, getUser, removeUserSession} from "./Utils/Common";
 import {io,socketIOClient} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 
 const ENDPOINT = "http://localhost:3000/api/partida";
+
+export let conn = undefined;
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -60,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Play(props) {
     const classes = useStyles();
-    let conn = undefined;
     const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
 
@@ -88,7 +89,6 @@ function Play(props) {
            console.log(conn);
            if(conectado==true){
                console.log("Conectado");
-               setConn(conn);
                props.history.push('/Game');
            }else{
                console.log("no conectado");
@@ -118,11 +118,58 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
-                setConn(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
                 alert("Fallo al unirse a sala");
+            }
+        })
+    }
+
+    const partidaAleatoria = () =>{
+        let conectado = undefined;
+
+        conn = io(ENDPOINT,{
+            extraHeaders:{
+                jwt:getToken(),
+                operacion: "buscarPartida"
+            }
+        });
+
+        conn.on("connect",()=>{
+            conectado=conn.connected;
+            if(conectado==true){
+                console.log("Conectado");
+                props.history.push('/Game');
+            }else{
+                console.log("no conectado");
+                alert("Fallo al buscar partida aleatoria");
+            }
+        })
+    }
+
+    const reconexion = () =>{
+        console.log(conn);
+        conn = undefined;
+        console.log(conn);
+        let conectado = undefined;
+
+        conn = io(ENDPOINT,{
+            extraHeaders:{
+                jwt:getToken(),
+                operacion: "reconexion"
+            }
+        });
+
+        console.log(conn);
+        conn.on("connect",()=>{
+            conectado=conn.connected;
+            if(conectado==true){
+                console.log("Conectado");
+                props.history.push('/Game');
+            }else{
+                console.log("no conectado");
+                alert("Fallo al reconectar a partida");
             }
         })
     }
@@ -139,7 +186,7 @@ function Play(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    href={'/Sala'}
+                    onClick={partidaAleatoria}
                 >
                     Partida aleatoria
                 </Button>
@@ -217,6 +264,19 @@ function Play(props) {
                 </Modal>
 
             </div>
+
+            <div style={{marginTop: 10}}>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={reconexion}
+                >
+                    Reconectar a partida
+                </Button>
+            </div>
             <div style={{marginTop: 100}}>
                 <Button
                     type="submit"
@@ -251,6 +311,7 @@ const useFormInput = initialValue => {
         onChange: handleChange
     }
 }
+
 
 
 export default Play;

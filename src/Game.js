@@ -8,11 +8,12 @@ import Chat from "./game/chat";
 import Room from "./game/room";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
-import {getConn} from "./Utils/Common";
+import {conn} from "./Play";
 
 
 function Game(props) {
-        let conn = getConn();
+        console.log("Estoy en game");
+        console.log(conn);
         //const classes = useStyles();
 
 
@@ -42,7 +43,7 @@ function Game(props) {
                             </Grid>
                              </CardContent>
                          </Card>
-                        <Chat socket={conn}></Chat>
+                        <Chat></Chat>
                     </Grid>
                 </Container>
 
