@@ -287,12 +287,14 @@ class ColourWheel extends Component {
       () => {
         // Reset state & re-draw.
         //this.initCanvas()
-
         this.drawInnerWheel()
         const num1=Math.floor(Math.random() * 24) + 1;
         const num2 = Math.floor(Math.random() * 24) + 1;
         this.drawOuterWheel(1,[num1,num2])
+        this.drawRadius(0.1)
+        this.drawSpacers()
         this.drawCenterCircle()
+
         //this.drawPosition()
         if (callback) callback()
       }
@@ -302,6 +304,7 @@ class ColourWheel extends Component {
 
 
   partida (callback = false) {
+
     const { radius } = this.props
 
     const height = radius * 2
@@ -328,7 +331,15 @@ class ColourWheel extends Component {
       },
       () => {
         // Reset state & re-draw.
-        this.jugada()
+
+        //this.jugada()
+        this.drawInnerWheel()
+        const num1=Math.floor(Math.random() * 24) + 1;
+        const num2 = Math.floor(Math.random() * 24) + 1;
+        this.drawOuterWheel(1)
+        this.drawRadius()
+        this.drawSpacers()
+        this.drawCenterCircle()
       }
     )
 
@@ -426,19 +437,43 @@ class ColourWheel extends Component {
     this.ctx.shadowColor = 'transparent'
   }
 
-  drawRadius () {
+  drawRadius (opa) {
+    this.drawRad(-27,-90,0,['#ff6400','#ecd700','#0091e2'],opa)
+    this.drawRad(27,90,180,['#ecd700','#ff00e9','#0091e2'],opa)
+    this.drawRad(65,-70,60,['#ff00e9','#008812','#0091e2'],opa)
+    this.drawRad(94,20,120,['#3b3887','#ff00e9','#ff6400'],opa)
+    this.drawRad(-65,70,240,['#ff6400','#3b3887','#008812'],opa)
+    this.drawRad(-94,-20,-60,['#008812','#3b3887','#ff00e9'],opa)
+
+
+
+  }
+
+  drawRad (xs,ys,angle,colors,opa=1) {
     // raf setup.
     const { radius } = this.props
     this.ctx.beginPath()
-    let x = [0, 43, 43, 0, -43, -43]
-    let y = [-50, -25, -25, 50, 25, 25]
-    x.forEach((val, i) => {
+    //65,-70 y 60º
+    //90,27 y 120º
+    //-65,70 y 240
+    //-90,-27 y -60
+    let x = [xs]//-27,27,
+    let y = [ys]//-90,90
+    this.ctx.translate(radius + x[0], radius + y[0]);
+    this.ctx.rotate(angle * Math.PI/180 );
+    this.ctx.translate(-(radius + x[0]),-( radius + y[0]));
+    for (var i=0;i<3;i++){
+      const rgb = colourToRgbObj(colors[i])
+      //this.ctx.rotate(45 * Math.PI / 180);
+      this.ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b},${opa})`
       this.ctx.fillRect(
-        radius + x[i],
-        radius + y[i],
-        40, 40
-      )
-    })
+        radius + x[0],
+        radius + y[0]-50*i,
+        50, 50
+      );
+      this.ctx.stroke()
+
+    }
     /*for(var i=1;i<7;i++){
       const startAngle = (fullCircle) * i + quarterCircle;
       const endAngle =
@@ -453,7 +488,7 @@ class ColourWheel extends Component {
         20,20
       );
     }*/
-    this.ctx.stroke()
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.closePath()
   }
 
@@ -496,7 +531,7 @@ class ColourWheel extends Component {
 
     //this.drawOuterWheel(1);
     //this.drawRadius();
-    this.drawSpacers()
+    //this.drawSpacers()
 
     const rgbShades = produceRgbShades(r, g, b, shades)
 
