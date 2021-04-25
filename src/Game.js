@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import IconButton from "@material-ui/core/IconButton";
 import {ArrowBack} from "@material-ui/icons";
 import {green} from "@material-ui/core/colors";
@@ -10,6 +10,19 @@ import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
 import {conn} from "./Play";
 
+const BackButtonListener = ({children}) => {
+
+    useEffect(() => {
+        window.onpopstate = () => {
+            alert("Acaba de abandonar la partida");
+            window.location.reload(true);
+
+        }
+    })
+
+    return null;
+};
+
 
 function Game(props) {
         console.log("Estoy en game");
@@ -18,7 +31,9 @@ function Game(props) {
 
 
         return (
+
             <Box>
+
                 <Container>
                     <Grid item xs={12}>
                         <Grid container direction="row">
@@ -32,7 +47,7 @@ function Game(props) {
                                    xl={9}
                                    xs={12}>
                                 <div>
-                                    <IconButton color="primary" aria-label="add an alarm" href={'/Play'}>
+                                    <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/Play'}>
                                         <ArrowBack color="primary"/>
                                         Volver
                                     </IconButton>
@@ -46,8 +61,10 @@ function Game(props) {
                         <Chat></Chat>
                     </Grid>
                 </Container>
+                <BackButtonListener/>
 
             </Box>
+
 
         );
 
