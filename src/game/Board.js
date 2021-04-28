@@ -17,6 +17,20 @@ class Board extends Component {
         })
     }
 
+    partidaa = () => {
+        this.colourWheel.partida(() => {
+            // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
+            this.setState({ selectedColour: yourDefaultColour })
+        })
+    }
+
+    jugadaa = () => {
+        this.colourWheel.jugada(() => {
+            // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
+            this.setState({ selectedColour: yourDefaultColour })
+        })
+    }
+
     render () {
         const { selectedColour } = this.state
 
@@ -38,6 +52,7 @@ class Board extends Component {
                 </div>
 
                 <ColourWheel
+
                     radius={250}
                     padding={10}
                     lineWidth={50}
@@ -51,6 +66,7 @@ class Board extends Component {
                     preset // You can set this bool depending on whether you have a pre-selected colour in state.
                     presetColour={this.state.selectedColour}
                     animated
+                    numPlayers={4}
                 />
 
                 <div
@@ -64,9 +80,31 @@ class Board extends Component {
                     }}>
                     clear
                 </div>
+                <div
+                    onClick={this.partidaa}
+                    style={{
+                        cursor: 'pointer',
+                        fontSize: 20,
+                        fontWeight: '500',
+                        color: '#FFFFFF',
+                        marginTop: 20
+                    }}>
+                    Iniciar partida
+                </div>
+                <div
+                    onClick={this.jugadaa}
+                    style={{
+                        cursor: 'pointer',
+                        fontSize: 20,
+                        fontWeight: '500',
+                        color: '#FFFFFF',
+                        marginTop: 20
+                    }}>
+                    tirar dado
+                </div>
             </div>
         )
     }
 }
 
-export default Board;
+export default Board
