@@ -7,8 +7,12 @@ import {Card, CardContent, Grid} from "@material-ui/core";
 import Chat from "./game/chat";
 import Room from "./game/room";
 import Container from "@material-ui/core/Container";
-import Box from "@material-ui/core/Box";
+import {Box, Popover, Typography } from "@material-ui/core";
 import {conn} from "./Play";
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import Button from '@material-ui/core/Button';
+import Quiz from './game/Quiz';
+
 
 const BackButtonListener = ({children}) => {
 
@@ -62,6 +66,36 @@ function Game(props) {
                     </Grid>
                 </Container>
                 <BackButtonListener/>
+                <div>
+                    <PopupState variant="popover" popupId="demo-popup-popover">
+                        {(popupState) => (
+                            <div>
+                                <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={false} >
+                                    Responder Pregunta
+                                </Button>
+                                <Popover
+                                    {...bindPopover(popupState)}
+                                    anchorReference="anchorPosition"
+                                    anchorPosition={{ top: 100, left: 400 }}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                >
+                                    <Box p={2}>
+                                        <Typography>Responda a la pregunta.</Typography>
+                                        <Quiz></Quiz>
+                                    </Box>
+                                </Popover>
+                            </div>
+                        )}
+                    </PopupState>
+
+                </div>
 
             </Box>
 
