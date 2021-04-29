@@ -261,12 +261,13 @@ class ColourWheel extends Component {
 
   innerWheelClicked (evtPos) {
     const rgbaArr = this.ctx.getImageData(evtPos.x, evtPos.y, 1, 1).data
-    const [r, g, b] = rgbaArr
+    const [r, g, b,opac] = rgbaArr
 
     const rgb = { r, g, b }
 
     const rgbArg = convertObjToString(rgb)
     console.log(rgbaArr)
+
 
     console.log(getCasillaNumber(r, g, b))
 
@@ -278,6 +279,19 @@ class ColourWheel extends Component {
         centerCircleOpen: true
       },
       () => {
+        if(opac===255 && this.state.puedoMover===true){
+          this.drawInnerWheel()
+          this.drawOuterWheel(1)
+          this.changePosition(evtPos.x, evtPos.y)
+          this.drawRadius()
+          this.drawSpacers()
+          this.drawCenterCircle()
+          this.state.puedoMover=false;
+
+
+        }else{
+
+        }
       }
     )
   }
@@ -317,7 +331,7 @@ class ColourWheel extends Component {
     this.setState(
       {
         rgb: '#ffffff',
-        innerWheelOpen: false,
+        innerWheelOpen: true,
         centerCircleOpen: false,
         puedoMover: true
       },
