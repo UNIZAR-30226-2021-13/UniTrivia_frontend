@@ -66,7 +66,29 @@ function Play(props) {
     const [modalAbierto ,modalAbiertoState] = useState(false);
 
     const code = useFormInput('');
+    const  config = (conn)=>{
+        /*conn.on("connect", () => {
+            console.assert(conn.conected != true, 'No conectado')
+            conn.emit("obtenerIdSala", (id) => {
+                console.assert(id !== '', 'Error obtener idSala');
+                //sala = id;
+            });
 
+        })*/
+        conn.on('cargarJugadores', (users) => {
+            console.log(users);
+        })/*
+
+        conn.on('comienzoPartida', () => {
+            console.log("Comienza la partida");
+        })*/
+
+
+
+        /*conn.on('disconnect', (reason)=>{
+            console.log('Desconectado: '+ reason);
+        })*/
+    }
     const crearSala = ()=>{
         console.log("comienza crearSala");
         let sala=undefined;
@@ -89,6 +111,7 @@ function Play(props) {
            console.log(conn);
            if(conectado==true){
                console.log("Conectado");
+               //config(conn);
                props.history.push('/Game');
            }else{
                console.log("no conectado");
@@ -118,6 +141,7 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
+                config(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
