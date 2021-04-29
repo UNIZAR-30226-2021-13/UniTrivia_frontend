@@ -10,7 +10,8 @@ const yourDefaultColour = 'rgb(255, 255, 255)'
 
 class App extends Component {
   state = {
-    selectedColour: yourDefaultColour
+    selectedColour: yourDefaultColour,
+    num: 0
   }
 
   clearColourWheel = () => {
@@ -20,26 +21,29 @@ class App extends Component {
     })
   }
 
-  partida = () => {
-    this.colourWheel.partida(() => {
+  iniciarPartida = () => {
+    this.colourWheel.iniciarPartida(() => {
       // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
       this.setState({ selectedColour: yourDefaultColour })
     })
   }
 
   jugada = () => {
-    this.colourWheel.jugada(() => {
+    let numero=this.state.num
+    console.log('num'+this.state.num)
+    this.colourWheel.jugada(numero,() => {
       // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
       this.setState({ selectedColour: yourDefaultColour })
     })
   }
-  num
+
 
   render () {
     const { selectedColour } = this.state
 
     function rollDoneCallback (num) {
       console.log(`You rolled a ${num}`)
+      this.state.num=num
     }
 
 
@@ -60,7 +64,7 @@ class App extends Component {
         </div>
 
         <ColourWheel
-
+          playerName={['jugador1','jugador2','jugador3','jugador4']}
           radius={250}
           padding={10}
           lineWidth={50}
@@ -89,7 +93,7 @@ class App extends Component {
           clear
         </div>
         <div
-          onClick={this.partida}
+          onClick={this.iniciarPartida}
           style={{
             cursor: 'pointer',
             fontSize: 20,

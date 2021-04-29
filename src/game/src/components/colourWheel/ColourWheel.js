@@ -41,7 +41,9 @@ class ColourWheel extends Component {
       centerCircleOpen: false,
       numPlayers: 0,
       positionsX: [50,50,50,50,50,50],
-      positionsY: [50,60,70,80,90,100]
+      positionsY: [50,60,70,80,90,100],
+      puedoMover: false,
+      playerName: ['1','2','3','4','5','6']
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -121,7 +123,7 @@ class ColourWheel extends Component {
     // Defining our bounds-objects, exposes a .inside(e) -> boolean method:
     this.outerWheelBounds = calculateBounds(radius - lineWidth, radius)
     this.innerWheelBounds = calculateBounds(
-      this.innerWheelRadius - lineWidth,
+      this.innerWheelRadius - this.centerCircleRadius,
       this.innerWheelRadius
     )
     this.centerCircleBounds = calculateBounds(0, this.centerCircleRadius)
@@ -229,20 +231,25 @@ class ColourWheel extends Component {
     console.log(colours[7])
     console.log(convertObjToString(colours[7]))
     console.log(evtPos.x)
+    console.log(this.state.puedoMover)
     this.setState(
       {
         rgb,
         innerWheelOpen: true,
-        centerCircleOpen: true
+        centerCircleOpen: true,
+
       },
       () => {
 
 
-        if(opac===255){
+        if(opac===255 && this.state.puedoMover===true){
           this.drawInnerWheel()
           this.drawOuterWheel(opa)
           this.changePosition(evtPos.x, evtPos.y)
+          this.drawRadius()
+          this.drawSpacers()
           this.drawCenterCircle()
+          this.state.puedoMover=false;
 
 
         }else{
@@ -259,6 +266,9 @@ class ColourWheel extends Component {
     const rgb = { r, g, b }
 
     const rgbArg = convertObjToString(rgb)
+    console.log(rgbaArr)
+
+    console.log(getCasillaNumber(r, g, b))
 
     this.props.onColourSelected(rgbArg)
 
@@ -268,7 +278,6 @@ class ColourWheel extends Component {
         centerCircleOpen: true
       },
       () => {
-        this.drawCenterCircle()
       }
     )
   }
@@ -289,24 +298,37 @@ class ColourWheel extends Component {
     )
   }
 
+  dibujarTablero(casillasMarcadas=[]){
 
-  jugada (callback = false) {
+    // Reset state & re-draw.
+    //this.initCanvas()
+
+    this.drawInnerWheel()
+    const num1=Math.floor(Math.random() * 24) + 1;
+    const num2 = Math.floor(Math.random() * 24) + 1;
+
+    this.drawOuterWheel(1,casillasMarcadas)
+    this.drawRadius(0.1,casillasMarcadas)
+    this.drawSpacers()
+    this.drawCenterCircle()
+  }
+
+  jugada (dado,callback = false) {
     this.setState(
       {
         rgb: '#ffffff',
         innerWheelOpen: false,
-        centerCircleOpen: false
+        centerCircleOpen: false,
+        puedoMover: true
       },
       () => {
-        // Reset state & re-draw.
-        //this.initCanvas()
-        this.drawInnerWheel()
-        const num1=Math.floor(Math.random() * 24) + 1;
-        const num2 = Math.floor(Math.random() * 24) + 1;
-        this.drawOuterWheel(1,[num1,num2])
-        this.drawRadius(0.1)
-        this.drawSpacers()
-        this.drawCenterCircle()
+        console.log(dado)
+        /*
+        tirar dado
+        socket.emit('posibles jugadas',()=>{})
+         */
+        //dibujar tablero
+        this.dibujarTablero([10,101,82])
 
         //this.drawPosition()
         if (callback) callback()
@@ -315,8 +337,16 @@ class ColourWheel extends Component {
 
   }
 
+  inicializarTablero(){
+    this.drawInnerWheel()//borrar lo anterior
+    this.drawOuterWheel(1)//dibujar rueda
+    this.drawRadius()//dibujar radios
+    this.drawSpacers()//dibujar spacer
+    this.drawCenterCircle()//dibujar circulo central con los jugadores
+  }
 
-  partida (callback = false) {
+
+  iniciarPartida (callback = false) {
 
     const { radius } = this.props
 
@@ -340,19 +370,21 @@ class ColourWheel extends Component {
           height / 2 +2*10,
           height / 2 +3*10,
           height / 2 +4*10,
-          height / 2 +5*10]
+          height / 2 +5*10],
+        playerName: [this.props.playerName[0],
+          this.props.playerName[1],
+          this.props.playerName[2],
+          this.props.playerName[3],
+          this.props.playerName[4],
+          this.props.playerName[5],
+          ]
+
+
       },
       () => {
         // Reset state & re-draw.
 
-        //this.jugada()
-        this.drawInnerWheel()
-        const num1=Math.floor(Math.random() * 24) + 1;
-        const num2 = Math.floor(Math.random() * 24) + 1;
-        this.drawOuterWheel(1)
-        this.drawRadius()
-        this.drawSpacers()
-        this.drawCenterCircle()
+       this.inicializarTablero()
       }
     )
 
@@ -375,6 +407,7 @@ class ColourWheel extends Component {
     const rgbArr = colours.map((colour) => colourToRgbObj(colour))
 
     rgbArr.forEach((rgb, i) => {
+
       this.ctx.beginPath()
 
       // Creates strokes 1 / rgbArr.length of the circle circumference.
@@ -397,7 +430,7 @@ class ColourWheel extends Component {
         //console.log(casillasMarcadas)
         //console.log(25% 24)
         casillasMarcadas.forEach((val, j) => {
-              if (i === (val+6)%24) {
+              if (getCasillaNumber(rgb.r, rgb.g, rgb.b) === (val)) {
                 op = 1
               }
 
@@ -453,19 +486,19 @@ class ColourWheel extends Component {
     this.ctx.shadowColor = 'transparent'
   }
 
-  drawRadius (opa) {
-    this.drawRad(-27,-90,0,['#ff6400','#ecd700','#0091e2'],opa)
-    this.drawRad(27,90,180,['#ecd700','#ff00e9','#0091e2'],opa)
-    this.drawRad(65,-70,60,['#ff00e9','#008812','#0091e2'],opa)
-    this.drawRad(94,20,120,['#3b3887','#ff00e9','#ff6400'],opa)
-    this.drawRad(-65,70,240,['#ff6400','#3b3887','#008812'],opa)
-    this.drawRad(-94,-20,-60,['#008812','#3b3887','#ff00e9'],opa)
+  drawRadius (opa,casillasMarcadas=[]) {
+    this.drawRad(-27,-90,0,['#ff6403','#ecd703','#0091df'],opa,casillasMarcadas)//radio 0
+    this.drawRad(27,90,180,['#ecd704','#ff00ec','#0091de'],opa,casillasMarcadas)//radio 3
+    this.drawRad(65,-70,60,['#ff00ed','#008810','#0091dd'],opa,casillasMarcadas)//radio 1
+    this.drawRad(94,20,120,['#3b3884','#ff00ee','#ff6404'],opa,casillasMarcadas)//radio 2
+    this.drawRad(-65,70,240,['#ff6405','#3b3883','#00880f'],opa,casillasMarcadas)//radio 4
+    this.drawRad(-94,-20,-60,['#00880e','#3b3882','#ff00ef'],opa,casillasMarcadas)//radio 5
 
 
 
   }
 
-  drawRad (xs,ys,angle,colors,opa=1) {
+  drawRad (xs,ys,angle,colors,opa=1,casillasMarcadas=[]) {
     // raf setup.
     const { radius } = this.props
     this.ctx.beginPath()
@@ -480,8 +513,25 @@ class ColourWheel extends Component {
     this.ctx.translate(-(radius + x[0]),-( radius + y[0]));
     for (var i=0;i<3;i++){
       const rgb = colourToRgbObj(colors[i])
+      if (casillasMarcadas.length != 0) {
+        let marcada=0
+        casillasMarcadas.forEach((val, j) => {
+          if (getCasillaNumber(rgb.r, rgb.g, rgb.b) === (val)) {
+            this.ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b},${1})`
+            marcada=1
+          }
+        })
+        if(marcada!=1){
+          this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${0.1})`
+
+        }
+      }else{
+        this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
+
+      }
+
       //this.ctx.rotate(45 * Math.PI / 180);
-      this.ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b},${opa})`
+      //this.ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b},${opa})`
       this.ctx.fillRect(
         radius + x[0],
         radius + y[0]-50*i,
@@ -655,7 +705,7 @@ class ColourWheel extends Component {
     for(var i=0;i<this.state.numPlayers;i++){
 
       this.ctx.fillText(
-        'player'+i,
+        this.state.playerName[i],
         this.state.positionsX[i],
         this.state.positionsY[i]
       )
