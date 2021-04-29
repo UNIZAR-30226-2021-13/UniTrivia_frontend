@@ -33,6 +33,10 @@ function Game(props) {
         console.log(conn);
         //const classes = useStyles();
 
+    function handleResponseFromQuiz(response){
+        console.log(response);
+    }
+
 
         return (
 
@@ -88,7 +92,7 @@ function Game(props) {
                                 >
                                     <Box p={2}>
                                         <Typography>Responda a la pregunta.</Typography>
-                                        <Quiz></Quiz>
+                                        <Quiz  onResponse={handleResponseFromQuiz.bind()}></Quiz>
                                     </Box>
                                 </Popover>
                             </div>
