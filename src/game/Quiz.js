@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
-//import GameOver from './GameOver';
+import GameOver from './GameOver';
+
 
 const QuizWindow = styled.div`
     text-align: center;
@@ -47,7 +47,11 @@ const Question = styled.div`
     margin: 0 auto;
 `;
 
-const Quiz = () => {
+function Quiz(props) {
+
+    let question = "preguntita brother"; //se sacaría de props
+    let incorrect_answers = ["inc1", "inc2", "inc3"]; //se sacaría de props
+    let correct_answer = "correct"; //se sacaría de props
 
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
@@ -59,27 +63,32 @@ const Quiz = () => {
 
         let userAnswer = e.target.outerText;
 
-        if (quiz[number].answer === userAnswer) setPts(pts + 1);
+        if (quiz[number].answer === userAnswer){
+            setPts(pts + 1);
+            props.onResponse(1);
+        }else{
+            props.onResponse(0);
+        }
         setNumber(number + 1);
+
     }
 
     useEffect(() => {
 
-        axios.get('https://opentdb.com/api.php?amount=5&category=18&difficulty=easy&type=multiple')
-            .then(res => {
-                setQuiz(res.data.results.map(item => (
 
-                    {
-                        question: item.question,
-                        options: shuffle([...item.incorrect_answers, item.correct_answer]),
-                        answer: item.correct_answer
-                    }
+        let pregunta_global = {
+            question: question,
+            options: shuffle([...incorrect_answers, correct_answer]),
+            answer: correct_answer
+        }
+        setQuiz([pregunta_global]);
 
-                )));
-            })
-            .catch(err => console.error(err))
+
 
     }, []);
+
+
+
 
 
     return (
@@ -96,6 +105,10 @@ const Quiz = () => {
                 </Options>
             </>
 
+            }
+            {
+
+                number === 1 && <GameOver pts={pts}/>
             }
 
         </QuizWindow>
