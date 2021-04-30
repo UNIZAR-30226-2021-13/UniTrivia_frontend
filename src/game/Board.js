@@ -2,12 +2,16 @@ import React, { Component } from 'react'
 
 // react-colour-wheel:
 import ColourWheel from './src/components/colourWheel/ColourWheel'
+import ReactDice from 'react-dice-complete'
+import 'react-dice-complete/dist/react-dice-complete.css'
+import Button from '@material-ui/core/Button'
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
 class Board extends Component {
     state = {
-        selectedColour: yourDefaultColour
+        selectedColour: yourDefaultColour,
+        num: 0
     }
 
     clearColourWheel = () => {
@@ -17,22 +21,33 @@ class Board extends Component {
         })
     }
 
-    partidaa = () => {
-        this.colourWheel.partida(() => {
+    iniciarPartida = () => {
+        this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
     }
 
-    jugadaa = () => {
-        this.colourWheel.jugada(() => {
+    jugada = () => {
+        let numero=this.state.num
+        console.log('num'+this.state.num)
+        this.colourWheel.jugada(numero,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
     }
+
+
+
 
     render () {
         const { selectedColour } = this.state
+
+        function rollDoneCallback (num) {
+            console.log(`You rolled a ${num}`)
+            this.state.num=num
+        }
+
 
         return (
             <div
@@ -47,12 +62,11 @@ class Board extends Component {
                 }}
             >
                 <div style={{ textAlign: 'center', color: '#FFFFFF' }}>
-                    <h1><span>react-colour-wheel</span></h1>
-                    <h2><span style={{ color: selectedColour }}>{selectedColour}</span></h2>
+                    <h1><span>UniTrivia</span></h1>
                 </div>
 
                 <ColourWheel
-
+                    playerName={['jugador1','jugador2','jugador3','jugador4']}
                     radius={250}
                     padding={10}
                     lineWidth={50}
@@ -81,7 +95,7 @@ class Board extends Component {
                     clear
                 </div>
                 <div
-                    onClick={this.partidaa}
+                    onClick={this.iniciarPartida}
                     style={{
                         cursor: 'pointer',
                         fontSize: 20,
@@ -92,7 +106,7 @@ class Board extends Component {
                     Iniciar partida
                 </div>
                 <div
-                    onClick={this.jugadaa}
+                    onClick={this.jugada}
                     style={{
                         cursor: 'pointer',
                         fontSize: 20,
@@ -101,7 +115,18 @@ class Board extends Component {
                         marginTop: 20
                     }}>
                     tirar dado
+                    <ReactDice
+                        numDice={1}
+                        rollDone={rollDoneCallback}
+                        ref={dice => this.reactDice = dice}
+                        outline={true}
+                        faceColor={'white'}
+                        dotColor={'black'}
+                        rollTime={0.1}
+                    />
+
                 </div>
+
             </div>
         )
     }
