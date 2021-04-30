@@ -342,7 +342,10 @@ class ColourWheel extends Component {
         socket.emit('posibles jugadas',()=>{})
          */
         //dibujar tablero
-        this.dibujarTablero([10,101,82])
+        if(this.state.puedoMover){//si es mi turno
+          this.dibujarTablero([10,101,82])
+        }
+
 
         //this.drawPosition()
         if (callback) callback()
@@ -350,6 +353,8 @@ class ColourWheel extends Component {
     )
 
   }
+
+
 
   inicializarTablero(){
     this.drawInnerWheel()//borrar lo anterior
