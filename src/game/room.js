@@ -92,6 +92,34 @@ function Room(props) {
         //setJugadores([...users.jugadores]);
         setJugadores(users.jugadores);
     })
+    conn.on('abandonoSala',(user)=>{
+        console.log("Entramos en abandono de sala "+jugadores);
+        var arrayJugadores=jugadores;
+        var indexUser=arrayJugadores.indexOf(user);
+        if(indexUser>-1){//no ha dado error
+            console.log("Hemos sacado el index del jugador que abandona");
+            arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+            setJugadores(arrayJugadores);
+        }else{
+            console.log("ha dado error el indexOf");
+            setJugadores(arrayJugadores);
+        }
+    })
+    conn.on('cambioLider',({antiguo,nuevo})=>{
+        console.log("Antiguo lider: "+antiguo+ " nuevo: "+nuevo);
+        var arrayJugadores=jugadores;
+        var indexUser=arrayJugadores.indexOf(antiguo);
+        if(indexUser>-1){//no ha dado error
+            console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
+            arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+            setJugadores(arrayJugadores);
+            setAdmin(nuevo);
+        }else{
+            console.log("ha dado error el indexOf");
+
+        }
+    })
+
     const empezarPartida=()=>{}
     const listarJugadores = () => {
         const listJugadores = jugadores.map((jugador)=>
