@@ -7,14 +7,45 @@ import {getToken} from "../Utils/Common";
 import {conn} from "../Play";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import {makeStyles} from "@material-ui/core/styles";
 
 const io = require("socket.io-client");
 const http = require("http");
 
 const ENDPOINT = "http://localhost:3000/api/partida";
-
+const useStyles = makeStyles((theme) => ({
+    root: {
+        height: '100vh',
+    },
+    image: {
+        backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
+        backgroundRepeat: 'no-repeat',
+        backgroundColor:
+            theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
+    paper: {
+        margin: theme.spacing(8, 4),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+}));
 
 function Room(props) {
+    const classes = useStyles();
     let [jugadores,setJugadores] = useState([]);
     let [codigoSala,setCodigoSala] = useState(null);
     let [username,setUsername]=useState("");
@@ -61,7 +92,7 @@ function Room(props) {
         //setJugadores([...users.jugadores]);
         setJugadores(users.jugadores);
     })
-
+    const empezarPartida=()=>{}
     const listarJugadores = () => {
         const listJugadores = jugadores.map((jugador)=>
             <li key="{jugador}">{jugador}</li>
@@ -85,8 +116,22 @@ function Room(props) {
             <h6>El codigo de la sala es {codigoSala}</h6>
         )
     }
-    const botonEmpezar = (newMessage) => {
-
+    const botonEmpezar = () => {
+        console.log("Estoy en boton: username: "+username+"  y admin  "+admin);
+        if(username===admin){
+            return(
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={empezarPartida}
+                >
+                    Partida aleatoria
+                </Button>
+            )
+        }
     }
     return (
         <div>
@@ -98,6 +143,9 @@ function Room(props) {
             </div>
             <div>
                 {devolverCodigoSala()}
+            </div>
+            <div>
+                {botonEmpezar()}
             </div>
         </div>
 
