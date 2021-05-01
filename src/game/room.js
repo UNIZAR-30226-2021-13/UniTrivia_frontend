@@ -128,7 +128,7 @@ function Room(props) {
                     className={classes.submit}
                     onClick={empezarPartida}
                 >
-                    Partida aleatoria
+                    Empezar Partida
                 </Button>
             )
         }
