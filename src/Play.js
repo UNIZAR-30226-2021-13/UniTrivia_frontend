@@ -7,6 +7,7 @@ import {io,socketIOClient} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
 
 const ENDPOINT = "http://localhost:3000/api/partida";
 
@@ -64,29 +65,12 @@ function Play(props) {
     const classes = useStyles();
     const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
-
+    const [username,setUsername]=useState(null);
     const code = useFormInput('');
-    const  config = (conn)=>{
-        /*conn.on("connect", () => {
-            console.assert(conn.conected != true, 'No conectado')
-            conn.emit("obtenerIdSala", (id) => {
-                console.assert(id !== '', 'Error obtener idSala');
-                //sala = id;
-            });
 
-        })*/
-        conn.on('cargarJugadores', (users) => {
+    const  configUnirseYRandom = (conn)=>{
+        /*conn.on('cargarJugadores', (users) => {
             console.log(users);
-        })/*
-
-        conn.on('comienzoPartida', () => {
-            console.log("Comienza la partida");
-        })*/
-
-
-
-        /*conn.on('disconnect', (reason)=>{
-            console.log('Desconectado: '+ reason);
         })*/
     }
     const crearSala = ()=>{
@@ -111,7 +95,6 @@ function Play(props) {
            console.log(conn);
            if(conectado==true){
                console.log("Conectado");
-               //config(conn);
                props.history.push('/Game');
            }else{
                console.log("no conectado");
@@ -141,7 +124,7 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
-                config(conn);
+                configUnirseYRandom(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
@@ -164,6 +147,7 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
+                configUnirseYRandom(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
