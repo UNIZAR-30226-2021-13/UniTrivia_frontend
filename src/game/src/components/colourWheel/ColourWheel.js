@@ -25,7 +25,7 @@ import {
 } from '../../utils/utils'
 import hexStrings from '../../utils/hexStrings'
 import { Box, Popover, Typography } from '@material-ui/core'
-
+import {conn} from '../../../../Play'
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
@@ -43,7 +43,8 @@ class ColourWheel extends Component {
       positionsX: [50,50,50,50,50,50],
       positionsY: [50,60,70,80,90,100],
       puedoMover: false,
-      playerName: ['1','2','3','4','5','6']
+      playerName: ['1','2','3','4','5','6'],
+      dado: 0
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -149,10 +150,11 @@ class ColourWheel extends Component {
       const rgb = colourToRgbObj(this.props.presetColour)
 
       this.setState({ rgb }, () => {
-        this.drawOuterWheel(1,[12,13])
-        //this.drawInnerWheel()
-        this.drawCenterCircle()
-        this.drawSpacers()
+        this.drawInnerWheel()//borrar lo anterior
+        this.drawOuterWheel(1)//dibujar rueda
+        this.drawRadius()//dibujar radios
+        this.drawSpacers()//dibujar spacer
+        this.drawCenterCircle()//dibujar circulo central con los jugadores
       })
     } else {
       this.drawOuterWheel(1)
@@ -333,24 +335,49 @@ class ColourWheel extends Component {
         rgb: '#ffffff',
         innerWheelOpen: true,
         centerCircleOpen: false,
-        puedoMover: true
+
       },
       () => {
-        console.log(dado)
-        /*
-        tirar dado
-        socket.emit('posibles jugadas',()=>{})
-         */
         //dibujar tablero
-        if(this.state.puedoMover){//si es mi turno
-          this.dibujarTablero([10,101,82])
-        }
-
-
         //this.drawPosition()
+
         if (callback) callback()
       }
     )
+    console.log('dado'+dado)
+    /*
+    tirar dado
+    conn.emit('posibles jugadas',(data)=>{
+
+    })
+     */
+
+    conn.emit("posiblesJugadas", dado, (res)=>{
+      console.log("Posibles jugadas con dado: " + dado.toString());
+      console.log(res['res']);
+      console.log(res['info']);
+      if(res['res']!='err'){
+        if(res['info']==="No es el turno."){
+          console.log('no turno')
+          this.state.puedoMover=false;
+        }else{
+          this.state.puedoMover=true;
+        }
+        console.log(res['info'].length);
+        console.log(res['info'][0]);
+        let casillas=[];
+        for(var i=0;i<res['info'].length;i++){
+
+          casillas[i]=res['info'][i].casilla.num
+        }
+        console.log(casillas[0])
+        if(this.state.puedoMover){//si es mi turno
+          this.dibujarTablero(casillas)
+        }
+      }
+
+    })
+
 
   }
 
@@ -404,6 +431,10 @@ class ColourWheel extends Component {
         // Reset state & re-draw.
 
        this.inicializarTablero()
+        conn.emit("comenzarPartida", (res)=>{
+          console.log(res)
+          console.log("Al comenzar partida: " + res.res + " " + res.info);
+        });
       }
     )
 

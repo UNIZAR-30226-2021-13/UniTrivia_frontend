@@ -11,7 +11,7 @@ const yourDefaultColour = 'rgb(255, 255, 255)'
 class Board extends Component {
     state = {
         selectedColour: yourDefaultColour,
-        num: 0
+        dado: 0
     }
 
     clearColourWheel = () => {
@@ -29,24 +29,28 @@ class Board extends Component {
     }
 
     jugada = () => {
-        let numero=this.state.num
-        console.log('num'+this.state.num)
-        this.colourWheel.jugada(numero,() => {
+        let dado=this.state.dado
+        console.log('num'+this.state.dado)
+        this.colourWheel.jugada(dado,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
     }
 
+    rollDoneCallback =(num) =>{
+        console.log(`You rolled a ${num}`)
+        //this.state.dado={num}
+        this.setState({dado: num})
+        console.log(`sacaste un `+this.state.dado)
+        this.jugada()
 
 
+    }
 
     render () {
         const { selectedColour } = this.state
 
-        function rollDoneCallback (num) {
-            console.log(`You rolled a ${num}`)
-            this.state.num=num
-        }
+
 
 
         return (
@@ -106,7 +110,6 @@ class Board extends Component {
                     Iniciar partida
                 </div>
                 <div
-                    onClick={this.jugada}
                     style={{
                         cursor: 'pointer',
                         fontSize: 20,
@@ -117,7 +120,7 @@ class Board extends Component {
                     tirar dado
                     <ReactDice
                         numDice={1}
-                        rollDone={rollDoneCallback}
+                        rollDone={this.rollDoneCallback}
                         ref={dice => this.reactDice = dice}
                         outline={true}
                         faceColor={'white'}
