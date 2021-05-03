@@ -119,8 +119,12 @@ function Room(props) {
 
         }
     })
+    const quesitos=()=>{
+        conn.on('estadoPartida',(info)=>{
+            console.log(info);
+        })
+    }
 
-    const empezarPartida=()=>{}
     const listarJugadores = () => {
         const listJugadores = jugadores.map((jugador)=>
             <li key="{jugador}">{jugador}</li>
@@ -143,6 +147,11 @@ function Room(props) {
         return (
             <h6>El codigo de la sala es {codigoSala}</h6>
         )
+    }
+    const empezarPartida=()=>{
+        conn.on('comienzoPartida',()=>{
+            console.log("Comienza la partida");
+        })
     }
     const botonEmpezar = () => {
         console.log("Estoy en boton: username: "+username+"  y admin  "+admin);
@@ -168,6 +177,7 @@ function Room(props) {
             </div>
             <div>
                 {listarJugadores()}
+                {quesitos()}
             </div>
             <div>
                 {devolverCodigoSala()}
