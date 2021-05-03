@@ -66,14 +66,14 @@ function Play(props) {
     const [modalAbierto ,modalAbiertoState] = useState(false);
 
     const code = useFormInput('');
-
+    console.log(getToken())
     const crearSala = ()=>{
         console.log("comienza crearSala");
         let sala=undefined;
         let conectado=false;
         conn = io(ENDPOINT,{
             extraHeaders:{
-                jwt:getToken(),
+                jwt: getToken(),
                 operacion: "crearSala",
                 priv:"true"
             }

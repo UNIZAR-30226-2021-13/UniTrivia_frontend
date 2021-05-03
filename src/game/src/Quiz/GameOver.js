@@ -4,26 +4,35 @@ import Button from '@material-ui/core/Button';
 
 
 const Title = styled.h1`
-    margin-top: 4em;
-    font-size: 48px;
+  margin-top: 4em;
+  font-size: 48px;
 `;
 
 const Points = styled.p`
-    font-size: 24px;
-    margin-bottom: 3em;
+  font-size: 24px;
+  margin-bottom: 3em;
 `;
 
-const GameOver = ({pts}) => {
+function GameOver(props){
+    let pts = props.pts;
+    let estado;
+    if(pts === 1){
+        estado = "CORRECTA";
+    }else{
+        estado = "INCORRECTA";
+    }
 
-  const refreshPage = () => window.location.reload();
 
-  return (
-    <>
-      <Title>Game Over</Title>
-      <Points>You did {pts} out of 5!</Points>
-      <Button onClick={refreshPage}>Retry</Button>
-    </>
-  )
+
+    return (
+        <>
+            <Title>Resultado</Title>
+            <Points>Respuesta {estado}</Points>
+
+
+        </>
+
+    )
 }
 
 export default GameOver

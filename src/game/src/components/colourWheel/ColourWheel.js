@@ -1,7 +1,7 @@
 // NOTES:
 // -- Array-destructuring assignment won't work w vanilla ie11; needs babel-polyfill lol
 
-import React, { Component } from 'react'
+import React, {Component, useState} from 'react'
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -44,7 +44,9 @@ class ColourWheel extends Component {
       positionsY: [50,60,70,80,90,100],
       puedoMover: false,
       playerName: ['1','2','3','4','5','6'],
-      dado: 0
+      dado: 0,
+      quienSoy: 0,
+      posiblesJugadas: null
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -259,6 +261,41 @@ class ColourWheel extends Component {
         }
       }
     )
+
+
+      return(
+          <div>
+            <PopupState variant="popover" popupId="demo-popup-popover">
+              {(popupState) => (
+                  <div>
+                    <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={false} >
+                      Responder Pregunta
+                    </Button>
+                    <Popover
+                        {...bindPopover(popupState)}
+                        anchorReference="anchorPosition"
+                        anchorPosition={{ top: 100, left: 400 }}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'center',
+                        }}
+                    >
+                      <Box p={2}>
+                        <Typography>Responda a la pregunta.</Typography>
+                        <Quiz  ></Quiz>
+                      </Box>
+                    </Popover>
+                  </div>
+              )}
+            </PopupState>
+          </div>
+      )
+
+
   }
 
   innerWheelClicked (evtPos) {
@@ -356,6 +393,8 @@ class ColourWheel extends Component {
       console.log("Posibles jugadas con dado: " + dado.toString());
       console.log(res['res']);
       console.log(res['info']);
+      this.state.posiblesJugadas=res['info'];
+      console.log(this.state.posiblesJugadas);
       if(res['res']!='err'){
         if(res['info']==="No es el turno."){
           console.log('no turno')
@@ -767,9 +806,15 @@ class ColourWheel extends Component {
     this.ctx.closePath()
   }
 
+  getPregunta(){
+    return this.state.posiblesJugadas
+  }
 
 
   render () {
+    function handleResponseFromQuiz(response){
+      console.log(response);
+    }
 
 
     const { radius, dynamicCursor } = this.props
@@ -788,29 +833,29 @@ class ColourWheel extends Component {
         <div>
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState) => (
-              <div>
-                <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={this.pregunta} >
-                  Responder Pregunta
-                </Button>
-                <Popover
-                  {...bindPopover(popupState)}
-                  anchorReference="anchorPosition"
-                  anchorPosition={{ top: 100, left: 400 }}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                  transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                  }}
-                >
-                  <Box p={2}>
-                    <Typography>The content of the Popover.</Typography>
-                    <Quiz></Quiz>
-                  </Box>
-                </Popover>
-              </div>
+                <div>
+                  <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={false} >
+                    Responder Pregunta
+                  </Button>
+                  <Popover
+                      {...bindPopover(popupState)}
+                      anchorReference="anchorPosition"
+                      anchorPosition={{ top: 100, left: 400 }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                  >
+                    <Box p={2}>
+                      <Typography>Responda a la pregunta.</Typography>
+                      <Quiz pregunta={this.getPregunta()} onResponse={handleResponseFromQuiz.bind()}></Quiz>
+                    </Box>
+                  </Popover>
+                </div>
             )}
           </PopupState>
 

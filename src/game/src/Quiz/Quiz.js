@@ -1,107 +1,118 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import axios from 'axios'
 import GameOver from './GameOver';
 
+
 const QuizWindow = styled.div`
-    text-align: center;
-    font-size: clamp(20px, 2.5vw, 24px);
-    margin-top: 10vh;
+  text-align: center;
+  font-size: clamp(20px, 2.5vw, 24px);
+  margin-top: 10vh;
 `;
 
 const Options = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 70%;
-    margin: 2em auto;
-    @media screen and (min-width: 1180px) {
-        width: 50%;
-    }
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin: 2em auto;
+  @media screen and (min-width: 1180px) {
+    width: 50%;
+  }
 `;
 
 const Option = styled.button`
-    display: block;
-    border: 1px solid #616A94;
-    border-radius: 15px;
-    padding: 15px 30px;
-    text-decoration: none;
-    color: #616A94;
-    background-color: #161A31;
-    transition: 0.3s;
-    font-size: 1em;
-    outline: none;
-    user-select: none;
-    margin-top: 1em;
-    cursor: pointer;
-    
-    @media screen and (min-width: 1180px) {
-        &:hover {
-            color: white;
-            background-color: #616A94;
-        }
+  display: block;
+  border: 1px solid #616A94;
+  border-radius: 15px;
+  padding: 15px 30px;
+  text-decoration: none;
+  color: #616A94;
+  background-color: #161A31;
+  transition: 0.3s;
+  font-size: 1em;
+  outline: none;
+  user-select: none;
+  margin-top: 1em;
+  cursor: pointer;
+
+  @media screen and (min-width: 1180px) {
+    &:hover {
+      color: white;
+      background-color: #616A94;
     }
+  }
 `;
 
 const Question = styled.div`
-    width: 70%;
-    margin: 0 auto;
+  width: 70%;
+  margin: 0 auto;
 `;
 
-const Quiz = () => {
+function Quiz(props) {
 
-  const [quiz, setQuiz] = useState([]);
-  const [number, setNumber] = useState(0);
-  const [pts, setPts] = useState(0);
+    let question = props.pregunta[0].casilla.num; //se sacaría de props  pregunta.pregunta
+    let incorrect_answers = ["inc1", "inc2", "inc3"]; //se sacaría de props
+    let correct_answer = "correct"; //se sacaría de props
 
-  const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+    const [quiz, setQuiz] = useState([]);
+    const [number, setNumber] = useState(0);
+    const [pts, setPts] = useState(0);
 
-  const pickAnswer = (e) => {
+    const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-    let userAnswer = e.target.outerText;
+    const pickAnswer = (e) => {
 
-    if (quiz[number].answer === userAnswer) setPts(pts + 1);
-    setNumber(number + 1);
-  }
+        let userAnswer = e.target.outerText;
 
-  useEffect(() => {
+        if (quiz[number].answer === userAnswer){
+            setPts(pts + 1);
+            props.onResponse(1);
+        }else{
+            props.onResponse(0);
+        }
+        setNumber(number + 1);
 
-    axios.get('https://opentdb.com/api.php?amount=5&category=18&difficulty=easy&type=multiple')
-      .then(res => {
-        setQuiz(res.data.results.map(item => (
+    }
 
-          {
-            question: item.question,
-            options: shuffle([...item.incorrect_answers, item.correct_answer]),
-            answer: item.correct_answer
-          }
-
-        )));
-      })
-      .catch(err => console.error(err))
-
-  }, []);
+    useEffect(() => {
 
 
-  return (
-    <QuizWindow>
-      { quiz[number] &&
+        let pregunta_global = {
+            question: question,
+            options: shuffle([...incorrect_answers, correct_answer]),
+            answer: correct_answer
+        }
+        setQuiz([pregunta_global]);
 
-      <>
-        <Question dangerouslySetInnerHTML={{ __html: quiz[number].question }}></Question>
 
-        <Options>
-          {quiz[number].options.map((item, index) => (
-            <Option key={index} dangerouslySetInnerHTML={{ __html: item }} onClick={pickAnswer}></Option>
-          ))}
-        </Options>
-      </>
 
-      }
-      {
-        number === 5 && <GameOver pts={pts} />
-      }
-    </QuizWindow>
-  )
+    }, []);
+
+
+
+
+
+    return (
+        <QuizWindow>
+            { quiz[number] &&
+
+            <>
+                <Question dangerouslySetInnerHTML={{ __html: quiz[number].question }}></Question>
+
+                <Options>
+                    {quiz[number].options.map((item, index) => (
+                        <Option key={index} dangerouslySetInnerHTML={{ __html: item }} onClick={pickAnswer}></Option>
+                    ))}
+                </Options>
+            </>
+
+            }
+            {
+
+                number === 1 && <GameOver pts={pts}/>
+            }
+
+        </QuizWindow>
+    )
 }
 
-export default Quiz
+export default Quiz;
