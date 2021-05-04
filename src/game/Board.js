@@ -70,7 +70,8 @@ class Board extends Component {
                 </div>
 
                 <ColourWheel
-                    playerName={['jugador1','jugador2','jugador3','jugador4']}
+                    numPlayers={4}
+                    playerName={['jugador1','jugador2','test','test2']}
                     radius={250}
                     padding={10}
                     lineWidth={50}
@@ -84,7 +85,7 @@ class Board extends Component {
                     preset // You can set this bool depending on whether you have a pre-selected colour in state.
                     presetColour={this.state.selectedColour}
                     animated
-                    numPlayers={4}
+
                 />
 
                 <div

@@ -49,9 +49,12 @@ const Question = styled.div`
 
 function Quiz(props) {
 
-    let question = props.pregunta[0].casilla.num; //se sacaría de props  pregunta.pregunta
-    let incorrect_answers = ["inc1", "inc2", "inc3"]; //se sacaría de props
-    let correct_answer = "correct"; //se sacaría de props
+    //console.log(props.pregunta)
+    let question = props.pregunta.pregunta.pregunta; //se sacaría de props  pregunta.pregunta
+    //let question = "preguntita brother"; //se sacaría de props
+
+    let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
+    let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
 
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
@@ -65,9 +68,9 @@ function Quiz(props) {
 
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
-            props.onResponse(1);
+            props.onResponse({result: 1, casillaInfo: props.pregunta});
         }else{
-            props.onResponse(0);
+            props.onResponse({result: 0, casillaInfo: props.pregunta});
         }
         setNumber(number + 1);
 

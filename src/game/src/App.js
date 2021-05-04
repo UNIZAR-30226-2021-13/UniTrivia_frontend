@@ -69,7 +69,7 @@ class App extends Component {
           playerName={['jugador1','jugador2','jugador3','jugador4']}
           radius={250}
           padding={10}
-          lineWidth={50}
+          lineWidth={'25%'}
           onColourSelected={(rgb) => this.setState({ selectedColour: rgb })}
           onRef={ref => (this.colourWheel = ref)}
           spacers={{
