@@ -8,21 +8,20 @@ import React, {useEffect} from 'react'
 //                         {`${moment().format('hh:mm A')} ${user.timezone}`}
 //                     </Typography>
 import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Typography} from '@material-ui/core';
+import Banner from 'react-js-banner';
 
-const user = {
-  avatar: '/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-8'
-};
+
 
 
 function AccountProfile(props) {
     const profiles=props;
+    let avatar = '/images/avatars/' + props.avatar + '.jpg';
+    let banner = '/images/banners/' + props.banner + '.jpg';
+    let ficha = '/images/fichas/' + props.ficha + '.png';
 
-
+    console.log(avatar);
+    console.log(banner);
+    console.log(ficha);
     return (
 
         <Card {...props}>
@@ -34,12 +33,30 @@ function AccountProfile(props) {
                         flexDirection: 'column'
                     }}
                 >
+
                     <Avatar
-                        src={user.avatar}
-                        sx={{
-                            height: 100,
-                            width: 100
-                        }}
+                        title='Avatar'
+                        src={avatar}
+                        height={1000}
+                        width={1000}
+
+
+                    />
+                    <Avatar
+                        title='Forma ficha'
+                        src={ficha}
+                        height={1000}
+                        width={1000}
+
+
+                    />
+                    <Avatar
+                        title='Banner'
+                        src={banner}
+                        height={1000}
+                        width={1000}
+
+
                     />
                     <Typography
                         color="textPrimary"
