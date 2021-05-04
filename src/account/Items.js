@@ -9,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddBox from '@material-ui/icons/AddBox';
 import {Card, CardHeader, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,8 @@ const states = [
 function Items(props) {
   const profile=props
 
+  console.log(props.comprados);
+
   const classes = useStyles();
   const [values, setValues] = useState({
     played: '6',
@@ -70,6 +73,18 @@ function Items(props) {
     });
   };
 
+  const clickAddAvatar = () => {
+    console.log("avatar clickado");
+  }
+
+  const clickAddBanner = () => {
+    console.log("banner clickado");
+  }
+
+  const clickAddFicha = () => {
+    console.log("ficha clickado");
+  }
+
   return (
       <Card>
         <CardHeader
@@ -77,6 +92,7 @@ function Items(props) {
             title="Objetos"
         />
         <div className={classes.demo}>
+          AVATARES
           <List>
             {generate(
                 <ListItem>
@@ -90,8 +106,54 @@ function Items(props) {
                       secondary={false ? 'Secondary text' : null}
                   />
                   <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon/>
+                    <IconButton edge="end" aria-label="add" onClick={clickAddAvatar}>
+                      <AddBox/>
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>,
+            )}
+          </List>
+        </div>
+        <div className={classes.demo}>
+          BANNERS
+          <List>
+            {generate(
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FolderIcon/>
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                      primary="Single-line item"
+                      secondary={false ? 'Secondary text' : null}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="add" onClick={clickAddBanner}>
+                      <AddBox/>
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>,
+            )}
+          </List>
+        </div>
+        <div className={classes.demo}>
+          FORMAS DE FICHA
+          <List>
+            {generate(
+                <ListItem>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FolderIcon/>
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                      primary="Single-line item"
+                      secondary={false ? 'Secondary text' : null}
+                  />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="add" onClick={clickAddFicha}>
+                      <AddBox/>
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem>,

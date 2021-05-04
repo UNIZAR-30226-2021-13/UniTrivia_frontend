@@ -7,7 +7,7 @@ import React, {useEffect} from 'react'
 //                     >
 //                         {`${moment().format('hh:mm A')} ${user.timezone}`}
 //                     </Typography>
-import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Typography} from '@material-ui/core';
+import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography} from '@material-ui/core';
 import Banner from 'react-js-banner';
 
 
@@ -22,6 +22,7 @@ function AccountProfile(props) {
     console.log(avatar);
     console.log(banner);
     console.log(ficha);
+
     return (
 
         <Card {...props}>
@@ -33,31 +34,68 @@ function AccountProfile(props) {
                         flexDirection: 'column'
                     }}
                 >
+                <Grid
+                    container
+                    spacing={3}
+                >
 
-                    <Avatar
-                        title='Avatar'
-                        src={avatar}
-                        height={1000}
-                        width={1000}
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
 
-
-                    />
-                    <Avatar
-                        title='Forma ficha'
-                        src={ficha}
-                        height={1000}
-                        width={1000}
-
-
-                    />
-                    <Avatar
-                        title='Banner'
-                        src={banner}
-                        height={1000}
-                        width={1000}
+                        <img
+                            title='Avatar'
+                            src={avatar}
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
 
 
-                    />
+                        />
+                    </Grid>
+
+                    <Grid
+                        item
+                        md={3}
+                        xs={1}
+                    >
+
+                        <img
+                            title='Forma Ficha'
+                            src={ficha}
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
+
+
+                        />
+                    </Grid>
+
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
+
+                        <img
+
+                            title='Banner'
+                            src={banner}
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
+
+                        />
+                    </Grid>
+                </Grid>
                     <Typography
                         color="textPrimary"
                         gutterBottom
@@ -74,32 +112,6 @@ function AccountProfile(props) {
 
                 </Box>
             </CardContent>
-            <Divider/>
-            <CardActions>
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar avatar
-                </Button>
-
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar banner
-                </Button>
-
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar forma de ficha
-                </Button>
-            </CardActions>
         </Card>
     );
 }
