@@ -60,8 +60,8 @@ function AccountProfile(props) {
 
                     <Grid
                         item
-                        md={3}
-                        xs={1}
+                        md={6}
+                        xs={12}
                     >
 
                         <img

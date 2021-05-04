@@ -11,67 +11,77 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBox from '@material-ui/icons/AddBox';
 import {Card, CardHeader, Typography} from "@material-ui/core";
+import PropTypes from 'prop-types';
+import {FixedSizeList} from 'react-window';
+
+let avatares = [];
+let banners = [];
+let fichas = [];
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752,
-  },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-  },
+
+    root: {
+        width: '100%',
+        height: 400,
+        maxWidth: 300,
+        backgroundColor: theme.palette.background.paper,
+    },
 }));
 
 
+function renderRowAvatars(props){
+  const { index, style } = props;
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
+    console.log(avatares);
+
+  const clickAddAvatar = () => {
+    console.log("avatar clickado");
   }
-];
+
+  return(
+
+      <ListItem button style={style} key={index} onClick={clickAddAvatar}>
+        <ListItemAvatar>
+          <Avatar>
+            <FolderIcon/>
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+            primary="Avatar"
+        />
+      </ListItem>
+
+  )
+}
+
+renderRowAvatars.propTypes = {
+  index: PropTypes.number.isRequired,
+  style: PropTypes.object.isRequired,
+};
 
 function Items(props) {
-  const profile=props
-
-  console.log(props.comprados);
-
-  const classes = useStyles();
-  const [values, setValues] = useState({
-    played: '6',
-    wins: '3',
-    ncoins: '67'
-  });
-
-  function generate(element) {
-    if (profile.comprados != null){
-      return (profile.comprados).map((value) =>
-          React.cloneElement(element, {
-            key: value,
-          }),
-      );
-    }
+  const profile = props.comprados;
 
 
+  for(let i = 0; i < profile.length; i++){
+      let word = profile[i];
+      if(word[0] == 'a'){
+          avatares.push(word);
+      }else if(word[0] == 'b'){
+          banners.push(word);
+      }else if(word[0] == 'f'){
+          fichas.push(word);
+      }
   }
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+
+  console.log(banners);
+  console.log(fichas);
+
+  const classes = useStyles();
+
+
+
 
   const clickAddAvatar = () => {
     console.log("avatar clickado");
@@ -91,75 +101,24 @@ function Items(props) {
             subheader="Objetos adquiridos por el usuario"
             title="Objetos"
         />
-        <div className={classes.demo}>
-          AVATARES
-          <List>
-            {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                      primary="Single-line item"
-                      secondary={false ? 'Secondary text' : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="add" onClick={clickAddAvatar}>
-                      <AddBox/>
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-            )}
-          </List>
-        </div>
-        <div className={classes.demo}>
-          BANNERS
-          <List>
-            {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                      primary="Single-line item"
-                      secondary={false ? 'Secondary text' : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="add" onClick={clickAddBanner}>
-                      <AddBox/>
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-            )}
-          </List>
-        </div>
-        <div className={classes.demo}>
-          FORMAS DE FICHA
-          <List>
-            {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <FolderIcon/>
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                      primary="Single-line item"
-                      secondary={false ? 'Secondary text' : null}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="add" onClick={clickAddFicha}>
-                      <AddBox/>
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>,
-            )}
-          </List>
-        </div>
+          <div className={classes.demo}>
+              AVATARES
+              <FixedSizeList height={100} width={800} itemSize={46} itemCount={avatares.length}>
+                  {renderRowAvatars}
+              </FixedSizeList>
+          </div>
+          <div className={classes.demo}>
+              BANNERS
+              <FixedSizeList height={100} width={800} itemSize={46} itemCount={banners.length}>
+                  {renderRowAvatars}
+              </FixedSizeList>
+          </div>
+          <div className={classes.demo}>
+              FORMAS DE FICHA
+              <FixedSizeList height={100} width={800} itemSize={46} itemCount={fichas.length}>
+                  {renderRowAvatars}
+              </FixedSizeList>
+          </div>
       </Card>
 
   );
