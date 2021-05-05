@@ -26,3 +26,16 @@ export const setUserSession = (token, user) => {
 export const setToken = (token) => {
   localStorage.setItem('token', token);
 }
+
+
+
+export const setPlayers = (players) => {
+
+    localStorage.setItem('players', JSON.stringify(players));
+
+}
+
+export const getPlayers = () => {
+  console.log(localStorage.getItem('players'))
+  return localStorage.getItem('players') || null;
+}

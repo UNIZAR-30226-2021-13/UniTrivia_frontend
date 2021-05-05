@@ -137,7 +137,7 @@ export default function Register(props) {
 
         if(username.value!='' && password.value!='' && email.value!='' && question.value!=''&& answer.value!='' && password.value==reppassword.value) {
 
-
+//https://unitrivia.herokuapp.com/api/register
             axios.post('https://unitrivia.herokuapp.com/api/register', {}, {
                 headers: {
                     'username': username.value,

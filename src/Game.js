@@ -54,7 +54,7 @@ function Game(props) {
                                         Volver
                                     </IconButton>
                                     <h1>Pedazo de juego</h1>
-                                    <img src={'/images/tablero/tablero.png'} height={500} align={'center'}/>
+
                                 </div>
                                 <Board></Board>
                             </Grid>

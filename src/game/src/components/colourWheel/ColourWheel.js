@@ -1,7 +1,7 @@
 // NOTES:
 // -- Array-destructuring assignment won't work w vanilla ie11; needs babel-polyfill lol
 
-import React, { Component } from 'react'
+import React, {Component, useState} from 'react'
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -19,13 +19,13 @@ import {
   calculateBounds,
   colourToRgbObj,
   convertObjToString,
-  getCasillaNumber,
+  getCasillaNumber, getCoordByCasilla,
   getEffectiveRadius,
   produceRgbShades
 } from '../../utils/utils'
 import hexStrings from '../../utils/hexStrings'
 import { Box, Popover, Typography } from '@material-ui/core'
-
+import {conn} from '../../../../Play'
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
@@ -43,7 +43,12 @@ class ColourWheel extends Component {
       positionsX: [50,50,50,50,50,50],
       positionsY: [50,60,70,80,90,100],
       puedoMover: false,
-      playerName: ['1','2','3','4','5','6']
+      playerName: ['1','2','3','4','5','6'],
+      dado: 0,
+      quienSoy: 0,
+      posiblesJugadas: null,
+      casillaActualInfo: null,
+      desactivado:true
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -137,6 +142,26 @@ class ColourWheel extends Component {
     )
   }
 
+  componentDidUpdate(){
+    conn.on("jugada",(res)=>{
+      console.log(res)
+      let indice=0;
+      for(var i=0;i<this.state.numPlayers;i++){
+        if(this.state.playerName[i]===res.user){
+          indice=i
+        }
+      }
+      let coords=getCoordByCasilla(res.casilla,indice)
+      this.state.positionsX[indice]=coords.x;
+      this.state.positionsY[indice]=coords.y;
+      this.inicializarTablero()
+    })
+    conn.on('comienzoPartida', () => {
+      console.log("Comienza la partida");
+      this.inicializarTablero()
+    })
+  }
+
   componentDidMount () {
     // Giving this context to our parent component.
     this.props.onRef(this)
@@ -149,10 +174,11 @@ class ColourWheel extends Component {
       const rgb = colourToRgbObj(this.props.presetColour)
 
       this.setState({ rgb }, () => {
-        this.drawOuterWheel(1,[12,13])
-        //this.drawInnerWheel()
-        this.drawCenterCircle()
-        this.drawSpacers()
+        this.drawInnerWheel()//borrar lo anterior
+        this.drawOuterWheel(1)//dibujar rueda
+        this.drawRadius()//dibujar radios
+        this.drawSpacers()//dibujar spacer
+        this.drawCenterCircle()//dibujar circulo central con los jugadores
       })
     } else {
       this.drawOuterWheel(1)
@@ -230,8 +256,38 @@ class ColourWheel extends Component {
     console.log(getCasillaNumber(r, g, b))
     console.log(colours[7])
     console.log(convertObjToString(colours[7]))
-    console.log(evtPos.x)
+    console.log(evtPos.x+' '+evtPos.y)
     console.log(this.state.puedoMover)
+    this.state.desactivado=false
+    if(opac===255 && this.state.puedoMover===true){
+
+
+      for (let j=0; j<this.state.posiblesJugadas.length; j++){
+        console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
+        if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+          this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+        }
+      }
+      if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
+        this.state.desactivado=true
+        this.state.puedoMover=true;
+        conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
+          quesito: "",
+          finTurno: false ,
+        }, (res)=>{
+          console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+        });
+      }else{
+        this.state.puedoMover=false;
+      }
+      this.drawInnerWheel()
+      this.drawOuterWheel(opa)
+      this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
+      this.drawRadius()
+      this.drawSpacers()
+      this.drawCenterCircle()
+
+    }
     this.setState(
       {
         rgb,
@@ -242,21 +298,41 @@ class ColourWheel extends Component {
       () => {
 
 
-        if(opac===255 && this.state.puedoMover===true){
+        /*if(opac===255 && this.state.puedoMover===true){
+
+
+          for (let j=0; j<this.state.posiblesJugadas.length; j++){
+            console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
+            if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+              this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+            }
+          }
+          if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
+            this.state.puedoMover=true;
+            conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
+              quesito: "",
+              finTurno: false ,
+            }, (res)=>{
+              console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+            });
+          }else{
+            this.state.puedoMover=false;
+          }
           this.drawInnerWheel()
           this.drawOuterWheel(opa)
           this.changePosition(evtPos.x, evtPos.y)
           this.drawRadius()
           this.drawSpacers()
           this.drawCenterCircle()
-          this.state.puedoMover=false;
 
-
-        }else{
-
-        }
+        }*/
       }
     )
+
+
+
+
+
   }
 
   innerWheelClicked (evtPos) {
@@ -270,27 +346,31 @@ class ColourWheel extends Component {
 
 
     console.log(getCasillaNumber(r, g, b))
+    console.log(evtPos.x+' '+evtPos.y)
 
     this.props.onColourSelected(rgbArg)
-
+    this.state.desactivado=false
     this.setState(
       {
         rgb,
         centerCircleOpen: true
       },
       () => {
-        if(opac===255 && this.state.puedoMover===true){
+        if(opac===255 && this.state.puedoMover===true ){
+
+          this.state.puedoMover=false;
+          for (let j=0; j<this.state.posiblesJugadas.length; j++){
+            console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
+            if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+              this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+            }
+          }
           this.drawInnerWheel()
           this.drawOuterWheel(1)
-          this.changePosition(evtPos.x, evtPos.y)
+          this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
           this.drawRadius()
           this.drawSpacers()
           this.drawCenterCircle()
-          this.state.puedoMover=false;
-
-
-        }else{
-
         }
       }
     )
@@ -333,24 +413,58 @@ class ColourWheel extends Component {
         rgb: '#ffffff',
         innerWheelOpen: true,
         centerCircleOpen: false,
-        puedoMover: true
+
       },
       () => {
-        console.log(dado)
-        /*
-        tirar dado
-        socket.emit('posibles jugadas',()=>{})
-         */
         //dibujar tablero
-        if(this.state.puedoMover){//si es mi turno
-          this.dibujarTablero([10,101,82])
-        }
-
-
         //this.drawPosition()
+
         if (callback) callback()
       }
     )
+    console.log('dado'+dado)
+    /*
+    tirar dado
+    conn.emit('posibles jugadas',(data)=>{
+
+    })
+     */
+
+    conn.emit("posiblesJugadas", dado, (res)=>{
+      console.log("Posibles jugadas con dado: " + dado.toString());
+      console.log(res['res']);
+      console.log(res['info']);
+      this.state.posiblesJugadas=res['info'];
+      console.log(this.state.posiblesJugadas);
+      if(res['res']!='err'){
+        if(res['info']==="No es el turno."){
+          console.log('no turno')
+          this.state.puedoMover=false;
+          alert('No es tu turno')
+        }else{
+          this.state.puedoMover=true;
+        }
+        console.log(res['info'].length);
+        console.log(res['info'][0]);
+        let casillas=[];
+        for(var i=0;i<res['info'].length;i++){
+
+          casillas[i]=res['info'][i].casilla.num
+        }
+        console.log(casillas[0])
+        if(this.state.puedoMover){//si es mi turno
+          this.dibujarTablero(casillas)
+        }
+      }else{
+        if(res['info']==="No es el turno."){
+          console.log('no turno')
+          this.state.puedoMover=false;
+          alert('No es tu turno')
+        }
+      }
+
+    })
+
 
   }
 
@@ -364,8 +478,14 @@ class ColourWheel extends Component {
     this.drawCenterCircle()//dibujar circulo central con los jugadores
   }
 
+  setValores(players,numplayers,quiensoy){
+    this.state.playerName=players
+    this.state.numPlayers=numplayers
+    this.state.quienSoy=quiensoy
+  }
 
-  iniciarPartida (callback = false) {
+
+   iniciarPartida (callback = false) {
 
     const { radius } = this.props
 
@@ -404,6 +524,10 @@ class ColourWheel extends Component {
         // Reset state & re-draw.
 
        this.inicializarTablero()
+        conn.emit("comenzarPartida", (res)=>{
+          console.log(res)
+          console.log("Al comenzar partida: " + res.res + " " + res.info);
+        });
       }
     )
 
@@ -583,8 +707,12 @@ class ColourWheel extends Component {
     this.ctx.fillText('PLAYER',x,
       y)*/
     //this.ctx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
-    this.state.positionsX[player]=x
-    this.state.positionsY[player]=y
+
+    let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
+    this.state.positionsX[player]=coords.x;
+    this.state.positionsY[player]=coords.y;
+    //this.state.positionsX[player]=x
+    //this.state.positionsY[player]=y
     /*this.ctx.stroke()
     this.ctx.closePath()*/
   }
@@ -722,7 +850,7 @@ class ColourWheel extends Component {
     this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
 
     for(var i=0;i<this.state.numPlayers;i++){
-
+      console.log(this.state.playerName[i])
       this.ctx.fillText(
         this.state.playerName[i],
         this.state.positionsX[i],
@@ -736,14 +864,46 @@ class ColourWheel extends Component {
     this.ctx.closePath()
   }
 
+  getPosiblesJugadas(){
+    return this.state.casillaActualInfo
+  }
+
+
+   handleResponseFromQuiz(response){
+    console.log(response);
+     console.log(response.result);
+
+    conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
+      quesito: response.casillaInfo.casilla.tipo==="Quesito"?response.casillaInfo.casilla.categoria:"",
+      finTurno: response.result===0?true:false ,
+    }, (res)=>{
+      console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+      console.log(res['info']);
+    });
+
+  }
 
 
   render () {
 
 
+
     const { radius, dynamicCursor } = this.props
-
-
+/*
+    conn.on("jugada",(res)=>{
+      console.log(res)
+      let indice=0;
+      for(var i=0;i<this.state.numPlayers;i++){
+        if(this.state.playerName[i]===res.user){
+          indice=i
+        }
+      }
+      let coords=getCoordByCasilla(res.casilla,indice)
+      this.state.positionsX[indice]=coords.x;
+      this.state.positionsY[indice]=coords.y;
+      this.inicializarTablero()
+    })
+*/
 
     return dynamicCursor ? (
       <div>
@@ -757,29 +917,29 @@ class ColourWheel extends Component {
         <div>
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState) => (
-              <div>
-                <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={this.pregunta} >
-                  Responder Pregunta
-                </Button>
-                <Popover
-                  {...bindPopover(popupState)}
-                  anchorReference="anchorPosition"
-                  anchorPosition={{ top: 100, left: 400 }}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                  }}
-                  transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'center',
-                  }}
-                >
-                  <Box p={2}>
-                    <Typography>The content of the Popover.</Typography>
-                    <Quiz></Quiz>
-                  </Box>
-                </Popover>
-              </div>
+                <div>
+                  <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={this.state.desactivado} >
+                    Responder Pregunta
+                  </Button>
+                  <Popover
+                      {...bindPopover(popupState)}
+                      anchorReference="anchorPosition"
+                      anchorPosition={{ top: 100, left: 400 }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                  >
+                    <Box p={2}>
+                      <Typography>Responda a la pregunta.</Typography>
+                      <Quiz pregunta={this.getPosiblesJugadas()}  onResponse={this.handleResponseFromQuiz.bind()}></Quiz>
+                    </Box>
+                  </Popover>
+                </div>
             )}
           </PopupState>
 
@@ -795,6 +955,7 @@ class ColourWheel extends Component {
 
     )
   }
+
 
 
 }

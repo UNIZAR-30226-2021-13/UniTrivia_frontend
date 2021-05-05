@@ -5,13 +5,16 @@ import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
+import {getPlayers, getUser, setPlayers} from "../Utils/Common";
+import {get} from "react-hook-form";
+
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
 class Board extends Component {
     state = {
         selectedColour: yourDefaultColour,
-        num: 0
+        dado: 0
     }
 
     clearColourWheel = () => {
@@ -22,6 +25,19 @@ class Board extends Component {
     }
 
     iniciarPartida = () => {
+        let players=getPlayers()
+        players=JSON.parse(players)
+        console.log(players)
+        console.log(JSON.parse(getPlayers()))
+        console.log(JSON.parse(getPlayers()).length)
+        console.log(getPlayers()[1])
+        let quienSoy=0
+        for(var i=0;i<JSON.parse(getPlayers()).length;i++){
+            if(JSON.parse(getPlayers())[i]===getUser()){
+                quienSoy=i
+            }
+        }
+        this.colourWheel.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
         this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
@@ -29,31 +45,36 @@ class Board extends Component {
     }
 
     jugada = () => {
-        let numero=this.state.num
-        console.log('num'+this.state.num)
-        this.colourWheel.jugada(numero,() => {
+        let dado=this.state.dado
+        console.log('num'+this.state.dado)
+        this.colourWheel.jugada(dado,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
     }
 
+    rollDoneCallback =(num) =>{
+        console.log(`You rolled a ${num}`)
+        //this.state.dado={num}
+        this.setState({dado: num})
+        console.log(`sacaste un `+this.state.dado)
+        this.jugada()
 
+
+    }
 
 
     render () {
         const { selectedColour } = this.state
 
-        function rollDoneCallback (num) {
-            console.log(`You rolled a ${num}`)
-            this.state.num=num
-        }
+
 
 
         return (
             <div
                 style={{
-                    height: '100vh',
-                    width: '100vw',
+                    height: '100%',
+                    width: '100%',
                     display: 'flex',
                     backgroundColor: '#394032',
                     flexDirection: 'column',
@@ -66,7 +87,8 @@ class Board extends Component {
                 </div>
 
                 <ColourWheel
-                    playerName={['jugador1','jugador2','jugador3','jugador4']}
+                    numPlayers={JSON.parse(getPlayers()).length}
+                    playerName={JSON.parse(getPlayers())}
                     radius={250}
                     padding={10}
                     lineWidth={50}
@@ -80,20 +102,10 @@ class Board extends Component {
                     preset // You can set this bool depending on whether you have a pre-selected colour in state.
                     presetColour={this.state.selectedColour}
                     animated
-                    numPlayers={4}
+
                 />
 
-                <div
-                    onClick={this.clearColourWheel}
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: 20,
-                        fontWeight: '500',
-                        color: '#FFFFFF',
-                        marginTop: 20
-                    }}>
-                    clear
-                </div>
+
                 <div
                     onClick={this.iniciarPartida}
                     style={{
@@ -106,7 +118,6 @@ class Board extends Component {
                     Iniciar partida
                 </div>
                 <div
-                    onClick={this.jugada}
                     style={{
                         cursor: 'pointer',
                         fontSize: 20,
@@ -117,7 +128,7 @@ class Board extends Component {
                     tirar dado
                     <ReactDice
                         numDice={1}
-                        rollDone={rollDoneCallback}
+                        rollDone={this.rollDoneCallback}
                         ref={dice => this.reactDice = dice}
                         outline={true}
                         faceColor={'white'}
