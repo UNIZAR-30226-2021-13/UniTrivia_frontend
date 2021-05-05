@@ -50,4 +50,4 @@ jobs:
         cp -r ../UniTrivia_frontend/build .
         git add build
         git commit -m "Auto-build webpage" --author "Daniel Benedí García <774156@unizar.es>"
-        git push origin/Deployment
+        git push remotes/origin/Deployment
