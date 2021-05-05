@@ -14,7 +14,6 @@ import {makeStyles} from "@material-ui/core/styles";
 const io = require("socket.io-client");
 const http = require("http");
 
-const ENDPOINT = "http://localhost:3000/api/partida";
 const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',

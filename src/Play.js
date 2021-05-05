@@ -8,7 +8,7 @@ import {io,socketIOClient} from "socket.io-client";
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 
-const ENDPOINT = "http://localhost:3000/api/partida";
+const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
 
 export let conn = undefined;
 
