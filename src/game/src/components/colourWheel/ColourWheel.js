@@ -475,7 +475,7 @@ class ColourWheel extends Component {
   }
 
 
-  iniciarPartida (callback = false) {
+   iniciarPartida (callback = false) {
 
     const { radius } = this.props
 
@@ -870,7 +870,7 @@ class ColourWheel extends Component {
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);
     });
-    
+
   }
 
 
@@ -945,6 +945,7 @@ class ColourWheel extends Component {
 
     )
   }
+
 
 
 }

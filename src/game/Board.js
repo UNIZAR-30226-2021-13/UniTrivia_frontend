@@ -5,6 +5,9 @@ import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
+import {getPlayers, setPlayers} from "../Utils/Common";
+import {get} from "react-hook-form";
+
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -22,6 +25,8 @@ class Board extends Component {
     }
 
     iniciarPartida = () => {
+        console.log(getPlayers())
+        console.log(getPlayers()[1])
         this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
@@ -47,6 +52,7 @@ class Board extends Component {
 
     }
 
+
     render () {
         const { selectedColour } = this.state
 
@@ -56,8 +62,8 @@ class Board extends Component {
         return (
             <div
                 style={{
-                    height: '100vh',
-                    width: '100vw',
+                    height: '100%',
+                    width: '100%',
                     display: 'flex',
                     backgroundColor: '#394032',
                     flexDirection: 'column',
@@ -70,8 +76,8 @@ class Board extends Component {
                 </div>
 
                 <ColourWheel
-                    numPlayers={4}
-                    playerName={['jugador1','jugador2','test','test2']}
+                    numPlayers={2}
+                    playerName={getPlayers()}
                     radius={250}
                     padding={10}
                     lineWidth={50}
