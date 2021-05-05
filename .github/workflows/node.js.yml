@@ -42,6 +42,8 @@ jobs:
         path: build
     - name: Copy build
       run: |
+        git config --global user.email "774156@unizar.es"
+        git config --global user.name "Daniel Benedí García"
         cd ..
         git clone --branch Deployment https://github.com/UNIZAR-30226-2021-13/UniTrivia_backend.git
         cd UniTrivia_backend
