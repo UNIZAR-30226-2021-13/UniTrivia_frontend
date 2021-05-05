@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -36,3 +36,7 @@ jobs:
         author_email: 774156@unizar.es
         message: 'Auto-build'
         add: 'build'
+    - name: Archive build results
+      uses: actions/upload-artifact@v2
+      with:
+        path: build
