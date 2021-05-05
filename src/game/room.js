@@ -163,6 +163,7 @@ function Room(props) {
 
     }
     conn.on('comienzoPartida',()=>{
+        setPlayers(jugadores)
         console.log("Comienza la partida");
     })
     const botonEmpezar = () => {

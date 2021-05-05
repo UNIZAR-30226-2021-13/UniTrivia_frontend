@@ -5,7 +5,7 @@ import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
-import {getPlayers, setPlayers} from "../Utils/Common";
+import {getPlayers, getUser, setPlayers} from "../Utils/Common";
 import {get} from "react-hook-form";
 
 
@@ -25,8 +25,19 @@ class Board extends Component {
     }
 
     iniciarPartida = () => {
-        console.log(getPlayers())
+        let players=getPlayers()
+        players=JSON.parse(players)
+        console.log(players)
+        console.log(JSON.parse(getPlayers()))
+        console.log(JSON.parse(getPlayers()).length)
         console.log(getPlayers()[1])
+        let quienSoy=0
+        for(var i=0;i<JSON.parse(getPlayers()).length;i++){
+            if(JSON.parse(getPlayers())[i]===getUser()){
+                quienSoy=i
+            }
+        }
+        this.colourWheel.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
         this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
@@ -76,8 +87,8 @@ class Board extends Component {
                 </div>
 
                 <ColourWheel
-                    numPlayers={2}
-                    playerName={getPlayers()}
+                    numPlayers={JSON.parse(getPlayers()).length}
+                    playerName={JSON.parse(getPlayers())}
                     radius={250}
                     padding={10}
                     lineWidth={50}
@@ -94,17 +105,7 @@ class Board extends Component {
 
                 />
 
-                <div
-                    onClick={this.clearColourWheel}
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: 20,
-                        fontWeight: '500',
-                        color: '#FFFFFF',
-                        marginTop: 20
-                    }}>
-                    clear
-                </div>
+
                 <div
                     onClick={this.iniciarPartida}
                     style={{

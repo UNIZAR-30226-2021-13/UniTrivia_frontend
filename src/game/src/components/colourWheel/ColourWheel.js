@@ -156,6 +156,10 @@ class ColourWheel extends Component {
       this.state.positionsY[indice]=coords.y;
       this.inicializarTablero()
     })
+    conn.on('comienzoPartida', () => {
+      console.log("Comienza la partida");
+      this.inicializarTablero()
+    })
   }
 
   componentDidMount () {
@@ -278,7 +282,7 @@ class ColourWheel extends Component {
       }
       this.drawInnerWheel()
       this.drawOuterWheel(opa)
-      this.changePosition(evtPos.x, evtPos.y)
+      this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
       this.drawRadius()
       this.drawSpacers()
       this.drawCenterCircle()
@@ -363,7 +367,7 @@ class ColourWheel extends Component {
           }
           this.drawInnerWheel()
           this.drawOuterWheel(1)
-          this.changePosition(evtPos.x, evtPos.y)
+          this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
           this.drawRadius()
           this.drawSpacers()
           this.drawCenterCircle()
@@ -472,6 +476,12 @@ class ColourWheel extends Component {
     this.drawRadius()//dibujar radios
     this.drawSpacers()//dibujar spacer
     this.drawCenterCircle()//dibujar circulo central con los jugadores
+  }
+
+  setValores(players,numplayers,quiensoy){
+    this.state.playerName=players
+    this.state.numPlayers=numplayers
+    this.state.quienSoy=quiensoy
   }
 
 
@@ -840,7 +850,7 @@ class ColourWheel extends Component {
     this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
 
     for(var i=0;i<this.state.numPlayers;i++){
-
+      console.log(this.state.playerName[i])
       this.ctx.fillText(
         this.state.playerName[i],
         this.state.positionsX[i],

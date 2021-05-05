@@ -27,9 +27,12 @@ export const setToken = (token) => {
   localStorage.setItem('token', token);
 }
 
+
+
 export const setPlayers = (players) => {
-  console.log(players)
-  localStorage.setItem('players', players);
+
+    localStorage.setItem('players', JSON.stringify(players));
+
 }
 
 export const getPlayers = () => {
