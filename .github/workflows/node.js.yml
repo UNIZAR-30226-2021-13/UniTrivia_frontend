@@ -45,7 +45,7 @@ jobs:
         cd ..
         git clone --branch Deployment https://github.com/UNIZAR-30226-2021-13/UniTrivia_backend.git
         cd UniTrivia_backend
-        cp ../UniTrivia_frontend/build .
+        cp -r ../UniTrivia_frontend/build .
         git add build
         git commit -m "Auto-build webpage" --author "Daniel Benedí García <774156@unizar.es>"
         git push origin/Deployment
