@@ -10,9 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBox from '@material-ui/icons/AddBox';
-import {Card, CardHeader, Typography} from "@material-ui/core";
+import {Card, CardHeader, Collapse, Typography} from "@material-ui/core";
 import PropTypes from 'prop-types';
 import {FixedSizeList} from 'react-window';
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import axios from "axios";
+import {getToken} from "../Utils/Common";
 
 let avatares = [];
 let banners = [];
@@ -31,19 +34,38 @@ const useStyles = makeStyles((theme) => ({
 
 function renderRowAvatars(props){
   const { index, style } = props;
-
-    console.log(avatares);
+  let currentAv = '/images/avatars/' + avatares[index] + '.jpg';
+    //console.log(avatares);
 
   const clickAddAvatar = () => {
-    console.log("avatar clickado");
+        console.log("avatar clickado");
+        console.log(String(avatares[index]));
+        let aceptar = window.confirm("Presione en OK para cambiar su Avatar");
+        if(aceptar === true) {
+            axios.post('https://unitrivia.herokuapp.com/api/profile/modify/avatar', {}, {
+                headers: {
+                    jwt: getToken(),
+                    idavatar: String(avatares[index])
+                }
+            }).then(response => {
+
+                //setUserSession(response.data.token, response.data.user);
+                window.location.reload(true);
+            }).catch(error => {
+
+                alert('Error al cambiar avatar');
+            });
+        }
   }
 
   return(
 
       <ListItem button style={style} key={index} onClick={clickAddAvatar}>
         <ListItemAvatar>
-          <Avatar>
-            <FolderIcon/>
+          <Avatar
+            src={currentAv}
+          >
+
           </Avatar>
         </ListItemAvatar>
         <ListItemText
@@ -60,40 +82,44 @@ renderRowAvatars.propTypes = {
 };
 
 function Items(props) {
-  const profile = props.comprados;
+    const profile = props.comprados;
+    const classes = useStyles();
+    const [openAvatar, setOpenAvatar] = useState(false);
+    const [openBanner, setOpenBanner] = useState(false);
+    const [openFicha, setOpenFicha] = useState(false);
+
+    if(profile != null) {
+        console.log(profile);
+        avatares = [];
+        banners = [];
+        fichas = [];
+        for (let i = 0; i < profile.length; i++) {
+            let word = profile[i];
+            if (word[0] == 'a') {
+                avatares.push(word);
+            } else if (word[0] == 'b') {
+                banners.push(word);
+            } else if (word[0] == 'f') {
+                fichas.push(word);
+            }
+        }
+    }
 
 
-  for(let i = 0; i < profile.length; i++){
-      let word = profile[i];
-      if(word[0] == 'a'){
-          avatares.push(word);
-      }else if(word[0] == 'b'){
-          banners.push(word);
-      }else if(word[0] == 'f'){
-          fichas.push(word);
-      }
-  }
-
-
-  console.log(banners);
-  console.log(fichas);
-
-  const classes = useStyles();
+  //console.log(banners);
+  //console.log(fichas);
 
 
 
-
-  const clickAddAvatar = () => {
-    console.log("avatar clickado");
-  }
-
-  const clickAddBanner = () => {
-    console.log("banner clickado");
-  }
-
-  const clickAddFicha = () => {
-    console.log("ficha clickado");
-  }
+    const handleClickAv = () => {
+        setOpenAvatar(!openAvatar);
+    };
+    const handleClickBa = () => {
+        setOpenBanner(!openBanner);
+    };
+    const handleClickFi = () => {
+        setOpenFicha(!openFicha);
+    };
 
   return (
       <Card>
@@ -101,24 +127,45 @@ function Items(props) {
             subheader="Objetos adquiridos por el usuario"
             title="Objetos"
         />
+        <List>
+
           <div className={classes.demo}>
-              AVATARES
-              <FixedSizeList height={100} width={800} itemSize={46} itemCount={avatares.length}>
-                  {renderRowAvatars}
-              </FixedSizeList>
+              <ListItem button onClick={handleClickAv}>
+                  <ListItemText primary="Avatares" />
+                  {openAvatar ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={openAvatar} timeout="auto">
+                  <FixedSizeList height={100} width={800} itemSize={46} itemCount={avatares.length}>
+                      {renderRowAvatars}
+                  </FixedSizeList>
+              </Collapse>
           </div>
+
           <div className={classes.demo}>
-              BANNERS
-              <FixedSizeList height={100} width={800} itemSize={46} itemCount={banners.length}>
-                  {renderRowAvatars}
-              </FixedSizeList>
+              <ListItem button onClick={handleClickBa}>
+                  <ListItemText primary="Banners" />
+                  {openBanner ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={openBanner} timeout="auto">
+                  <FixedSizeList height={100} width={800} itemSize={46} itemCount={banners.length}>
+                      {renderRowAvatars}
+                  </FixedSizeList>
+              </Collapse>
           </div>
+
           <div className={classes.demo}>
-              FORMAS DE FICHA
-              <FixedSizeList height={100} width={800} itemSize={46} itemCount={fichas.length}>
-                  {renderRowAvatars}
-              </FixedSizeList>
+              <ListItem button onClick={handleClickFi}>
+                  <ListItemText primary="Formas de ficha" />
+                  {openFicha ? <ExpandLess /> : <ExpandMore />}
+              </ListItem>
+              <Collapse in={openFicha} timeout="auto">
+                  <FixedSizeList height={100} width={800} itemSize={46} itemCount={fichas.length}>
+                      {renderRowAvatars}
+                  </FixedSizeList>
+              </Collapse>
           </div>
+
+        </List>
       </Card>
 
   );
