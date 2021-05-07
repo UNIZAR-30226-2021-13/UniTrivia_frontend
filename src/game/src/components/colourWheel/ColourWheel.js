@@ -24,8 +24,12 @@ import {
   produceRgbShades
 } from '../../utils/utils'
 import hexStrings from '../../utils/hexStrings'
-import { Box, Popover, Typography } from '@material-ui/core'
+import {Box, Card, CardContent, Modal, Popover, Typography} from '@material-ui/core'
 import {conn} from '../../../../Play'
+import {getPlayers, getUser} from "../../../../Utils/Common";
+import throttle from 'lodash.throttle';
+import Popup from "reactjs-popup";
+import {green} from "@material-ui/core/colors";
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
@@ -33,6 +37,7 @@ const quarterCircle = fullCircle / 4
 class ColourWheel extends Component {
 
   constructor () {
+    
     super()
 
     this.state = {
@@ -40,15 +45,26 @@ class ColourWheel extends Component {
       innerWheelOpen: false,
       centerCircleOpen: false,
       numPlayers: 0,
-      positionsX: [50,50,50,50,50,50],
-      positionsY: [50,60,70,80,90,100],
+      positionsX: [250,
+        250,
+        250,
+        250,
+        250,
+        250],
+      positionsY: [250,
+        250+10
+        ,250+20,
+        250+30,
+        250+40,
+        250+50],
       puedoMover: false,
       playerName: ['1','2','3','4','5','6'],
       dado: 0,
       quienSoy: 0,
       posiblesJugadas: null,
       casillaActualInfo: null,
-      desactivado:true
+      desactivado:true,
+      open: false
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -156,10 +172,9 @@ class ColourWheel extends Component {
       this.state.positionsY[indice]=coords.y;
       this.inicializarTablero()
     })
-    conn.on('comienzoPartida', () => {
-      console.log("Comienza la partida");
-      this.inicializarTablero()
-    })
+
+
+
   }
 
   componentDidMount () {
@@ -184,6 +199,21 @@ class ColourWheel extends Component {
       this.drawOuterWheel(1)
       this.drawSpacers()
     }
+
+    conn.on('comienzoPartida', () => {
+      console.log("Comienza la partida");
+      let quienSoy=0
+      for(var i=0;i<JSON.parse(getPlayers()).length;i++){
+        if(JSON.parse(getPlayers())[i]===getUser()){
+          quienSoy=i
+        }
+      }
+      this.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
+      console.log('dibujand')
+
+      //this.drawCenterCircle()
+      this.inicializarTablero()
+    })
   }
 
   componentWillUnmount () {
@@ -279,6 +309,7 @@ class ColourWheel extends Component {
         });
       }else{
         this.state.puedoMover=false;
+        this.handleOpen()
       }
       this.drawInnerWheel()
       this.drawOuterWheel(opa)
@@ -292,7 +323,7 @@ class ColourWheel extends Component {
       {
         rgb,
         innerWheelOpen: true,
-        centerCircleOpen: true,
+        centerCircleOpen: false,
 
       },
       () => {
@@ -328,7 +359,6 @@ class ColourWheel extends Component {
         }*/
       }
     )
-
 
 
 
@@ -475,7 +505,9 @@ class ColourWheel extends Component {
     this.drawOuterWheel(1)//dibujar rueda
     this.drawRadius()//dibujar radios
     this.drawSpacers()//dibujar spacer
+    console.log('inicializando')
     this.drawCenterCircle()//dibujar circulo central con los jugadores
+    this.drawPlayers()
   }
 
   setValores(players,numplayers,quiensoy){
@@ -491,45 +523,37 @@ class ColourWheel extends Component {
 
     const height = radius * 2
     const width = radius * 2
+     console.log(this.state.playerName)
     this.setState(
       {
+
         rgb: '#ffffff',
-        innerWheelOpen: false,
-        centerCircleOpen: false,
-        numPlayers: this.props.numPlayers,
-        positionsX: [width / 2,
-          width / 2,
-          width / 2,
-          width / 2,
-          width / 2,
-          width / 2
-        ],
-        positionsY: [height / 2 +0*10,
-          height / 2 +1*10,
-          height / 2 +2*10,
-          height / 2 +3*10,
-          height / 2 +4*10,
-          height / 2 +5*10],
-        playerName: [this.props.playerName[0],
-          this.props.playerName[1],
-          this.props.playerName[2],
-          this.props.playerName[3],
-          this.props.playerName[4],
-          this.props.playerName[5],
-          ]
+        innerWheelOpen: true,
+        centerCircleOpen: false
+
 
 
       },
       () => {
         // Reset state & re-draw.
-
-       this.inicializarTablero()
+        console.log(this.state.positionsX)
+        console.log(this.state.positionsY)
+        //this.inicializarTablero()
         conn.emit("comenzarPartida", (res)=>{
           console.log(res)
           console.log("Al comenzar partida: " + res.res + " " + res.info);
+          //this.inicializarTablero()
+          if(res.res==='ok'){
+            //this.drawCenterCircle()
+            this.inicializarTablero()
+          }
+
+
         });
+
       }
     )
+
 
   }
 
@@ -637,8 +661,6 @@ class ColourWheel extends Component {
     this.drawRad(-65,70,240,['#ff6405','#3b3883','#00880f'],opa,casillasMarcadas)//radio 4
     this.drawRad(-94,-20,-60,['#00880e','#3b3882','#ff00ef'],opa,casillasMarcadas)//radio 5
 
-
-
   }
 
   drawRad (xs,ys,angle,colors,opa=1,casillasMarcadas=[]) {
@@ -672,9 +694,6 @@ class ColourWheel extends Component {
         this.ctx.fillStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
 
       }
-
-      //this.ctx.rotate(45 * Math.PI / 180);
-      //this.ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b},${opa})`
       this.ctx.fillRect(
         radius + x[0],
         radius + y[0]-50*i,
@@ -683,38 +702,17 @@ class ColourWheel extends Component {
       this.ctx.stroke()
 
     }
-    /*for(var i=1;i<7;i++){
-      const startAngle = (fullCircle) * i + quarterCircle;
-      const endAngle =
-        (fullCircle) * (i + 1) + (1 / 2) * Math.PI;
-      /*const fromCenter = Math.sqrt(
-        (onCanvas.x - w / 2) * (onCanvas.x - w / 2) +
-        (onCanvas.y - h / 2) * (onCanvas.y - h / 2)
-      );
-      this.ctx.fillRect(
-        radius,
-        radius-50,
-        20,20
-      );
-    }*/
+
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.closePath()
   }
 
   changePosition(x,y,player=0) {
-    // raf setup.
-    /*this.ctx.beginPath()
-    this.ctx.fillText('PLAYER',x,
-      y)*/
-    //this.ctx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
 
     let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
     this.state.positionsX[player]=coords.x;
     this.state.positionsY[player]=coords.y;
-    //this.state.positionsX[player]=x
-    //this.state.positionsY[player]=y
-    /*this.ctx.stroke()
-    this.ctx.closePath()*/
+
   }
 
   drawInnerWheel (animationPercentage = 0) {
@@ -881,6 +879,20 @@ class ColourWheel extends Component {
       console.log(res['info']);
     });
 
+
+  }
+
+  handleOpen = () => {
+
+    this.state.open=true;
+  };
+
+  handleClose = () => {
+
+    this.state.open=false;
+  };
+  getOpen(){
+    return this.state.open
   }
 
 
@@ -905,6 +917,11 @@ class ColourWheel extends Component {
     })
 */
 
+    conn.on('nuevoJugador', (user) => {
+      console.log("Entra en la sala: " + user);
+    })
+
+
     return dynamicCursor ? (
       <div>
         <canvas
@@ -918,27 +935,24 @@ class ColourWheel extends Component {
           <PopupState variant="popover" popupId="demo-popup-popover">
             {(popupState) => (
                 <div>
-                  <Button variant="contained" color="primary" {...bindTrigger(popupState)} disabled={this.state.desactivado} >
-                    Responder Pregunta
-                  </Button>
-                  <Popover
-                      {...bindPopover(popupState)}
-                      anchorReference="anchorPosition"
-                      anchorPosition={{ top: 100, left: 400 }}
-                      anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                      }}
-                      transformOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                      }}
+
+
+                  <Popup
+                      open={this.getOpen()}
+                      onClose={this.handleClose}
+                      aria-labelledby="simple-modal-title"
+                      aria-describedby="simple-modal-description"
                   >
-                    <Box p={2}>
-                      <Typography>Responda a la pregunta.</Typography>
-                      <Quiz pregunta={this.getPosiblesJugadas()}  onResponse={this.handleResponseFromQuiz.bind()}></Quiz>
-                    </Box>
-                  </Popover>
+
+                    <Card style={{ color: green[500] }} >
+                      <CardContent>
+                        <Typography>Responda a la pregunta.</Typography>
+                        <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} onClick={this.handleClose()}> </Quiz>
+                      </CardContent>
+                      </Card>
+
+
+                  </Popup>
                 </div>
             )}
           </PopupState>
@@ -961,6 +975,7 @@ class ColourWheel extends Component {
 }
 
 ColourWheel.propTypes = {
+  playerName: PropTypes.array,
   numPlayers: PropTypes.number,
   radius: PropTypes.number.isRequired,
   lineWidth: PropTypes.number.isRequired,

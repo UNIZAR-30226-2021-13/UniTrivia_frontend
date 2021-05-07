@@ -17,14 +17,9 @@ class Board extends Component {
         dado: 0
     }
 
-    clearColourWheel = () => {
-        this.colourWheel.clear(() => {
-            // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
-            this.setState({ selectedColour: yourDefaultColour })
-        })
-    }
 
-    iniciarPartida = () => {
+
+      iniciarPartidaa = () => {
         let players=getPlayers()
         players=JSON.parse(players)
         console.log(players)
@@ -38,7 +33,8 @@ class Board extends Component {
             }
         }
         this.colourWheel.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
-        this.colourWheel.iniciarPartida(() => {
+
+          this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
@@ -67,7 +63,7 @@ class Board extends Component {
     render () {
         const { selectedColour } = this.state
 
-
+//                    backgroundImage: 'url(https://vips.org/wp-content/uploads/2018/09/question-background.png)',
 
 
         return (
@@ -76,7 +72,7 @@ class Board extends Component {
                     height: '100%',
                     width: '100%',
                     display: 'flex',
-                    backgroundColor: '#394032',
+                    backgroundColor: '#353833',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center'
@@ -107,7 +103,7 @@ class Board extends Component {
 
 
                 <div
-                    onClick={this.iniciarPartida}
+                    onClick={this.iniciarPartidaa}
                     style={{
                         cursor: 'pointer',
                         fontSize: 20,

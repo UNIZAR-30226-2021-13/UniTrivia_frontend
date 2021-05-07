@@ -56,6 +56,8 @@ function Quiz(props) {
     let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
     let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
 
+
+
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
     const [pts, setPts] = useState(0);
@@ -95,6 +97,7 @@ function Quiz(props) {
 
 
     return (
+        <div>
         <QuizWindow>
             { quiz[number] &&
 
@@ -115,6 +118,7 @@ function Quiz(props) {
             }
 
         </QuizWindow>
+        </div>
     )
 }
 

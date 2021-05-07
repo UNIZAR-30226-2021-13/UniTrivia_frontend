@@ -164,6 +164,7 @@ function Room(props) {
     conn.on('comienzoPartida',()=>{
         setPlayers(jugadores)
         console.log("Comienza la partida");
+        console.log(jugadores)
     })
     const botonEmpezar = () => {
         console.log("Estoy en boton: username: "+username+"  y admin  "+admin);
