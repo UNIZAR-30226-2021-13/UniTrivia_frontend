@@ -201,19 +201,23 @@ class ColourWheel extends Component {
     }
 
     conn.on('comienzoPartida', () => {
-      console.log("Comienza la partida");
-      let quienSoy=0
-      for(var i=0;i<JSON.parse(getPlayers()).length;i++){
-        if(JSON.parse(getPlayers())[i]===getUser()){
-          quienSoy=i
-        }
-      }
-      this.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
-      console.log('dibujand')
-
-      //this.drawCenterCircle()
-      this.inicializarTablero()
+      setTimeout(()=>{this.comienzo()}, 100);
     })
+  }
+
+  comienzo(){
+    console.log("Comienza la partida");
+    let quienSoy=0
+    for(var i=0;i<JSON.parse(getPlayers()).length;i++){
+      if(JSON.parse(getPlayers())[i]===getUser()){
+        quienSoy=i
+      }
+    }
+    this.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
+    console.log('dibujand')
+
+    //this.drawCenterCircle()
+    this.inicializarTablero()
   }
 
   componentWillUnmount () {
@@ -250,8 +254,7 @@ class ColourWheel extends Component {
     if (this.outerWheelBounds.inside(evt.fromCenter)) {
       this.outerWheelClicked(evt.onCanvas)
     } else if (
-      this.innerWheelBounds.inside(evt.fromCenter) &&
-      this.state.innerWheelOpen
+      this.innerWheelBounds.inside(evt.fromCenter)
     ) {
       this.innerWheelClicked(evt.onCanvas)
     }
@@ -386,24 +389,27 @@ class ColourWheel extends Component {
         centerCircleOpen: true
       },
       () => {
-        if(opac===255 && this.state.puedoMover===true ){
 
-          this.state.puedoMover=false;
-          for (let j=0; j<this.state.posiblesJugadas.length; j++){
-            console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
-            if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
-              this.state.casillaActualInfo=this.state.posiblesJugadas[j];
-            }
-          }
-          this.drawInnerWheel()
-          this.drawOuterWheel(1)
-          this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
-          this.drawRadius()
-          this.drawSpacers()
-          this.drawCenterCircle()
-        }
       }
     )
+    if(opac===255 && this.state.puedoMover===true ){
+      console.log('asdf')
+      this.state.puedoMover=false;
+      this.handleOpen()
+      for (let j=0; j<this.state.posiblesJugadas.length; j++){
+        console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
+        if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+          this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+        }
+      }
+
+      this.drawInnerWheel()
+      this.drawOuterWheel(1)
+      this.changePosition(evtPos.x, evtPos.y,this.state.quienSoy)
+      this.drawRadius()
+      this.drawSpacers()
+      this.drawCenterCircle()
+    }
   }
 
   clear (callback = false) {
@@ -920,6 +926,8 @@ class ColourWheel extends Component {
     conn.on('nuevoJugador', (user) => {
       console.log("Entra en la sala: " + user);
     })
+
+
 
 
     return dynamicCursor ? (

@@ -48,7 +48,7 @@ function App(props) {
 
   return (
     <div className="App">
-      <PlaySound ></PlaySound>
+
       <BrowserRouter>
         <div>
           <div className="content">

@@ -161,6 +161,11 @@ function Room(props) {
         })
 
     }
+
+    /*export const getAdmin=()=>{
+        return admin
+    }*/
+
     conn.on('comienzoPartida',()=>{
         setPlayers(jugadores)
         console.log("Comienza la partida");

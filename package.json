@@ -28,7 +28,8 @@
     "socket.io-client": "^4.0.1",
     "styled-components": "^5.2.1",
     "swagger-ui-express": "^4.1.6",
-    "tinycolor2": "^1.4.2"
+    "tinycolor2": "^1.4.2",
+    "use-sound": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -56,6 +57,7 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express-openapi-validator": "^4.12.6",
+    "history": "^5.0.0",
     "js-yaml": "^4.0.0"
   }
 }

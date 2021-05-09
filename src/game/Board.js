@@ -7,19 +7,42 @@ import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
 import {getPlayers, getUser, setPlayers} from "../Utils/Common";
 import {get} from "react-hook-form";
-
+import dados from '../music/dado.mp3'
+import {conn} from "../Play";
+import {Card, CardContent, Typography} from "@material-ui/core";
+import {green} from "@material-ui/core/colors";
+import Quiz from "./src/Quiz/Quiz";
+import Popup from "reactjs-popup";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
 class Board extends Component {
     state = {
         selectedColour: yourDefaultColour,
-        dado: 0
+        dado: 0,
+        play: false,
+        turno:'',
+        admin:'',
+        open:false
+
+    }
+    audio = new Audio(dados)
+
+    componentDidMount() {
+        this.audio.addEventListener('ended', () => this.setState({ play: false }));
     }
 
+    componentWillUnmount() {
+        this.audio.removeEventListener('ended', () => this.setState({ play: false }));
+    }
 
+    togglePlay = () => {
+        this.setState({ play: !this.state.play }, () => {
+            this.state.play ? this.audio.play() : this.audio.pause();
+        });
+    }
 
-      iniciarPartidaa = () => {
+    iniciarPartidaa = () => {
         let players=getPlayers()
         players=JSON.parse(players)
         console.log(players)
@@ -60,10 +83,61 @@ class Board extends Component {
     }
 
 
+
+    rollDoneCallback2 =(num) =>{
+        setTimeout(()=>{this.rollDoneCallback(num)}, 2000);//2000
+    }
+
+    turn =() =>{
+        return(
+            <h1>{this.state.turno}</h1>
+        )
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        conn.on('turno', (info) => {
+            console.log("Turno de: " + info);
+            this.state.turno=info
+        })
+    }
+
+    componentDidMount() {
+        conn.on('turno', (info) => {
+            console.log("Turno de: " + info);
+            this.state.turno=info
+        })
+    }
+
+    handleOpen = () => {
+
+        this.state.open=true;
+    };
+
+    handleClose = () => {
+
+        this.state.open=false;
+    };
+    getOpen(){
+        return this.state.open
+    }
+
+
     render () {
         const { selectedColour } = this.state
+        let audio = new Audio("../music/dado.mp3")
+
 
 //                    backgroundImage: 'url(https://vips.org/wp-content/uploads/2018/09/question-background.png)',
+        const start = () => {
+            audio.play()
+        }
+//onClick={this.togglePlay}
+
+
+        conn.on('finDelJuego', (usuario) => {
+            console.log("Fin del juego, gana: " + usuario);
+            this.handleOpen()
+        })
 
 
         return (
@@ -80,6 +154,9 @@ class Board extends Component {
             >
                 <div style={{ textAlign: 'center', color: '#FFFFFF' }}>
                     <h1><span>UniTrivia</span></h1>
+                </div>
+                <div style={{ textAlign: 'right', color: '#FFFFFF' }}>
+                    <h1><span>Turno de :{this.state.turno}</span></h1>
                 </div>
 
                 <ColourWheel
@@ -100,6 +177,22 @@ class Board extends Component {
                     animated
 
                 />
+                <Popup
+                    open={this.getOpen()}
+                    onClose={this.handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                >
+
+                    <Card style={{ color: green[500] }} >
+                        <CardContent>
+                            <Typography>Fin de la partida.</Typography>
+                            <Button href={'/menu'}>Volver al menú</Button>
+                        </CardContent>
+                    </Card>
+
+
+                </Popup>
 
 
                 <div
@@ -111,7 +204,7 @@ class Board extends Component {
                         color: '#FFFFFF',
                         marginTop: 20
                     }}>
-                    Iniciar partida
+                    <Button >Iniciar partida</Button>
                 </div>
                 <div
                     style={{
@@ -120,16 +213,21 @@ class Board extends Component {
                         fontWeight: '500',
                         color: '#FFFFFF',
                         marginTop: 20
-                    }}>
-                    tirar dado
+                    }}
+                    onClick={this.togglePlay}
+
+                    >
+                    <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
                     <ReactDice
                         numDice={1}
-                        rollDone={this.rollDoneCallback}
+                        rollDone={this.rollDoneCallback2}
                         ref={dice => this.reactDice = dice}
                         outline={true}
                         faceColor={'white'}
                         dotColor={'black'}
-                        rollTime={0.1}
+                        rollTime={2}
+                        sound={'../music/dado.mp3'}
+
                     />
 
                 </div>
