@@ -69,16 +69,118 @@ function renderRowAvatars(props){
           </Avatar>
         </ListItemAvatar>
         <ListItemText
-            primary="Avatar"
+            primary={avatares[index]}
         />
       </ListItem>
 
   )
-}
+};
 
 renderRowAvatars.propTypes = {
   index: PropTypes.number.isRequired,
   style: PropTypes.object.isRequired,
+};
+
+
+function renderRowBanners(props){
+    const { index, style } = props;
+    let currentB = '/images/banners/' + banners[index] + '.jpg';
+    //console.log(avatares);
+
+    const clickAddBanner = () => {
+        console.log("banner clickado");
+        console.log(String(banners[index]));
+        let aceptar = window.confirm("Presione en OK para cambiar su Banner");
+        if(aceptar === true) {
+            axios.post('https://unitrivia.herokuapp.com/api/profile/modify/banner', {}, {
+                headers: {
+                    jwt: getToken(),
+                    idbanner: String(banners[index])
+                }
+            }).then(response => {
+
+                //setUserSession(response.data.token, response.data.user);
+                window.location.reload(true);
+            }).catch(error => {
+
+                alert('Error al cambiar banner');
+            });
+        }
+    }
+
+    return(
+
+        <ListItem button style={style} key={index} onClick={clickAddBanner}>
+            <ListItemAvatar>
+                <img
+                    src={currentB}
+                    width="300"
+                    height="50"
+                >
+
+                </img>
+            </ListItemAvatar>
+            <ListItemText
+                primary={banners[index]}
+            />
+        </ListItem>
+
+    )
+}
+
+renderRowBanners.propTypes = {
+    index: PropTypes.number.isRequired,
+    style: PropTypes.object.isRequired,
+};
+
+
+function renderRowFichas(props){
+    const { index, style } = props;
+    let currentF = '/images/banners/' + fichas[index] + '.png';
+    //console.log(avatares);
+
+    const clickAddFichas = () => {
+        console.log("ficha clickado");
+        console.log(String(fichas[index]));
+        let aceptar = window.confirm("Presione en OK para cambiar su Forma de Ficha");
+        if(aceptar === true) {
+            axios.post('https://unitrivia.herokuapp.com/api/profile/modify/formFicha', {}, {
+                headers: {
+                    jwt: getToken(),
+                    idformficha: String(fichas[index])
+                }
+            }).then(response => {
+
+                //setUserSession(response.data.token, response.data.user);
+                window.location.reload(true);
+            }).catch(error => {
+
+                alert('Error al cambiar forma de ficha');
+            });
+        }
+    }
+
+    return(
+
+        <ListItem button style={style} key={index} onClick={clickAddFichas}>
+            <ListItemAvatar>
+                <Avatar
+                    src={currentF}
+                >
+
+                </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+                primary={fichas[index]}
+            />
+        </ListItem>
+
+    )
+}
+
+renderRowFichas.propTypes = {
+    index: PropTypes.number.isRequired,
+    style: PropTypes.object.isRequired,
 };
 
 function Items(props) {
@@ -105,9 +207,6 @@ function Items(props) {
         }
     }
 
-
-  //console.log(banners);
-  //console.log(fichas);
 
 
 
@@ -148,7 +247,7 @@ function Items(props) {
               </ListItem>
               <Collapse in={openBanner} timeout="auto">
                   <FixedSizeList height={100} width={800} itemSize={46} itemCount={banners.length}>
-                      {renderRowAvatars}
+                      {renderRowBanners}
                   </FixedSizeList>
               </Collapse>
           </div>
@@ -160,7 +259,7 @@ function Items(props) {
               </ListItem>
               <Collapse in={openFicha} timeout="auto">
                   <FixedSizeList height={100} width={800} itemSize={46} itemCount={fichas.length}>
-                      {renderRowAvatars}
+                      {renderRowFichas}
                   </FixedSizeList>
               </Collapse>
           </div>

@@ -92,6 +92,8 @@ function AccountProfile(props) {
                                 display: 'flex',
                                 flexDirection: 'row'
                             }}
+                            width="800"
+                            height="300"
 
                         />
                     </Grid>
