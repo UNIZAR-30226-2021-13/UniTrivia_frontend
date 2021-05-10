@@ -42,17 +42,13 @@ function AccountProfile(props) {
                     <Grid
                         item
                         md={6}
-                        xs={12}
+                        xs={6}
                     >
 
-                        <img
+                        <Avatar
                             title='Avatar'
                             src={avatar}
-                            sx={{
-                                alignItems: 'center',
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}
+                            sx={{ width: 100, height: 100 }}
 
 
                         />
@@ -60,8 +56,9 @@ function AccountProfile(props) {
 
                     <Grid
                         item
-                        md={6}
-                        xs={12}
+                        sm={3}
+                        xs={6}
+
                     >
 
                         <img

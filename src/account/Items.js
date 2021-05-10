@@ -136,7 +136,7 @@ renderRowBanners.propTypes = {
 
 function renderRowFichas(props){
     const { index, style } = props;
-    let currentF = '/images/banners/' + fichas[index] + '.png';
+    let currentF = '/images/fichas/' + fichas[index] + '.png';
     //console.log(avatares);
 
     const clickAddFichas = () => {
