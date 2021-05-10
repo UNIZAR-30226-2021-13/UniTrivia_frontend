@@ -5,7 +5,7 @@ import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
-import {getPlayers, getUser, setPlayers} from "../Utils/Common";
+import {getPlayers, getSoyAdmin, getUser, setPlayers} from "../Utils/Common";
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
@@ -94,17 +94,16 @@ class Board extends Component {
         )
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        conn.on('turno', (info) => {
-            console.log("Turno de: " + info);
-            this.state.turno=info
-        })
-    }
 
     componentDidMount() {
         conn.on('turno', (info) => {
             console.log("Turno de: " + info);
             this.state.turno=info
+            if(info===getUser()){
+                alert('Es tu turno!')
+            }else{
+                alert('Es el turno de '+info)
+            }
         })
     }
 
@@ -120,6 +119,8 @@ class Board extends Component {
     getOpen(){
         return this.state.open
     }
+
+
 
 
     render () {
@@ -204,7 +205,7 @@ class Board extends Component {
                         color: '#FFFFFF',
                         marginTop: 20
                     }}>
-                    <Button >Iniciar partida</Button>
+                    <Button disabled={!getSoyAdmin()}>Iniciar partida{console.log(getSoyAdmin())}</Button>
                 </div>
                 <div
                     style={{

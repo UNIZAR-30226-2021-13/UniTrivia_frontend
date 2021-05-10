@@ -927,6 +927,10 @@ class ColourWheel extends Component {
       console.log("Entra en la sala: " + user);
     })
 
+    conn.on('turno', (info) => {
+      console.log("Turno de: " + info);
+
+    })
 
 
 

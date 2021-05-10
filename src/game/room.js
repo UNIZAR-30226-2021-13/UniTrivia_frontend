@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Card, CardContent, TextField} from '@material-ui/core';
 //import {io,socketIOClient} from "socket.io-client";
-import {getToken, setPlayers} from "../Utils/Common";
+import {getToken, getUser, setPlayers, setSoyAdmin} from "../Utils/Common";
 
 import {conn} from "../Play";
 import Button from "@material-ui/core/Button";
@@ -13,6 +13,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const io = require("socket.io-client");
 const http = require("http");
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -174,6 +175,7 @@ function Room(props) {
     const botonEmpezar = () => {
         console.log("Estoy en boton: username: "+username+"  y admin  "+admin);
         if(username===admin){
+            setSoyAdmin(true)
             return(
                 <Button
                     type="submit"
@@ -186,8 +188,15 @@ function Room(props) {
                     Empezar Partida
                 </Button>
             )
+        }else{
+            setSoyAdmin(false)
         }
     }
+
+
+
+
+
     return (
         <div>
             <div>

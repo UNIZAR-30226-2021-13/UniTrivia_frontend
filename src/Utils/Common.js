@@ -39,3 +39,14 @@ export const getPlayers = () => {
   console.log(localStorage.getItem('players'))
   return localStorage.getItem('players') || null;
 }
+
+export const setSoyAdmin = (soy) => {
+
+  localStorage.setItem('soyAdmin', soy);
+
+}
+
+export const getSoyAdmin = () => {
+  console.log(localStorage.getItem('soyAdmin'))
+  return localStorage.getItem('soyAdmin') || null;
+}
