@@ -2,13 +2,21 @@ import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Card, CardContent, TextField} from '@material-ui/core';
 //import {io,socketIOClient} from "socket.io-client";
-import Cheese from './cheese';
+import Cheese from './Cheese';
+//import Cheese from './Cheese';
 import {getToken} from "../Utils/Common";
 
 import {conn} from "../Play";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Checkbox from '@material-ui/core/Checkbox';
+import Avatar from '@material-ui/core/Avatar';
 
 const io = require("socket.io-client");
 const http = require("http");
@@ -16,7 +24,9 @@ const http = require("http");
 const ENDPOINT = "http://localhost:3000/api/partida";
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
     },
     image: {
         backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
@@ -47,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Room(props) {
     const classes = useStyles();
+    let [coloresAcertados,setColoresAcertados]=useState(["yellow","pink"])
     let [jugadores,setJugadores] = useState([]);
     let [codigoSala,setCodigoSala] = useState(null);
     let [username,setUsername]=useState("");
@@ -132,10 +143,23 @@ function Room(props) {
             <li key="{jugador}">{jugador}</li>
         )
         return(
-            <div>
-                <h6>Ey voy a listar los jugadores</h6>
-                <h6>{listJugadores}</h6>
-            </div>
+            <List dense className={classes.root}>
+                {jugadores.map((value) => {
+                    const labelId = `checkbox-list-secondary-label-${value}`;
+                    return (
+                        <div>
+                            <ListItem key={value} button>
+                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                <ListItemSecondaryAction>
+                                    <Cheese color={coloresAcertados}></Cheese>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+
+                        </div>
+
+                    );
+                })}
+            </List>
         )
     }
     const devolverCodigoSala = () => {
@@ -179,7 +203,6 @@ function Room(props) {
             </div>
             <div>
                 {listarJugadores()}
-                {quesitos()}
             </div>
             <div>
                 {devolverCodigoSala()}
