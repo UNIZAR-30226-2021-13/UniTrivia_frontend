@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Card, CardContent, TextField} from '@material-ui/core';
 //import {io,socketIOClient} from "socket.io-client";
+import Cheese from './cheese';
 import {getToken} from "../Utils/Common";
 
 import {conn} from "../Play";
@@ -120,6 +121,7 @@ function Room(props) {
         }
     })
     const quesitos=()=>{
+        console.log("EStoy en quesitos");
         conn.on('estadoPartida',(info)=>{
             console.log(info);
         })
