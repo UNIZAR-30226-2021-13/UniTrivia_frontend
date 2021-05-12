@@ -116,20 +116,20 @@ class Board extends Component {
     }
 
     getCodigoSala(){
-        return this.state.codigoSala
+        return this.state.codigoSala;
     }
 
     setCodigoSala(sala){
-        this.state.codigoSala=sala
+        this.setState({codigoSala:sala});
     }
 
 
-    devolverCodigoSala = () => {
+    devolverCodigoSala =  () => {
         conn.emit("obtenerIdSala",(id)=>{
             //console.log("En obtener id ");
             console.assert(id!=='','Error al obtener idSala');
             //this.state.codigoSala = id;
-            this.setCodigoSala(id)
+            //this.setCodigoSala(id)
             this.setState({codigoSala: id})
             console.log(id);
             console.log(this.state.codigoSala)
@@ -163,15 +163,15 @@ class Board extends Component {
     componentDidMount(){
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
-            }}).then((response) => {
-            this.state.username = response.data._id;
+        }}).then((response) => {
+            this.setState({username: response.data._id});
             console.log(this.state.jugadores);
             console.log(response.data._id);
             if (this.state.jugadores.length==0 &&  this.state.esprimero) {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
-                this.state.admin = response.data._id;
-                this.state.jugadores = list;
+                this.setState({admin: response.data._id});
+                this.setState({jugadores: list});
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
@@ -185,7 +185,7 @@ class Board extends Component {
             if (!this.state.jugadores.includes(user)) {
                 console.log("Es nuevo de verdad");
                 const list = this.state.jugadores.concat(user);
-                this.state.jugadores = list;
+                this.setState({jugadores: list});
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
@@ -193,11 +193,11 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores);
-            this.state.admin = users.jugadores[0];
-            this.state.esprimero=false;
+            this.setState({admin: users.jugadores[0]});
+            this.setState({esprimero:false});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
-            this.state.jugadores = users.jugadores;
+            this.setState({jugadores: users.jugadores});
         })
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
@@ -206,10 +206,10 @@ class Board extends Component {
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores});
             }else{
                 console.log("ha dado error el indexOf");
-                this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores});
             }
         })
         conn.on('cambioLider',({antiguo,nuevo})=>{
@@ -219,8 +219,8 @@ class Board extends Component {
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                this.state.jugadores = arrayJugadores;
-                this.state.admin = nuevo;
+                this.setState({jugadores: arrayJugadores});
+                this.setState({admin: nuevo});
             }else{
                 console.log("ha dado error el indexOf");
 
@@ -235,7 +235,7 @@ class Board extends Component {
 
         conn.on('turno', (info) => {
             console.log("Turno de: " + info);
-            this.state.turno=info
+            this.setState({turno:info});
             if(info===getUser()){
                 alert('Es tu turno!')
             }else{
@@ -260,15 +260,15 @@ class Board extends Component {
     }
 
     iniciarPartidaa = () => {
-        let players=getPlayers()
-        players=JSON.parse(players)
+        let players=this.state.jugadores
+        //players=JSON.parse(players)
         console.log(players)
-        console.log(JSON.parse(getPlayers()))
-        console.log(JSON.parse(getPlayers()).length)
-        console.log(getPlayers()[1])
+        console.log(this.state.jugadores)
+        console.log(this.state.jugadores.length)
+        console.log(this.state.jugadores[1])
         let quienSoy=0
-        for(var i=0;i<JSON.parse(getPlayers()).length;i++){
-            if(JSON.parse(getPlayers())[i]===getUser()){
+        for(var i=0;i<this.state.jugadores.length;i++){
+            if(this.state.jugadores[i]===this.state.username){
                 quienSoy=i
             }
         }
@@ -316,15 +316,15 @@ class Board extends Component {
 
     handleOpen = () => {
 
-        this.state.open=true;
+        this.setState({open:true});
     };
 
     handleClose = () => {
 
-        this.state.open=false;
+        this.setState({open:false});
     };
     getOpen(){
-        return this.state.open
+        return this.state.open;
     }
 
 
@@ -493,8 +493,8 @@ class Board extends Component {
                                 </div>
 
                                 <ColourWheel
-                                    numPlayers={JSON.parse(getPlayers()).length}
-                                    playerName={JSON.parse(getPlayers())}
+                                    numPlayers={this.state.jugadores.length}
+                                    playerName={this.state.jugadores}
                                     radius={250}
                                     padding={10}
                                     lineWidth={50}
