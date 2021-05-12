@@ -19,7 +19,7 @@ import Game from "./Game";
 import CrearSala from "./CrearSala";
 import UnirseSala from "./UnirseSala";
 import Sala from "./Sala";
-
+import Tienda from "./tienda/Tienda"
 
 function App(props) {
   const [authLoading, setAuthLoading] = useState(true);
@@ -62,6 +62,7 @@ function App(props) {
               <PrivateRoute path="/UnirseSala" component={UnirseSala}/>
               <PrivateRoute path="/Sala" component={Sala}/>
               <NoGuestRoute path="/Profile" component={Profile}/>
+              <NoGuestRoute path="/Tienda" component={Tienda}/>
             </Switch>
           </div>
         </div>
