@@ -31,11 +31,8 @@ function Game(props) {
         console.log(conn);
         //const classes = useStyles();
 
-
+    /*
         return (
-
-
-
 
                     <Grid container spacing={2}>
                         <Grid item xs={2} direction="row">
@@ -65,13 +62,16 @@ function Game(props) {
                         <BackButtonListener/>
                     </Grid>
 
-
-
-
-
-
         );
+        */
+    return (
+        <Grid container spacing={2}>
+            <Board></Board>
+            <Chat></Chat>
+            <BackButtonListener/>
+        </Grid>
 
+    );
 }
 
 

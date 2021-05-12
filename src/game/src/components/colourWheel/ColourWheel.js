@@ -158,24 +158,6 @@ class ColourWheel extends Component {
     )
   }
 
-  componentDidUpdate(){
-    conn.on("jugada",(res)=>{
-      console.log(res)
-      let indice=0;
-      for(var i=0;i<this.state.numPlayers;i++){
-        if(this.state.playerName[i]===res.user){
-          indice=i
-        }
-      }
-      let coords=getCoordByCasilla(res.casilla,indice)
-      this.state.positionsX[indice]=coords.x;
-      this.state.positionsY[indice]=coords.y;
-      this.inicializarTablero()
-    })
-
-
-
-  }
 
   componentDidMount () {
     // Giving this context to our parent component.
@@ -202,6 +184,20 @@ class ColourWheel extends Component {
 
     conn.on('comienzoPartida', () => {
       setTimeout(()=>{this.comienzo()}, 100);
+    })
+
+    conn.on("jugada",(res)=>{
+      console.log(res)
+      let indice=0;
+      for(var i=0;i<this.state.numPlayers;i++){
+        if(this.state.playerName[i]===res.user){
+          indice=i
+        }
+      }
+      let coords=getCoordByCasilla(res.casilla,indice)
+      this.state.positionsX[indice]=coords.x;
+      this.state.positionsY[indice]=coords.y;
+      this.inicializarTablero()
     })
   }
 
@@ -923,6 +919,7 @@ class ColourWheel extends Component {
     })
 */
 
+    /*
     conn.on('nuevoJugador', (user) => {
       console.log("Entra en la sala: " + user);
     })
@@ -931,7 +928,7 @@ class ColourWheel extends Component {
       console.log("Turno de: " + info);
 
     })
-
+    */
 
 
     return dynamicCursor ? (
