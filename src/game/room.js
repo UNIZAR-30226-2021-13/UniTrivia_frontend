@@ -22,7 +22,7 @@ import Avatar from '@material-ui/core/Avatar';
 const io = require("socket.io-client");
 const http = require("http");
 
-/*
+
 const ENDPOINT = "http://localhost:3000/api/partida";
 
 const useStyles = makeStyles((theme) => ({
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
 }));
-*/
+
 function Room(props) {
     const classes = useStyles();
     let [coloresAcertados,setColoresAcertados]=useState(["yellow","pink"])

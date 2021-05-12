@@ -22,11 +22,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Cheese from "./Cheese";
-import {makeStyles} from "@material-ui/core/styles";
+import {withStyles} from "@material-ui/core/styles";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = (theme) => ({
     root: {
         width: '100%',
         maxWidth: 360,
@@ -57,7 +58,9 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
+});
+
+
 
 class Board extends Component {
     state = {
@@ -78,16 +81,21 @@ class Board extends Component {
     }
 
     audio = new Audio(dados)
-    classes = useStyles();
+
+
+
+
+
+
 
     quesitos=()=>{
         console.log("EStoy en quesitos");
 
     }
 
-    listarJugadores = () => {
+    listarJugadores = (classes) => {
         return(
-            <List dense className={this.classes.root}>
+            <List dense className={classes.root}>
                 {this.state.jugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     return (
@@ -106,24 +114,31 @@ class Board extends Component {
             </List>
         )
     }
+
+    getCodigoSala(){
+        return this.state.codigoSala
+    }
+
+    setCodigoSala(sala){
+        this.state.codigoSala=sala
+    }
+
+
     devolverCodigoSala = () => {
         conn.emit("obtenerIdSala",(id)=>{
             //console.log("En obtener id ");
             console.assert(id!=='','Error al obtener idSala');
-            this.state.codigoSala = id;
-            //console.log(id);
+            //this.state.codigoSala = id;
+            this.setCodigoSala(id)
+            console.log(id);
+            console.log(this.state.codigoSala)
         })
-        //console.log("El identificador es :");
+        console.log("El identificador es :"+ this.state.codigoSala);
         return (
             <h6>El codigo de la sala es {this.state.codigoSala}</h6>
         )
     }
-    /*
-    empezarPartida=()=>{
-        conn.on('comienzoPartida',()=>{
-            console.log("Comienza la partida");
-        })
-    }
+
 
 
     botonEmpezar = () => {
@@ -135,15 +150,14 @@ class Board extends Component {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    className={this.classes.submit}
-                    onClick={this.empezarPartida}
+                    onClick={this.iniciarPartidaa}
                 >
                     Empezar Partida
                 </Button>
             )
         }
     }
-    */
+
 
     componentDidMount(){
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
@@ -185,7 +199,7 @@ class Board extends Component {
             this.state.jugadores = users.jugadores;
         })
         conn.on('abandonoSala',(user)=>{
-            console.log("Entramos en abandono de sala "+jugadores);
+            console.log("Entramos en abandono de sala "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
             var indexUser = arrayJugadores.indexOf(user);
             if(indexUser>-1){//no ha dado error
@@ -257,9 +271,11 @@ class Board extends Component {
                 quienSoy=i
             }
         }
-        this.colourWheel.setValores(JSON.parse(getPlayers()),JSON.parse(getPlayers()).length,quienSoy)
+        console.log(this.state.jugadores)
+        console.log(this.colourWheel)
+        this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
 
-          this.colourWheel.iniciarPartida(() => {
+        this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
@@ -314,6 +330,7 @@ class Board extends Component {
 
 
     render () {
+        const {classes} = this.props
         const { selectedColour } = this.state
         let audio = new Audio("../music/dado.mp3")
 
@@ -422,14 +439,14 @@ class Board extends Component {
         )*/
 
         return (
-            <Grid>
-                <Grid item xs={2} direction="row">
+            <div>
+                <Grid item xs={4} direction="row">
                     <div>
                         <div>
                             Hola
                         </div>
                         <div>
-                            {this.listarJugadores()}
+                            {this.listarJugadores(classes)}
                         </div>
                         <div>
                             {this.devolverCodigoSala()}
@@ -550,9 +567,9 @@ class Board extends Component {
                         </CardContent>
                     </Card>
                 </Grid>
-            </Grid>
+            </div>
         )
     }
 }
 
-export default Board
+export default withStyles(useStyles)(Board);
