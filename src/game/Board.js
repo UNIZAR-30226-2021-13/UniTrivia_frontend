@@ -9,7 +9,7 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from "reactjs-popup";
@@ -130,6 +130,7 @@ class Board extends Component {
             console.assert(id!=='','Error al obtener idSala');
             //this.state.codigoSala = id;
             this.setCodigoSala(id)
+            this.setState({codigoSala: id})
             console.log(id);
             console.log(this.state.codigoSala)
         })
@@ -439,8 +440,8 @@ class Board extends Component {
         )*/
 
         return (
-            <div>
-                <Grid item xs={4} direction="row">
+            <Grid container>
+                <Grid item xs={2} direction="row">
                     <div>
                         <div>
                             Hola
@@ -467,8 +468,10 @@ class Board extends Component {
                                 </IconButton>
                                 <IconButton color="secondary" variant="contained" >
                                     <HelpOutline color="primary"/>
-
+                                    <Popper open={true}  >
+                                    </Popper>
                                 </IconButton>
+
 
                             </div>
                             <div
@@ -567,7 +570,7 @@ class Board extends Component {
                         </CardContent>
                     </Card>
                 </Grid>
-            </div>
+            </Grid>
         )
     }
 }
