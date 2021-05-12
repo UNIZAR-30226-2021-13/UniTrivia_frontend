@@ -9,7 +9,6 @@ const http = require("http");
 
 
 
-const ENDPOINT = "http://localhost:3000/api/partida";
 
 
 

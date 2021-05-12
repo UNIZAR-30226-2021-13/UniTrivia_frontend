@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
+import PlaySound from "./PlaySound";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -44,6 +45,7 @@ function Settings(){
     }
     return(
         <div className={classes.paper}>
+
             <Button className={classes.but} onClick={() => changePlay()}>Sonido {play}</Button>
             <Button className={classes.but} onClick={() => changeMusic()}>Musica {music}</Button>
         </div>

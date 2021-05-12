@@ -9,6 +9,7 @@ import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstr
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 
+//const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
 const ENDPOINT = "http://localhost:3000/api/partida";
 
 export let conn = undefined;
@@ -65,21 +66,16 @@ function Play(props) {
     const classes = useStyles();
     const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
-    const [username,setUsername]=useState(null);
+
     const code = useFormInput('');
 
-    const  configUnirseYRandom = (conn)=>{
-        /*conn.on('cargarJugadores', (users) => {
-            console.log(users);
-        })*/
-    }
     const crearSala = ()=>{
         console.log("comienza crearSala");
         let sala=undefined;
         let conectado=false;
         conn = io(ENDPOINT,{
             extraHeaders:{
-                jwt:getToken(),
+                jwt: getToken(),
                 operacion: "crearSala",
                 priv:"true"
             }
@@ -124,7 +120,6 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
-                configUnirseYRandom(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
@@ -147,7 +142,6 @@ function Play(props) {
             conectado=conn.connected;
             if(conectado==true){
                 console.log("Conectado");
-                configUnirseYRandom(conn);
                 props.history.push('/Game');
             }else{
                 console.log("no conectado");
