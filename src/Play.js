@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
@@ -66,13 +66,16 @@ function Play(props) {
     const classes = useStyles();
     const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
-
+    let [esReconexion, setReconexion] = useState(false);
     const code = useFormInput('');
+
+    useEffect( () => {
+
+
+    }, []);
 
     const crearSala = ()=>{
         console.log("comienza crearSala");
-        let sala=undefined;
-        let conectado=false;
         conn = io(ENDPOINT,{
             extraHeaders:{
                 jwt: getToken(),
@@ -80,24 +83,22 @@ function Play(props) {
                 priv:"true"
             }
         });
-
-
-       conn.on("connect",()=>{
-           conectado=conn.connected;
-           console.log(conn.connected);
-           console.log(conectado);
-           console.log(conn.disconnected);
-           console.log(conn.nsp);
-           console.log(conn);
-           if(conectado==true){
-               console.log("Conectado");
-               props.history.push('/Game');
-           }else{
-               console.log("no conectado");
-               alert("Fallo al crear sala");
-           }
+        conn.on("connect",()=>{
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
+                console.log("Conectado");
+                props.history.push('/Game');
+            }else{
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
+            }
         })
+
     }
+
 
     const abrirModal = () =>{
         modalAbiertoState(!modalAbierto);
@@ -105,7 +106,6 @@ function Play(props) {
 
     const unirseSala = ()=>{
         let salaAct = code.value;
-        let conectado = undefined;
         console.log(salaAct);
 
         conn = io(ENDPOINT,{
@@ -115,37 +115,39 @@ function Play(props) {
                 sala: salaAct
             }
         });
-
         conn.on("connect",()=>{
-            conectado=conn.connected;
-            if(conectado==true){
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
                 console.log("Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("no conectado");
-                alert("Fallo al unirse a sala");
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
             }
         })
     }
 
     const partidaAleatoria = () =>{
-        let conectado = undefined;
-
         conn = io(ENDPOINT,{
             extraHeaders:{
                 jwt:getToken(),
                 operacion: "buscarPartida"
             }
         });
-
         conn.on("connect",()=>{
-            conectado=conn.connected;
-            if(conectado==true){
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
                 console.log("Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("no conectado");
-                alert("Fallo al buscar partida aleatoria");
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
             }
         })
     }
@@ -176,6 +178,15 @@ function Play(props) {
         })
     }
 
+    axios.get(ENDPOINT + "/reconexion",{headers: {
+            jwt: getToken()
+        }}).then((response) => {
+        setReconexion(response.data !== "");
+
+    }).catch((code, message) => {
+        console.log(code.response)
+    });
+
     return (
 
         <Div>
@@ -189,6 +200,7 @@ function Play(props) {
                     color="primary"
                     className={classes.submit}
                     onClick={partidaAleatoria}
+                    disabled={esReconexion}
                 >
                     Partida aleatoria
                 </Button>
@@ -201,6 +213,7 @@ function Play(props) {
                     color="primary"
                     className={classes.submit}
                     onClick={crearSala}
+                    disabled={esReconexion}
                 >
                     Crear sala
                 </Button>
@@ -213,6 +226,7 @@ function Play(props) {
                     color="primary"
                     className={classes.submit}
                     onClick={abrirModal}
+                    disabled={esReconexion}
                 >
                     Unirse a sala
                 </Button>
@@ -275,6 +289,7 @@ function Play(props) {
                     color="primary"
                     className={classes.submit}
                     onClick={reconexion}
+                    disabled={!esReconexion}
                 >
                     Reconectar a partida
                 </Button>
