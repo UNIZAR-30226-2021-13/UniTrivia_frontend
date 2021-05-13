@@ -77,13 +77,25 @@ class Board extends Component {
         codigoSala: null,
         username: "",
         esprimero: true,
-        nuevoJugador: false
+        nuevoJugador: false,
+
+        puedoTirar: false
 
     }
 
     audio = new Audio(dados)
 
+    activarDado(){
+        this.setState({
+            puedoTirar: true
+        })
+    }
 
+    desactivarDado(){
+        this.setState({
+            puedoTirar: false
+        })
+    }
 
 
 
@@ -233,10 +245,12 @@ class Board extends Component {
 
         conn.on('turno', (info) => {
             console.log("Turno de: " + info);
+            console.log(getUser())
             //this.state.turno=info
             this.setState({turno:info})
             if(info===getUser()){
                 alert('Es tu turno!')
+                this.activarDado()
             }else{
                 alert('Es el turno de '+info)
             }
@@ -347,6 +361,12 @@ class Board extends Component {
     }
 
 
+    handleResponse(response){
+        if(response.desactivarDado===true){
+            this.desactivarDado()
+        }
+
+    }
 
 
     render () {
@@ -540,6 +560,7 @@ class Board extends Component {
                                     preset // You can set this bool depending on whether you have a pre-selected colour in state.
                                     presetColour={this.state.selectedColour}
                                     animated
+                                    desactivarDado={this.desactivarDado.bind(this)}
 
                                 />
                                 <Popup
@@ -561,7 +582,7 @@ class Board extends Component {
 
 
 
-                                <div
+                                <Button
                                     style={{
                                         cursor: 'pointer',
                                         fontSize: 20,
@@ -570,6 +591,9 @@ class Board extends Component {
                                         marginTop: 20
                                     }}
                                     onClick={this.togglePlay}
+                                    disabled={!this.state.puedoTirar}
+
+
 
                                 >
                                     <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
@@ -582,10 +606,10 @@ class Board extends Component {
                                         dotColor={'black'}
                                         rollTime={2}
                                         sound={'../music/dado.mp3'}
-
+                                        disableIndividual={!this.state.puedoTirar}
                                     />
 
-                                </div>
+                                </Button>
 
                             </div>
 

@@ -36,9 +36,9 @@ const quarterCircle = fullCircle / 4
 
 class ColourWheel extends Component {
 
-  constructor () {
+  constructor (props) {
 
-    super()
+    super(props)
 
     this.state = {
       rgb: null,
@@ -494,6 +494,8 @@ class ColourWheel extends Component {
           alert('No es tu turno')
         }
       }
+      this.props.desactivarDado();
+
 
     })
 
@@ -852,11 +854,14 @@ class ColourWheel extends Component {
 
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
-      this.ctx.fillText(
+      /*this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
           this.state.positionsY[i]
-      )
+      )*/
+      var imageObj1 = new Image();
+      imageObj1.src= 'https://i.stack.imgur.com/h5RjZ.png'
+      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i])
     }
 
 
