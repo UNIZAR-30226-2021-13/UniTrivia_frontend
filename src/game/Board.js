@@ -12,7 +12,8 @@ import {conn} from "../Play";
 import {Card, CardContent, Grid, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
-import Popup from "reactjs-popup";
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 import Room from "./room";
 import IconButton from "@material-ui/core/IconButton";
 import {ArrowBack, HelpOutline} from "@material-ui/icons";
@@ -94,6 +95,8 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
+        console.log('listando jugadores')
+        console.log(this.state.jugadores)
         return(
             <List dense className={classes.root}>
                 {this.state.jugadores.map((value) => {
@@ -115,31 +118,20 @@ class Board extends Component {
         )
     }
 
-    getCodigoSala(){
-        return this.state.codigoSala;
-    }
 
-    setCodigoSala(sala){
-        this.setState({codigoSala:sala});
-    }
+    /*
+        devolverCodigoSala(){
+            conn.emit("obtenerIdSala",(id)=>{
+                //this.state.codigoSala = id;
+                this.setCodigoSala(id)
+                this.setState({codigoSala: id});
+                console.log(id);
+                console.log(this.state.codigoSala)
+            })
+            console.log("El identificador es :"+ this.state.codigoSala);
 
-
-    devolverCodigoSala =  () => {
-        conn.emit("obtenerIdSala",(id)=>{
-            //console.log("En obtener id ");
-            console.assert(id!=='','Error al obtener idSala');
-            //this.state.codigoSala = id;
-            //this.setCodigoSala(id)
-            this.setState({codigoSala: id})
-            console.log(id);
-            console.log(this.state.codigoSala)
-        })
-        console.log("El identificador es :"+ this.state.codigoSala);
-        return (
-            <h6>El codigo de la sala es {this.state.codigoSala}</h6>
-        )
-    }
-
+        }
+    */
 
 
     botonEmpezar = () => {
@@ -163,15 +155,16 @@ class Board extends Component {
     componentDidMount(){
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
-        }}).then((response) => {
-            this.setState({username: response.data._id});
+            }}).then((response) => {
+            this.setState({username:response.data._id})
             console.log(this.state.jugadores);
             console.log(response.data._id);
             if (this.state.jugadores.length==0 &&  this.state.esprimero) {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
-                this.setState({admin: response.data._id});
-                this.setState({jugadores: list});
+                //this.state.admin = response.data._id;
+                this.setState({jugadores:list,
+                    admin: response.data._id})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
@@ -185,7 +178,7 @@ class Board extends Component {
             if (!this.state.jugadores.includes(user)) {
                 console.log("Es nuevo de verdad");
                 const list = this.state.jugadores.concat(user);
-                this.setState({jugadores: list});
+                this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
@@ -193,11 +186,13 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores);
-            this.setState({admin: users.jugadores[0]});
-            this.setState({esprimero:false});
+            this.state.admin = users.jugadores[0];
+            this.state.esprimero=false;
+            this.setState()
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
-            this.setState({jugadores: users.jugadores});
+            //this.state.jugadores = users.jugadores;
+            this.setState({jugadores: users.jugadores})
         })
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
@@ -206,10 +201,12 @@ class Board extends Component {
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                this.setState({jugadores: arrayJugadores});
+                //this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores})
             }else{
                 console.log("ha dado error el indexOf");
-                this.setState({jugadores: arrayJugadores});
+                //this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores})
             }
         })
         conn.on('cambioLider',({antiguo,nuevo})=>{
@@ -219,8 +216,10 @@ class Board extends Component {
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                this.setState({jugadores: arrayJugadores});
-                this.setState({admin: nuevo});
+                //this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores,
+                    admin: nuevo})
+                //this.state.admin = nuevo;
             }else{
                 console.log("ha dado error el indexOf");
 
@@ -235,7 +234,8 @@ class Board extends Component {
 
         conn.on('turno', (info) => {
             console.log("Turno de: " + info);
-            this.setState({turno:info});
+            //this.state.turno=info
+            this.setState({turno:info})
             if(info===getUser()){
                 alert('Es tu turno!')
             }else{
@@ -246,6 +246,30 @@ class Board extends Component {
         conn.on('finDelJuego', (usuario) => {
             console.log("Fin del juego, gana: " + usuario);
             this.handleOpen()
+        })
+
+        conn.emit("obtenerIdSala",(id)=>{
+            //this.state.codigoSala = id;
+            this.setState({codigoSala: id});
+            console.log(id);
+            console.log(this.state.codigoSala)
+        })
+        console.log("El identificador es :"+ this.state.codigoSala);
+
+        conn.on('comienzoPartida', () => {
+            console.log("Comienza la partida");
+            let quienSoy=0
+            for(var i=0;i<this.state.jugadores.length;i++){
+                if(this.state.jugadores[i]===getUser()){
+                    quienSoy=i
+                }
+            }
+            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+            console.log('dibujand')
+
+            //this.drawCenterCircle()
+            this.colourWheel.inicializarTablero()
+
         })
     }
 
@@ -260,15 +284,10 @@ class Board extends Component {
     }
 
     iniciarPartidaa = () => {
-        let players=this.state.jugadores
-        //players=JSON.parse(players)
-        console.log(players)
-        console.log(this.state.jugadores)
-        console.log(this.state.jugadores.length)
-        console.log(this.state.jugadores[1])
+
         let quienSoy=0
         for(var i=0;i<this.state.jugadores.length;i++){
-            if(this.state.jugadores[i]===this.state.username){
+            if(this.state.jugadores[i]===getUser()){
                 quienSoy=i
             }
         }
@@ -316,15 +335,16 @@ class Board extends Component {
 
     handleOpen = () => {
 
-        this.setState({open:true});
+        //this.state.open=true;
+        this.setState({open: true})
     };
 
     handleClose = () => {
 
-        this.setState({open:false});
+        this.state.open=false;
     };
     getOpen(){
-        return this.state.open;
+        return this.state.open
     }
 
 
@@ -443,14 +463,16 @@ class Board extends Component {
             <Grid container>
                 <Grid item xs={2} direction="row">
                     <div>
-                        <div>
-                            Hola
-                        </div>
+                        <h2>
+                            Sala
+                        </h2>
                         <div>
                             {this.listarJugadores(classes)}
                         </div>
                         <div>
-                            {this.devolverCodigoSala()}
+                            {/*this.devolverCodigoSala()*/}
+                            <h6>El codigo de la sala es {this.state.codigoSala}</h6>
+
                         </div>
                         <div>
                             {this.botonEmpezar()}
@@ -466,11 +488,22 @@ class Board extends Component {
                                     <ArrowBack color="primary"/>
                                     Volver
                                 </IconButton>
-                                <IconButton color="secondary" variant="contained" >
-                                    <HelpOutline color="primary"/>
-                                    <Popper open={true}  >
-                                    </Popper>
-                                </IconButton>
+
+                                <Popup trigger={
+                                    <IconButton color="secondary" variant="contained" >
+                                        <HelpOutline color="primary"/>
+                                    </IconButton>} position="right top" >
+                                    <div>
+                                        <h5>INFORMACIÓN</h5>
+                                        <li><font size={2}>AMARILLO: historia</font></li>
+                                        <li><font size={2}>VERDE: historia</font></li>
+                                        <li><font size={2}>ROSA: historia</font></li>
+                                        <li><font size={2}>MORADO: historia</font></li>
+                                        <li><font size={2}>NARANJA: historia</font></li>
+                                        <li><font size={2}>AZUL: historia</font></li>
+                                        <li><font size={2}>BLANCO: tira otra vez</font></li>
+                                    </div>
+                                </Popup>
 
 
                             </div>
@@ -528,17 +561,7 @@ class Board extends Component {
                                 </Popup>
 
 
-                                <div
-                                    onClick={this.iniciarPartidaa}
-                                    style={{
-                                        cursor: 'pointer',
-                                        fontSize: 20,
-                                        fontWeight: '500',
-                                        color: '#FFFFFF',
-                                        marginTop: 20
-                                    }}>
-                                    <Button disabled={!getSoyAdmin()}>Iniciar partida{console.log(getSoyAdmin())}</Button>
-                                </div>
+
                                 <div
                                     style={{
                                         cursor: 'pointer',
