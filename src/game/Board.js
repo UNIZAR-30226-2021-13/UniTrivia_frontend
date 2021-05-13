@@ -186,13 +186,12 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores);
-            this.state.admin = users.jugadores[0];
-            this.state.esprimero=false;
-            this.setState()
+            this.setState({admin: users.jugadores[0],
+                esprimero:false, jugadores: users.jugadores});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
-            this.setState({jugadores: users.jugadores})
+            //this.setState({jugadores: users.jugadores})
         })
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
@@ -341,7 +340,7 @@ class Board extends Component {
 
     handleClose = () => {
 
-        this.state.open=false;
+        this.setState({open:false});
     };
     getOpen(){
         return this.state.open
