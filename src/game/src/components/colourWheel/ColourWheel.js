@@ -195,8 +195,11 @@ class ColourWheel extends Component {
         }
       }
       let coords=getCoordByCasilla(res.casilla,indice)
-      this.state.positionsX[indice]=coords.x;
-      this.state.positionsY[indice]=coords.y;
+      const vecx=this.state.positionsX;
+      vecx[indice]=coords.x;
+      const vecy=this.state.positionsY;
+      vecy[indice]=coords.y;
+      this.setState({positionsX: vecx,positionsY: vecy})
       this.inicializarTablero()
     })
   }
@@ -531,30 +534,31 @@ class ColourWheel extends Component {
 
           rgb: '#ffffff',
           innerWheelOpen: true,
-          centerCircleOpen: false
+          centerCircleOpen: false,
 
 
 
         },
         () => {
           // Reset state & re-draw.
-          console.log(this.state.positionsX)
-          console.log(this.state.positionsY)
-          //this.inicializarTablero()
-          conn.emit("comenzarPartida", (res)=>{
-            console.log(res)
-            console.log("Al comenzar partida: " + res.res + " " + res.info);
-            //this.inicializarTablero()
-            if(res.res==='ok'){
-              //this.drawCenterCircle()
-              this.inicializarTablero()
-            }
 
-
-          });
 
         }
     )
+    console.log(this.state.positionsX)
+    console.log(this.state.positionsY)
+    //this.inicializarTablero()
+    conn.emit("comenzarPartida", (res)=>{
+      console.log(res)
+      console.log("Al comenzar partida: " + res.res + " " + res.info);
+      //this.inicializarTablero()
+      if(res.res==='ok'){
+        //this.drawCenterCircle()
+        this.inicializarTablero()
+      }
+
+
+    });
 
 
   }
@@ -712,8 +716,13 @@ class ColourWheel extends Component {
   changePosition(x,y,player=0) {
 
     let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
-    this.state.positionsX[player]=coords.x;
-    this.state.positionsY[player]=coords.y;
+    //this.state.positionsX[player]=coords.x;
+    //this.state.positionsY[player]=coords.y;
+    const vecx=this.state.positionsX;
+    vecx[player]=coords.x;
+    const vecy=this.state.positionsY;
+    vecy[player]=coords.y;
+    this.setState({positionsX: vecx,positionsY: vecy})
 
   }
 
@@ -846,27 +855,32 @@ class ColourWheel extends Component {
     const height = radius * 2
     const width = radius * 2
 
+    //this.ctx.beginPath()
     this.ctx.beginPath()
-
-    this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    const imageObj1 = new Image();
+    console.log('imagen')
+    //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
+    imageObj1.src= '/images/avatars/avatar_6.png';
 
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
+      console.log(this.state.positionsX[i])
+      console.log(this.state.positionsY[i])
       /*this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
           this.state.positionsY[i]
       )*/
-      const imageObj1 = new Image();
-      //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
-      imageObj1.src= '/images/avatars/avatar_6.png';
+
+
       //imageObj1.crossOrigin = "Anonymous";
       this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
     }
 
 
 
-    this.ctx.stroke()
+    //this.ctx.stroke()
     this.ctx.closePath()
   }
 
