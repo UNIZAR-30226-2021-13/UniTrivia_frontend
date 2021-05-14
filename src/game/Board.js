@@ -205,6 +205,50 @@ class Board extends Component {
             //this.state.jugadores = users.jugadores;
             //this.setState({jugadores: users.jugadores})
         })
+
+        conn.on('reconexionJugador',(user)=> {
+            console.log(user);
+            console.log(this.state.admin);
+            if (!this.state.jugadores.includes(user)) {
+                console.log("Es nuevo de verdad");
+                const list = this.state.jugadores.concat(user);
+                this.setState({jugadores:list})
+            } else {
+                console.log("Se intenta meter un usuario que ya estaba");
+            }
+        })
+
+        conn.on('estadoPartida',(users)=>{
+            console.log(users);
+            let userList = [];
+            for(let i = 0; i < users.jugadores.length; i++){
+                userList.push(users.jugadores[i].usuario)
+            }
+            console.log(users.jugadores);
+            this.setState({admin: userList[0],
+                esprimero:false, jugadores: userList});
+            //console.log(users.jugadores.prototype);
+            //setJugadores([...users.jugadores]);
+            //this.state.jugadores = users.jugadores;
+            //this.setState({jugadores: users.jugadores})
+            console.log("Volviendo a la partida");
+            let casillas = [];
+            for(let i = 0; i < users.jugadores.length; i++){
+                casillas.push(users.jugadores[i].casilla)
+            }
+            //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
+            let quienSoy=0
+            for(var i=0;i<this.state.jugadores.length;i++){
+                if(this.state.jugadores[i]===getUser()){
+                    quienSoy=i
+                }
+            }
+
+            //this.drawCenterCircle()
+            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+            this.colourWheel.cargarPartida(casillas,quienSoy)
+        })
+
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
@@ -220,6 +264,23 @@ class Board extends Component {
                 this.setState({jugadores: arrayJugadores})
             }
         })
+
+        conn.on('jugadorSale',(user)=>{
+            console.log("Entramos en abandono de partida "+this.state.jugadores);
+            var arrayJugadores = this.state.jugadores;
+            var indexUser = arrayJugadores.indexOf(user);
+            if(indexUser>-1){//no ha dado error
+                console.log("Hemos sacado el index del jugador que abandona la partida");
+                arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+                //this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores})
+            }else{
+                console.log("ha dado error el indexOf");
+                //this.state.jugadores = arrayJugadores;
+                this.setState({jugadores: arrayJugadores})
+            }
+        })
+
         conn.on('cambioLider',({antiguo,nuevo})=>{
             console.log("Antiguo lider: "+antiguo+ " nuevo: "+nuevo);
             var arrayJugadores = this.state.jugadores;
@@ -336,7 +397,7 @@ class Board extends Component {
 
 
     rollDoneCallback2 =(num) =>{
-        setTimeout(()=>{this.rollDoneCallback(num)}, 2000);//2000
+        setTimeout(()=>{this.rollDoneCallback(num)}, 1000);//2000
     }
 
     turn =() =>{

@@ -219,6 +219,7 @@ class ColourWheel extends Component {
     this.inicializarTablero()
   }*/
 
+
   componentWillUnmount () {
     this.props.onRef(undefined)
   }
@@ -563,6 +564,24 @@ class ColourWheel extends Component {
 
   }
 
+  cargarPartida(casillas,quiensoy){
+    console.log(casillas)
+    for(var i=0; i< casillas.length;i++){
+      let coords=getCoordByCasilla(casillas[i],i)
+      //this.state.positionsX[player]=coords.x;
+      //this.state.positionsY[player]=coords.y;
+      const vecx=this.state.positionsX;
+      vecx[i]=coords.x;
+      const vecy=this.state.positionsY;
+      vecy[i]=coords.y;
+      this.setState({positionsX: vecx,positionsY: vecy})
+
+    }
+    console.log(this.state.positionsX)
+    console.log(this.state.playerName)
+    this.inicializarTablero()
+  }
+
   // MARK - Drawing:
 
 
@@ -857,25 +876,25 @@ class ColourWheel extends Component {
 
     //this.ctx.beginPath()
     this.ctx.beginPath()
-    //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
-    const imageObj1 = new Image();
+    this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    //const imageObj1 = new Image();
     console.log('imagen')
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
-    imageObj1.src= '/images/avatars/avatar_6.png';
+    //imageObj1.src= '/images/avatars/avatar_6.png';
 
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
       console.log(this.state.positionsX[i])
       console.log(this.state.positionsY[i])
-      /*this.ctx.fillText(
+      this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
           this.state.positionsY[i]
-      )*/
+      )
 
 
       //imageObj1.crossOrigin = "Anonymous";
-      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
+      //this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
     }
 
 
