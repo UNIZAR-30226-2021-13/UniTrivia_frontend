@@ -131,7 +131,7 @@ function Profile(props) {
             state:{
                 actual_coins: coins,
                 comprados: comprados,
-                tipo: 'avatar'
+                tipo: 'Avatar'
             }
         })
     }
@@ -142,7 +142,7 @@ function Profile(props) {
             state:{
                 actual_coins: coins,
                 comprados: comprados,
-                tipo: 'banner'
+                tipo: 'Banner'
             }
         })
     }
@@ -153,7 +153,7 @@ function Profile(props) {
             state:{
                 actual_coins: coins,
                 comprados: comprados,
-                tipo: 'ficha'
+                tipo: 'Ficha'
             }
         })
     }
