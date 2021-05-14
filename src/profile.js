@@ -158,6 +158,18 @@ function Profile(props) {
         })
     }
 
+    function handleResponseFromItem(response){
+
+        console.log(response);
+        if(response == "Avatar"){
+            irATiendaAvatares();
+        }else if(response == "Banner"){
+            irATiendaBanners();
+        }else if(response == "Ficha"){
+            irATiendaFichas();
+        }
+    }
+
 
     return (
         <>
@@ -184,30 +196,6 @@ function Profile(props) {
                         >
                             <AccountProfile user={username} mail={email} avatar={avatar} banner={banner} ficha={ficha}/>
                         </Grid>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={irATiendaAvatares}
-                            size="small"
-                        >
-                            Tienda Avatares
-                        </Button>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={irATiendaBanners}
-                            size="small"
-                        >
-                            Tienda Banners
-                        </Button>
-                        <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={irATiendaFichas}
-                            size="small"
-                        >
-                            Tienda Fichas
-                        </Button>
                         <Grid
                             item
                             lg={8}
@@ -230,7 +218,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <Items comprados={comprados} />
+                            <Items comprados={comprados} coins={coins} onResponse={handleResponseFromItem.bind()}/>
                         </Grid>
 
                         <Grid
