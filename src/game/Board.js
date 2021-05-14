@@ -72,7 +72,7 @@ class Board extends Component {
         admin:'',
         open:false,
 
-        coloresAcertados: ["yellow","pink"],
+        coloresAcertados: ["yellow"],
         jugadores: [],
         codigoSala: null,
         username: "",
@@ -116,7 +116,7 @@ class Board extends Component {
                     return (
                         <div>
                             <ListItem key={value} button>
-                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                <ListItemText id={labelId} primary={`${value}`} />
                                 <ListItemSecondaryAction>
                                     <Cheese color={this.state.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
@@ -248,11 +248,11 @@ class Board extends Component {
             console.log(getUser())
             //this.state.turno=info
             this.setState({turno:info})
-            if(info===getUser()){
-                alert('Es tu turno!')
+            if(info===getUser() || !getUser()){
+                //alert('Es tu turno!')
                 this.activarDado()
             }else{
-                alert('Es el turno de '+info)
+                //alert('Es el turno de '+info)
             }
         })
 
@@ -361,10 +361,11 @@ class Board extends Component {
     }
 
 
-    handleResponse(response){
-        if(response.desactivarDado===true){
-            this.desactivarDado()
-        }
+    handleQuesitos=(response)=>{
+        console.log('quesito de'+response.quesito)
+        const colors = this.state.jugadores.concat("pink");
+        this.setState({coloresAcertados: colors})
+        console.log(this.state.coloresAcertados)
 
     }
 
@@ -541,7 +542,7 @@ class Board extends Component {
                                     <h1><span>UniTrivia</span></h1>
                                 </div>
                                 <div style={{ textAlign: 'right', color: '#FFFFFF' }}>
-                                    <h1><span>Turno de :{this.state.turno}</span></h1>
+                                    {this.state.turno === getUser()?<h2>Tu turno!</h2>:<h2>Turno de :{this.state.turno}</h2>}
                                 </div>
 
                                 <ColourWheel
@@ -561,6 +562,8 @@ class Board extends Component {
                                     presetColour={this.state.selectedColour}
                                     animated
                                     desactivarDado={this.desactivarDado.bind(this)}
+                                    activarDado={this.activarDado.bind(this)}
+                                    onResponse={this.handleQuesitos}
 
                                 />
                                 <Popup

@@ -298,6 +298,7 @@ class ColourWheel extends Component {
         }
       }
       if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
+        this.props.activarDado();
         this.state.desactivado=true
         this.state.puedoMover=true;
         conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
@@ -305,6 +306,7 @@ class ColourWheel extends Component {
           finTurno: false ,
         }, (res)=>{
           console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+          this.props.activarDado();
         });
       }else{
         this.state.puedoMover=false;
@@ -437,6 +439,7 @@ class ColourWheel extends Component {
     this.drawRadius(0.1,casillasMarcadas)
     this.drawSpacers()
     this.drawCenterCircle()
+    this.drawPlayers()//añadido
   }
 
   jugada (dado,callback = false) {
@@ -455,12 +458,7 @@ class ColourWheel extends Component {
         }
     )
     console.log('dado'+dado)
-    /*
-    tirar dado
-    conn.emit('posibles jugadas',(data)=>{
 
-    })
-     */
 
     conn.emit("posiblesJugadas", dado, (res)=>{
       console.log("Posibles jugadas con dado: " + dado.toString());
@@ -859,9 +857,11 @@ class ColourWheel extends Component {
           this.state.positionsX[i],
           this.state.positionsY[i]
       )*/
-      var imageObj1 = new Image();
-      imageObj1.src= 'https://i.stack.imgur.com/h5RjZ.png'
-      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i])
+      const imageObj1 = new Image();
+      //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
+      imageObj1.src= '/images/avatars/avatar_6.png';
+      //imageObj1.crossOrigin = "Anonymous";
+      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
     }
 
 
@@ -875,7 +875,7 @@ class ColourWheel extends Component {
   }
 
 
-  handleResponseFromQuiz(response){
+  handleResponseFromQuiz=(response)=>{
     console.log(response);
     console.log(response.result);
 
@@ -885,7 +885,16 @@ class ColourWheel extends Component {
     }, (res)=>{
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);
+
     });
+    if(response.result===1){
+      this.props.activarDado();
+    }
+    if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
+      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria});
+    }
+
+    //this.handleClose()
 
 
   }
@@ -962,7 +971,7 @@ class ColourWheel extends Component {
                       <Card style={{ color: green[500] }} >
                         <CardContent>
                           <Typography>Responda a la pregunta.</Typography>
-                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} onClick={this.handleClose()}> </Quiz>
+                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
                         </CardContent>
                       </Card>
 
