@@ -122,6 +122,8 @@ function Tienda (props){
         console.log(cat);
         let precio = cat[index].precio + " coins";
         const clickBuy = () => {
+
+
             console.log("clickado " + cat[index].nombre);
             if(cat[index].precio > coins){
                 alert("No dispone de suficientes coins para comprar este objeto");
@@ -137,7 +139,8 @@ function Tienda (props){
 
                         //setUserSession(response.data.token, response.data.user);
                         alert("Adquirido");
-                        window.location.reload(true);
+                        setTimeout(function(){console.log("esperamos server reaccione")}, 1000);
+                        window.history.go(-1);
                     }).catch(error => {
 
                         alert('Error al cambiar forma de ficha');
@@ -242,7 +245,7 @@ function Tienda (props){
             </Grid>
             <List>
                 <div className={classes.demo}>
-                    <FixedSizeList height={300} width={800} itemSize={80} itemCount={numObj}>
+                    <FixedSizeList height={300} width={1500} itemSize={80} itemCount={numObj}>
                         {renderRow}
                     </FixedSizeList>
                 </div>
