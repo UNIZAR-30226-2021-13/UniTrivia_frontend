@@ -72,18 +72,30 @@ class Board extends Component {
         admin:'',
         open:false,
 
-        coloresAcertados: ["yellow","pink"],
+        coloresAcertados: ["yellow"],
         jugadores: [],
         codigoSala: null,
         username: "",
         esprimero: true,
-        nuevoJugador: false
+        nuevoJugador: false,
+
+        puedoTirar: false
 
     }
 
     audio = new Audio(dados)
 
+    activarDado(){
+        this.setState({
+            puedoTirar: true
+        })
+    }
 
+    desactivarDado(){
+        this.setState({
+            puedoTirar: false
+        })
+    }
 
 
 
@@ -104,7 +116,7 @@ class Board extends Component {
                     return (
                         <div>
                             <ListItem key={value} button>
-                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                <ListItemText id={labelId} primary={`${value}`} />
                                 <ListItemSecondaryAction>
                                     <Cheese color={this.state.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
@@ -293,12 +305,14 @@ class Board extends Component {
 
         conn.on('turno', (info) => {
             console.log("Turno de: " + info);
+            console.log(getUser())
             //this.state.turno=info
             this.setState({turno:info})
-            if(info===getUser()){
-                alert('Es tu turno!')
+            if(info===getUser() || !getUser()){
+                //alert('Es tu turno!')
+                this.activarDado()
             }else{
-                alert('Es el turno de '+info)
+                //alert('Es el turno de '+info)
             }
         })
 
@@ -409,6 +423,13 @@ class Board extends Component {
     }
 
 
+    handleQuesitos=(response)=>{
+        console.log('quesito de'+response.quesito)
+        const colors = this.state.jugadores.concat("pink");
+        this.setState({coloresAcertados: colors})
+        console.log(this.state.coloresAcertados)
+
+    }
 
 
     render () {
@@ -583,7 +604,7 @@ class Board extends Component {
                                     <h1><span>UniTrivia</span></h1>
                                 </div>
                                 <div style={{ textAlign: 'right', color: '#FFFFFF' }}>
-                                    <h1><span>Turno de :{this.state.turno}</span></h1>
+                                    {this.state.turno === getUser()?<h2>Tu turno!</h2>:<h2>Turno de :{this.state.turno}</h2>}
                                 </div>
 
                                 <ColourWheel
@@ -602,6 +623,9 @@ class Board extends Component {
                                     preset // You can set this bool depending on whether you have a pre-selected colour in state.
                                     presetColour={this.state.selectedColour}
                                     animated
+                                    desactivarDado={this.desactivarDado.bind(this)}
+                                    activarDado={this.activarDado.bind(this)}
+                                    onResponse={this.handleQuesitos}
 
                                 />
                                 <Popup
@@ -623,7 +647,7 @@ class Board extends Component {
 
 
 
-                                <div
+                                <Button
                                     style={{
                                         cursor: 'pointer',
                                         fontSize: 20,
@@ -632,6 +656,9 @@ class Board extends Component {
                                         marginTop: 20
                                     }}
                                     onClick={this.togglePlay}
+                                    disabled={!this.state.puedoTirar}
+
+
 
                                 >
                                     <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
@@ -644,10 +671,10 @@ class Board extends Component {
                                         dotColor={'black'}
                                         rollTime={2}
                                         sound={'../music/dado.mp3'}
-
+                                        disableIndividual={!this.state.puedoTirar}
                                     />
 
-                                </div>
+                                </Button>
 
                             </div>
 

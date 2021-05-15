@@ -36,9 +36,9 @@ const quarterCircle = fullCircle / 4
 
 class ColourWheel extends Component {
 
-  constructor () {
+  constructor (props) {
 
-    super()
+    super(props)
 
     this.state = {
       rgb: null,
@@ -195,8 +195,11 @@ class ColourWheel extends Component {
         }
       }
       let coords=getCoordByCasilla(res.casilla,indice)
-      this.state.positionsX[indice]=coords.x;
-      this.state.positionsY[indice]=coords.y;
+      const vecx=this.state.positionsX;
+      vecx[indice]=coords.x;
+      const vecy=this.state.positionsY;
+      vecy[indice]=coords.y;
+      this.setState({positionsX: vecx,positionsY: vecy})
       this.inicializarTablero()
     })
   }
@@ -298,6 +301,7 @@ class ColourWheel extends Component {
         }
       }
       if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
+        this.props.activarDado();
         this.state.desactivado=true
         this.state.puedoMover=true;
         conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
@@ -305,6 +309,7 @@ class ColourWheel extends Component {
           finTurno: false ,
         }, (res)=>{
           console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+          this.props.activarDado();
         });
       }else{
         this.state.puedoMover=false;
@@ -437,6 +442,7 @@ class ColourWheel extends Component {
     this.drawRadius(0.1,casillasMarcadas)
     this.drawSpacers()
     this.drawCenterCircle()
+    this.drawPlayers()//añadido
   }
 
   jugada (dado,callback = false) {
@@ -455,12 +461,7 @@ class ColourWheel extends Component {
         }
     )
     console.log('dado'+dado)
-    /*
-    tirar dado
-    conn.emit('posibles jugadas',(data)=>{
 
-    })
-     */
 
     conn.emit("posiblesJugadas", dado, (res)=>{
       console.log("Posibles jugadas con dado: " + dado.toString());
@@ -494,6 +495,8 @@ class ColourWheel extends Component {
           alert('No es tu turno')
         }
       }
+      this.props.desactivarDado();
+
 
     })
 
@@ -531,30 +534,31 @@ class ColourWheel extends Component {
 
           rgb: '#ffffff',
           innerWheelOpen: true,
-          centerCircleOpen: false
+          centerCircleOpen: false,
 
 
 
         },
         () => {
           // Reset state & re-draw.
-          console.log(this.state.positionsX)
-          console.log(this.state.positionsY)
-          //this.inicializarTablero()
-          conn.emit("comenzarPartida", (res)=>{
-            console.log(res)
-            console.log("Al comenzar partida: " + res.res + " " + res.info);
-            //this.inicializarTablero()
-            if(res.res==='ok'){
-              //this.drawCenterCircle()
-              this.inicializarTablero()
-            }
 
-
-          });
 
         }
     )
+    console.log(this.state.positionsX)
+    console.log(this.state.positionsY)
+    //this.inicializarTablero()
+    conn.emit("comenzarPartida", (res)=>{
+      console.log(res)
+      console.log("Al comenzar partida: " + res.res + " " + res.info);
+      //this.inicializarTablero()
+      if(res.res==='ok'){
+        //this.drawCenterCircle()
+        this.inicializarTablero()
+      }
+
+
+    });
 
 
   }
@@ -712,8 +716,13 @@ class ColourWheel extends Component {
   changePosition(x,y,player=0) {
 
     let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
-    this.state.positionsX[player]=coords.x;
-    this.state.positionsY[player]=coords.y;
+    //this.state.positionsX[player]=coords.x;
+    //this.state.positionsY[player]=coords.y;
+    const vecx=this.state.positionsX;
+    vecx[player]=coords.x;
+    const vecy=this.state.positionsY;
+    vecy[player]=coords.y;
+    this.setState({positionsX: vecx,positionsY: vecy})
 
   }
 
@@ -846,22 +855,32 @@ class ColourWheel extends Component {
     const height = radius * 2
     const width = radius * 2
 
+    //this.ctx.beginPath()
     this.ctx.beginPath()
-
-    this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    const imageObj1 = new Image();
+    console.log('imagen')
+    //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
+    imageObj1.src= '/images/avatars/avatar_6.png';
 
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
-      this.ctx.fillText(
+      console.log(this.state.positionsX[i])
+      console.log(this.state.positionsY[i])
+      /*this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
           this.state.positionsY[i]
-      )
+      )*/
+
+
+      //imageObj1.crossOrigin = "Anonymous";
+      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
     }
 
 
 
-    this.ctx.stroke()
+    //this.ctx.stroke()
     this.ctx.closePath()
   }
 
@@ -870,7 +889,7 @@ class ColourWheel extends Component {
   }
 
 
-  handleResponseFromQuiz(response){
+  handleResponseFromQuiz=(response)=>{
     console.log(response);
     console.log(response.result);
 
@@ -880,7 +899,16 @@ class ColourWheel extends Component {
     }, (res)=>{
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);
+
     });
+    if(response.result===1){
+      this.props.activarDado();
+    }
+    if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
+      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria});
+    }
+
+    //this.handleClose()
 
 
   }
@@ -957,7 +985,7 @@ class ColourWheel extends Component {
                       <Card style={{ color: green[500] }} >
                         <CardContent>
                           <Typography>Responda a la pregunta.</Typography>
-                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} onClick={this.handleClose()}> </Quiz>
+                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
                         </CardContent>
                       </Card>
 
