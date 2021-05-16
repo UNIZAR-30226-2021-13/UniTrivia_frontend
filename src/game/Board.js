@@ -180,16 +180,17 @@ class Board extends Component {
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
-        }).catch((code,message) => {
+        }).catch((code) => {
             console.log(code.response)
         });
 
         conn.on('nuevoJugador',(user)=> {
+            const usuario = user.jugador;
             console.log(user);
             console.log(this.state.admin);
-            if (!this.state.jugadores.includes(user)) {
+            if (!this.state.jugadores.includes(usuario)) {
                 console.log("Es nuevo de verdad");
-                const list = this.state.jugadores.concat(user);
+                const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
@@ -199,26 +200,35 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores);
+            let list = [];
+            for(let i = 0; i<users.jugadores.length; i++){
+                list.push(users.jugadores[i].usuario);
+            }
             this.setState({admin: users.jugadores[0],
-                esprimero:false, jugadores: users.jugadores});
+                esprimero:false, jugadores: list});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
             //this.setState({jugadores: users.jugadores})
         })
 
+        //TODO: marcar de alguna forma un usuario desconectado y luego desmarcarlo cuando se reconecta
+        /*
         conn.on('reconexionJugador',(user)=> {
+            const usuario = user.jugador;
             console.log(user);
             console.log(this.state.admin);
-            if (!this.state.jugadores.includes(user)) {
-                console.log("Es nuevo de verdad");
-                const list = this.state.jugadores.concat(user);
+            if (!this.state.jugadores.includes(usuario)) {
+                console.log("Se reconecta");
+                const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
         })
 
+
+         */
         conn.on('estadoPartida',(users)=>{
             console.log(users);
             let userList = [];
