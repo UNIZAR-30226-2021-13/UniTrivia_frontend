@@ -523,6 +523,8 @@ class ColourWheel extends Component {
   }
 
 
+
+
   iniciarPartida (callback = false) {
 
     const { radius } = this.props
@@ -867,6 +869,13 @@ class ColourWheel extends Component {
     this.drawPlayers()
   }
 
+  cargarImagen(){
+    const imageObj1 = new Image();
+    //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
+    imageObj1.src= '/images/avatars/avatar_6.png';
+    return imageObj1
+  }
+
   drawPlayers () {
     console.log('dibujando players')
     const { radius } = this.props
@@ -876,25 +885,26 @@ class ColourWheel extends Component {
 
     //this.ctx.beginPath()
     this.ctx.beginPath()
-    this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
     //const imageObj1 = new Image();
     console.log('imagen')
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
     //imageObj1.src= '/images/avatars/avatar_6.png';
-
+    const imageObj1=this.cargarImagen()
+    console.log(imageObj1)
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
       console.log(this.state.positionsX[i])
       console.log(this.state.positionsY[i])
-      this.ctx.fillText(
+      /*this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
           this.state.positionsY[i]
-      )
+      )*/
 
 
       //imageObj1.crossOrigin = "Anonymous";
-      //this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
+      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
     }
 
 

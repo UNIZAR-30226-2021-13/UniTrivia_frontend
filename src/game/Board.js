@@ -180,16 +180,17 @@ class Board extends Component {
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
-        }).catch((code,message) => {
+        }).catch((code) => {
             console.log(code.response)
         });
 
         conn.on('nuevoJugador',(user)=> {
+            const usuario = user;
             console.log(user);
             console.log(this.state.admin);
-            if (!this.state.jugadores.includes(user)) {
+            if (!this.state.jugadores.includes(usuario)) {
                 console.log("Es nuevo de verdad");
-                const list = this.state.jugadores.concat(user);
+                const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
@@ -198,8 +199,12 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores);
+            let list = [];
+            for(let i = 0; i<users.jugadores.length; i++){
+                list.push(users.jugadores[i]);
+            }
             this.setState({admin: users.jugadores[0],
-                esprimero:false, jugadores: users.jugadores});
+                esprimero:false, jugadores: list});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -215,7 +220,16 @@ class Board extends Component {
                 this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
+
             }
+            let quienSoy
+            for(var i=0;i<this.state.jugadores.length;i++){
+                if(this.state.jugadores[i]===getUser()){
+                    quienSoy=i
+                }
+            }
+            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+
         })
 
         conn.on('estadoPartida',(users)=>{
