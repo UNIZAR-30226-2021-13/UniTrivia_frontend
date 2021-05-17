@@ -72,7 +72,7 @@ class Board extends Component {
         admin:'',
         open:false,
 
-        coloresAcertados: ["yellow"],
+        coloresAcertados: [],
         jugadores: [],
         codigoSala: null,
         username: "",
@@ -97,12 +97,8 @@ class Board extends Component {
         })
     }
 
-
-
-
-
-    quesitos=()=>{
-        console.log("EStoy en quesitos");
+    rellenarQuesitos=(color)=>{
+        this.state({coloresAcertados: color});
 
     }
 
@@ -185,7 +181,7 @@ class Board extends Component {
         });
 
         conn.on('nuevoJugador',(user)=> {
-            const usuario = user;
+            const usuario = user.jugador;
             console.log(user);
             console.log(this.state.admin);
             if (!this.state.jugadores.includes(usuario)) {
@@ -198,13 +194,17 @@ class Board extends Component {
         })
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
-            console.log(users.jugadores);
+            console.log(users.jugadores.usuario);
             let list = [];
+            let gamers = [];
             for(let i = 0; i<users.jugadores.length; i++){
                 list.push(users.jugadores[i]);
+                gamers.push(users.jugadores[i].usuario);
             }
+            console.log(list);
+            //console.log(gamers);
             this.setState({admin: users.jugadores[0],
-                esprimero:false, jugadores: list});
+                esprimero:false, jugadores: gamers});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -439,6 +439,7 @@ class Board extends Component {
     handleQuesitos=(response)=>{
         console.log('quesito de'+response.quesito)
         const colors = this.state.jugadores.concat("pink");
+        console.log(response);
         this.setState({coloresAcertados: colors})
         console.log(this.state.coloresAcertados)
 
