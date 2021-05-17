@@ -190,6 +190,8 @@ export function getCoordByCasilla (casilla,i) {
     case 111: coord.x=94.5 ;coord.y=145.6875+offset*i; break
     case 112: coord.x=136.5 ;coord.y=169.6875+offset*i; break
     case 113: coord.x=179.5;coord.y= 195.6875+offset*i; break
+
+    case 777: coord.x=250;coord.y= 250+offset*i; break
   }
   return coord
 

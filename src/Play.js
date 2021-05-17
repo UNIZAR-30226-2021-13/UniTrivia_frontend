@@ -25,7 +25,6 @@ const Div=styled.div`
   flex-direction: column;
   width: 70%;
   margin: 2em auto;
-
   @media screen and (min-width: 1180px) {
     width: 50%;
   }

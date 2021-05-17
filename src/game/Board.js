@@ -408,7 +408,7 @@ class Board extends Component {
 
 
     rollDoneCallback2 =(num) =>{
-        setTimeout(()=>{this.rollDoneCallback(num)}, 2000);//2000
+        setTimeout(()=>{this.rollDoneCallback(num)}, 1000);//2000
     }
 
     turn =() =>{
