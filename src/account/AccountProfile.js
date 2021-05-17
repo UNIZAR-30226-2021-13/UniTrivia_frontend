@@ -94,7 +94,6 @@ function AccountProfile(props) {
 
 
                         />
-                        
                     </Grid>
 
                     <Grid
