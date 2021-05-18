@@ -59,6 +59,7 @@
     "express-openapi-validator": "^4.12.6",
     "js-yaml": "^4.0.0",
     "prop-types": "^15.7.2",
+    "react-sound": "^1.2.0",
     "react-window": "^1.8.6"
   }
 }
