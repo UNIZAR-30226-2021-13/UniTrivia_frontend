@@ -64,6 +64,7 @@ const useStyles = (theme) => ({
 
 
 class Board extends Component {
+
     state = {
         selectedColour: yourDefaultColour,
         dado: 0,
@@ -78,12 +79,40 @@ class Board extends Component {
         username: "",
         esprimero: true,
         nuevoJugador: false,
-
         puedoTirar: false
 
     }
 
     audio = new Audio(dados)
+
+    constructor(props) {
+        super(props);
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+                jwt: getToken()
+            }}).then((response) => {
+            this.setState({username:response.data._id})
+            console.log(this.state.jugadores);
+            console.log(response.data._id);
+            console.log("no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
+            if (this.state.jugadores.length == 0 &&  this.state.esprimero) {
+                console.log("Es el primero, lo ponemos como admin");
+                const list = this.state.jugadores.concat(response.data._id);
+                //this.state.admin = response.data._id;
+                this.setState({jugadores:list,
+                    admin: response.data._id})
+
+
+            } else if (this.state.jugadores.length == 1 &&  this.state.esprimero){
+                this.setState({admin: response.data._id})
+
+            } else {
+                console.log("Se intenta meter un usuario que ya estaba");
+
+            }
+        }).catch((code) => {
+            console.log(code.response)
+        });
+    }
 
     activarDado(){
         this.setState({
@@ -96,10 +125,6 @@ class Board extends Component {
             puedoTirar: false
         })
     }
-
-
-
-
 
     quesitos=()=>{
         console.log("EStoy en quesitos");
@@ -165,26 +190,9 @@ class Board extends Component {
 
 
     componentDidMount(){
-        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
-                jwt: getToken()
-            }}).then((response) => {
-            this.setState({username:response.data._id})
-            console.log(this.state.jugadores);
-            console.log(response.data._id);
-            if (this.state.jugadores.length==0 &&  this.state.esprimero) {
-                console.log("Es el primero, lo ponemos como admin");
-                const list = this.state.jugadores.concat(response.data._id);
-                //this.state.admin = response.data._id;
-                this.setState({jugadores:list,
-                    admin: response.data._id})
-            } else {
-                console.log("Se intenta meter un usuario que ya estaba");
-            }
-        }).catch((code) => {
-            console.log(code.response)
-        });
 
         conn.on('nuevoJugador',(user)=> {
+            console.log("Cargando nuevo jugador...")
             const usuario = user.jugador;
             console.log(user);
             console.log(this.state.admin);
@@ -198,14 +206,23 @@ class Board extends Component {
         })
 
         conn.on('cargarJugadores',(users)=>{
+            console.log("Cargando jugadores...")
             console.log(users);
             console.log(users.jugadores);
             let list = [];
             for(let i = 0; i<users.jugadores.length; i++){
                 list.push(users.jugadores[i].usuario);
             }
-            this.setState({admin: users.jugadores[0],
-                esprimero:false, jugadores: list});
+
+            if(list.length > 1){
+                this.setState({admin: '',
+                    esprimero:false, jugadores: list});
+            } else {
+                this.setState({admin: this.state.username,
+                    esprimero:true, jugadores: list});
+            }
+
+
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -230,13 +247,14 @@ class Board extends Component {
 
          */
         conn.on('estadoPartida',(users)=>{
+            console.log("Cargando estado partida...")
             console.log(users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
                 userList.push(users.jugadores[i].usuario)
             }
             console.log(users.jugadores);
-            this.setState({admin: userList[0],
+            this.setState({admin: '',
                 esprimero:false, jugadores: userList});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
@@ -275,6 +293,7 @@ class Board extends Component {
         })
 
         conn.on('jugadorSale',(user)=>{
+            /*
             console.log("Entramos en abandono de partida "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
             var indexUser = arrayJugadores.indexOf(user);
@@ -288,6 +307,8 @@ class Board extends Component {
                 //this.state.jugadores = arrayJugadores;
                 this.setState({jugadores: arrayJugadores})
             }
+            */
+            alert("El jugador " + user + "ha abandonado la partida")
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
@@ -567,7 +588,16 @@ class Board extends Component {
 
                         </div>
                         <div>
-                            {this.botonEmpezar()}
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                onClick={this.iniciarPartidaa}
+                                disabled={! (this.state.username===this.state.admin)}
+                            >
+                                Empezar Partida
+                            </Button>
                         </div>
                     </div>
                 </Grid>
