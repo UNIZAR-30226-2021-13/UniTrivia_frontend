@@ -9,7 +9,7 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, Popper, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
@@ -24,6 +24,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Cheese from "./Cheese";
 import {withStyles} from "@material-ui/core/styles";
+import Avatar from '@material-ui/core/Avatar';
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -71,7 +72,13 @@ class Board extends Component {
         turno:'',
         admin:'',
         open:false,
-
+        datosJugadores:[{
+            avatar:"",
+            nombre:"",
+            coloresAcertados: [],
+            banner:"",
+            ficha:""
+        }],
         coloresAcertados: [],
         jugadores: [],
         codigoSala: null,
@@ -98,7 +105,7 @@ class Board extends Component {
     }
 
     rellenarQuesitos=(color)=>{
-        this.state({coloresAcertados: color});
+        //this.state({coloresAcertados: color});
 
     }
 
@@ -107,14 +114,17 @@ class Board extends Component {
         console.log(this.state.jugadores)
         return(
             <List dense className={classes.root}>
-                {this.state.jugadores.map((value) => {
+                {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     return (
                         <div>
                             <ListItem key={value} button>
-                                <ListItemText id={labelId} primary={`${value}`} />
+                                <ListItemAvatar>
+                                    <Avatar altP="Remy Sharp" src={"/images/avatars/"+value.avatar+".png"} />
+                                </ListItemAvatar>
+                                <ListItemText id={labelId} primary={`${value.nombre}`} />
                                 <ListItemSecondaryAction>
-                                    <Cheese color={this.state.coloresAcertados}></Cheese>
+                                    <Cheese color={value.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
                             </ListItem>
 
@@ -164,6 +174,7 @@ class Board extends Component {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
+            console.log(response)
             this.setState({username:response.data._id})
             console.log(this.state.jugadores);
             console.log(response.data._id);
@@ -171,8 +182,18 @@ class Board extends Component {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
-                this.setState({jugadores:list,
-                    admin: response.data._id})
+                this.setState({
+                    jugadores:list,
+                    admin: response.data._id,
+                    datosJugadores:[{
+                        avatar: response.data.avtr,
+                        banner: response.data.bnr,
+                        ficha: response.data.fich,
+                        nombre: response.data._id,
+                        coloresAcertados: []
+                    }
+                    ]
+                    })
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
             }
@@ -186,6 +207,16 @@ class Board extends Component {
             console.log(this.state.admin);
             if (!this.state.jugadores.includes(usuario)) {
                 console.log("Es nuevo de verdad");
+                const listDatos = this.state.datosJugadores.concat({
+                    ficha:user.imgs.ficha,
+                    nombre: user.jugador,
+                    banner:user.imgs.banner,
+                    avatar:user.imgs.avatar,
+                    coloresAcertados: ["purple","blue"]
+                })
+                console.log(listDatos);
+                this.setState({datosJugadores:listDatos});
+                console.log(this.state.datosJugadores);
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
             } else {
@@ -199,12 +230,17 @@ class Board extends Component {
             let gamers = [];
             for(let i = 0; i<users.jugadores.length; i++){
                 list.push(users.jugadores[i]);
-                gamers.push(users.jugadores[i].usuario);
+                gamers.push({
+                    nombre:users.jugadores[i].usuario,
+                    ficha:users.jugadores[i].ficha,
+                    banner:users.jugadores[i].banner,
+                    avatar:users.jugadores[i].avatar,
+                    coloresAcertados: []});
             }
             console.log(list);
             //console.log(gamers);
             this.setState({admin: users.jugadores[0],
-                esprimero:false, jugadores: gamers});
+                esprimero:false, datosJugadores: gamers});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -437,12 +473,30 @@ class Board extends Component {
 
 
     handleQuesitos=(response)=>{
-        console.log('quesito de'+response.quesito)
-        const colors = this.state.jugadores.concat("pink");
         console.log(response);
-        this.setState({coloresAcertados: colors})
-        console.log(this.state.coloresAcertados)
-
+        console.log('quesito de'+response.quesito);
+        let color;
+        switch (response.quesito) {
+            case "Historia":
+                color = "yellow";
+            case "Deportes":
+                color = "orange";
+            case "Entretenimiento":
+                color = "pink";
+            case "Ciencias":
+                color = "green";
+            case "Geografia":
+                color = "blue";
+            case "Cultura General":
+                color = "purple";
+        }
+        const colors = this.state.coloresAcertados;
+        colors.push(color);
+        console.log(colors);
+        this.setState({coloresAcertados:colors});
+        console.log(this.state.coloresAcertados);
+        //this.setState({})
+        //console.log(this.state.coloresAcertados)
     }
 
 
