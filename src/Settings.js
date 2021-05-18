@@ -58,6 +58,7 @@ function Settings(){
                 }
                 playFromPosition={300}
                 loop={true}
+                volume={20}
             />
         </div>
         );
