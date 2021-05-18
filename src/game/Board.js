@@ -260,7 +260,7 @@ class Board extends Component {
                     nombre: user.jugador,
                     banner:user.imgs.banner,
                     avatar:user.imgs.avatar,
-                    coloresAcertados: ["purple","blue"]
+                    coloresAcertados: []
                 })
                 console.log(listDatos);
                 this.setState({datosJugadores:listDatos});
@@ -495,22 +495,35 @@ class Board extends Component {
         switch (response.quesito) {
             case "Historia":
                 color = "yellow";
+                break;
             case "Deportes":
                 color = "orange";
+                break;
             case "Entretenimiento":
                 color = "pink";
+                break;
             case "Ciencias":
                 color = "green";
+                break;
             case "Geografia":
                 color = "blue";
+                break;
             case "Cultura General":
                 color = "purple";
+                break;
         }
         const colors = this.state.coloresAcertados;
         colors.push(color);
         console.log(colors);
         this.setState({coloresAcertados:colors});
         console.log(this.state.coloresAcertados);
+        var i;
+        var arrayDatosJugadores=this.state.datosJugadores;
+        for(i=0;i<arrayDatosJugadores.length;i++){
+            if(arrayDatosJugadores[i].nombre==this.state.username){
+
+            }
+        }
         //this.setState({})
         //console.log(this.state.coloresAcertados)
     }
