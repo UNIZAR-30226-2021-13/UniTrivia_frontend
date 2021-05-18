@@ -111,11 +111,14 @@ class Board extends Component {
 
     listarJugadores = (classes) => {
         console.log('listando jugadores')
-        console.log(this.state.jugadores)
+        console.log(this.state.datosJugadores)
         return(
             <List dense className={classes.root}>
                 {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
+                    console.log("Voy a imprimiRRRRRRRR")
+                    console.log(value)
+                    console.log(value.avatar)
                     return (
                         <div>
                             <ListItem key={value} button>
@@ -212,7 +215,7 @@ class Board extends Component {
                     nombre: user.jugador,
                     banner:user.imgs.banner,
                     avatar:user.imgs.avatar,
-                    coloresAcertados: ["purple","blue"]
+                    coloresAcertados: []
                 })
                 console.log(listDatos);
                 this.setState({datosJugadores:listDatos});
@@ -232,13 +235,13 @@ class Board extends Component {
                 list.push(users.jugadores[i]);
                 gamers.push({
                     nombre:users.jugadores[i].usuario,
-                    ficha:users.jugadores[i].ficha,
-                    banner:users.jugadores[i].banner,
-                    avatar:users.jugadores[i].avatar,
+                    ficha:users.jugadores[i].imgs.ficha,
+                    banner:users.jugadores[i].imgs.banner,
+                    avatar:users.jugadores[i].imgs.avatar,
                     coloresAcertados: []});
             }
             console.log(list);
-            //console.log(gamers);
+            console.log(gamers);
             this.setState({admin: users.jugadores[0],
                 esprimero:false, datosJugadores: gamers});
             //console.log(users.jugadores.prototype);
@@ -252,6 +255,15 @@ class Board extends Component {
             console.log(this.state.admin);
             if (!this.state.jugadores.includes(user)) {
                 console.log("Es nuevo de verdad");
+                const listDatos = this.state.datosJugadores.concat({
+                    ficha:user.imgs.ficha,
+                    nombre: user.jugador,
+                    banner:user.imgs.banner,
+                    avatar:user.imgs.avatar,
+                    coloresAcertados: ["purple","blue"]
+                })
+                console.log(listDatos);
+                this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(user);
                 this.setState({jugadores:list})
             } else {
@@ -302,12 +314,14 @@ class Board extends Component {
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
+            var arrayDatosJugadores = this.state.datosJugadores;
             var indexUser = arrayJugadores.indexOf(user);
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+                arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores})
+                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -319,11 +333,13 @@ class Board extends Component {
             console.log("Entramos en abandono de partida "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
             var indexUser = arrayJugadores.indexOf(user);
+            var arrayDatosJugadores = this.state.datosJugadores;
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona la partida");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+                arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores})
+                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
