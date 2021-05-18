@@ -64,7 +64,8 @@ class ColourWheel extends Component {
       posiblesJugadas: null,
       casillaActualInfo: null,
       desactivado:true,
-      open: false
+      open: false,
+      imagenes: []
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -201,6 +202,12 @@ class ColourWheel extends Component {
       vecy[indice]=coords.y;
       this.setState({positionsX: vecx,positionsY: vecy})
       this.inicializarTablero()
+      if(res.ques!=""){
+          this.props.onResponse({quesito: res.ques,user: res.user});
+
+      }
+
+
     })
   }
 
@@ -299,6 +306,7 @@ class ColourWheel extends Component {
         console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
         if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
           this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+          this.setState({casillaActualInfo: this.state.posiblesJugadas[j]})
         }
       }
       if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
@@ -517,9 +525,15 @@ class ColourWheel extends Component {
   }
 
   setValores(players,numplayers,quiensoy){
-    this.state.playerName=players
+    let imgs=[]
+    for(var i=0;i<numplayers;i++){
+      this.state.playerName=players.nombre
+      imgs.push(players[i].ficha)
+    }
+    //this.state.playerName=players
     this.state.numPlayers=numplayers
     this.state.quienSoy=quiensoy
+    this.state.imagenes=imgs
   }
 
 
@@ -891,6 +905,8 @@ class ColourWheel extends Component {
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
     //imageObj1.src= '/images/avatars/avatar_6.png';
     const imageObj1=this.cargarImagen()
+    console.log(this.state.numPlayers)
+
     console.log(imageObj1)
     for(var i=0;i<this.state.numPlayers;i++){
       console.log(this.state.playerName[i])
@@ -934,7 +950,7 @@ class ColourWheel extends Component {
       this.props.activarDado();
     }
     if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
-      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria});
+      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria,user: getUser()});
     }
 
     //this.handleClose()

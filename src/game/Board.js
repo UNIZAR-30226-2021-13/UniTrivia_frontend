@@ -300,14 +300,12 @@ class Board extends Component {
             }
             //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
             let quienSoy=0
-            for(var i=0;i<this.state.jugadores.length;i++){
-                if(this.state.jugadores[i]===getUser()){
+            for(var i=0;i<this.state.datosJugadores.length;i++){
+                if(this.state.datosJugadores[i].nombre===getUser()){
                     quienSoy=i
                 }
             }
-
-            //this.drawCenterCircle()
-            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+            this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
             this.colourWheel.cargarPartida(casillas,quienSoy)
         })
 
@@ -399,12 +397,12 @@ class Board extends Component {
         conn.on('comienzoPartida', () => {
             console.log("Comienza la partida");
             let quienSoy=0
-            for(var i=0;i<this.state.jugadores.length;i++){
-                if(this.state.jugadores[i]===getUser()){
+            for(var i=0;i<this.state.datosJugadores.length;i++){
+                if(this.state.datosJugadores[i].nombre===getUser()){
                     quienSoy=i
                 }
             }
-            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+            this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
             console.log('dibujand')
 
             //this.drawCenterCircle()
@@ -517,13 +515,13 @@ class Board extends Component {
         console.log(colors);
         this.setState({coloresAcertados:colors});
         console.log(this.state.coloresAcertados);
-        var i;
         var arrayDatosJugadores=this.state.datosJugadores;
-        for(i=0;i<arrayDatosJugadores.length;i++){
-            if(arrayDatosJugadores[i].nombre==this.state.username){
-
+        for(var i=0;i<arrayDatosJugadores.length;i++){
+            if(arrayDatosJugadores[i].nombre===response.user){
+                arrayDatosJugadores[i].coloresAcertados.push(color)
             }
         }
+        this.setState({datosJugadores: arrayDatosJugadores});
         //this.setState({})
         //console.log(this.state.coloresAcertados)
     }
