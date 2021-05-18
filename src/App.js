@@ -19,9 +19,7 @@ import Game from "./Game";
 import CrearSala from "./CrearSala";
 import UnirseSala from "./UnirseSala";
 import Sala from "./Sala";
-import PlaySound, {swap} from "./PlaySound";
-
-global.isPlaying=false
+import Tienda from "./tienda/Tienda"
 
 function App(props) {
   const [authLoading, setAuthLoading] = useState(true);
@@ -48,11 +46,9 @@ function App(props) {
 
   return (
     <div className="App">
-
       <BrowserRouter>
         <div>
           <div className="content">
-
             <Switch>
               <Route exact path="/" component={Home} />
               <Route path="/login" component={Login} />
@@ -66,6 +62,7 @@ function App(props) {
               <PrivateRoute path="/UnirseSala" component={UnirseSala}/>
               <PrivateRoute path="/Sala" component={Sala}/>
               <NoGuestRoute path="/Profile" component={Profile}/>
+              <NoGuestRoute path="/Tienda" component={Tienda}/>
             </Switch>
           </div>
         </div>

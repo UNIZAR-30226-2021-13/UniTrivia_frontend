@@ -7,21 +7,21 @@ import React, {useEffect} from 'react'
 //                     >
 //                         {`${moment().format('hh:mm A')} ${user.timezone}`}
 //                     </Typography>
-import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Typography} from '@material-ui/core';
+import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography} from '@material-ui/core';
+import Banner from 'react-js-banner';
 
-const user = {
-  avatar: '/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-8'
-};
+
 
 
 function AccountProfile(props) {
     const profiles=props;
+    let avatar = '/images/avatars/' + props.avatar + '.jpg';
+    let banner = '/images/banners/' + props.banner + '.jpg';
+    let ficha = '/images/fichas/' + props.ficha + '.png';
 
+    console.log(avatar);
+    console.log(banner);
+    console.log(ficha);
 
     return (
 
@@ -34,13 +34,67 @@ function AccountProfile(props) {
                         flexDirection: 'column'
                     }}
                 >
-                    <Avatar
-                        src={user.avatar}
-                        sx={{
-                            height: 100,
-                            width: 100
-                        }}
-                    />
+                <Grid
+                    container
+                    spacing={3}
+                >
+
+                    <Grid
+                        item
+                        md={6}
+                        xs={6}
+                    >
+
+                        <Avatar
+                            title='Avatar'
+                            src={avatar}
+                            sx={{ width: 100, height: 100 }}
+
+
+                        />
+                    </Grid>
+
+                    <Grid
+                        item
+                        sm={3}
+                        xs={6}
+
+                    >
+
+                        <img
+                            title='Forma Ficha'
+                            src={ficha}
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
+
+
+                        />
+                    </Grid>
+
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
+
+                        <img
+
+                            title='Banner'
+                            src={banner}
+                            sx={{
+                                alignItems: 'center',
+                                display: 'flex',
+                                flexDirection: 'row'
+                            }}
+                            width="800"
+                            height="300"
+
+                        />
+                    </Grid>
+                </Grid>
                     <Typography
                         color="textPrimary"
                         gutterBottom
@@ -57,32 +111,6 @@ function AccountProfile(props) {
 
                 </Box>
             </CardContent>
-            <Divider/>
-            <CardActions>
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar avatar
-                </Button>
-
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar banner
-                </Button>
-
-                <Button
-                    color="primary"
-                    fullWidth
-                    variant="text"
-                >
-                    Modificar forma de ficha
-                </Button>
-            </CardActions>
         </Card>
     );
 }

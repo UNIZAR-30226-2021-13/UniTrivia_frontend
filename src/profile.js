@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import {
     Box,
     Container,
-    Grid
+    Grid, Link
 } from '@material-ui/core';
 import AccountProfile from './account/AccountProfile';
 import AccountProfileDetails from './account/AccountProfileDetails';
@@ -15,6 +15,7 @@ import Stats from './account/Stats'
 import Items from './account/Items'
 import axios from "axios";
 import {setUserSession,getToken,removeUserSession} from "./Utils/Common";
+import Tienda from './tienda/Tienda';
 
 
 
@@ -124,6 +125,40 @@ function Profile(props) {
 
     }
 
+    const irATiendaAvatares = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'avatar'
+            }
+        })
+    }
+
+    const irATiendaBanners = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'banner'
+            }
+        })
+    }
+
+    const irATiendaFichas = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'ficha'
+            }
+        })
+    }
+
+
     return (
         <>
             <Helmet>
@@ -147,8 +182,32 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfile user={username} mail={email} avatar={avatar}/>
+                            <AccountProfile user={username} mail={email} avatar={avatar} banner={banner} ficha={ficha}/>
                         </Grid>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={irATiendaAvatares}
+                            size="small"
+                        >
+                            Tienda Avatares
+                        </Button>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={irATiendaBanners}
+                            size="small"
+                        >
+                            Tienda Banners
+                        </Button>
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={irATiendaFichas}
+                            size="small"
+                        >
+                            Tienda Fichas
+                        </Button>
                         <Grid
                             item
                             lg={8}
@@ -173,6 +232,7 @@ function Profile(props) {
                         >
                             <Items comprados={comprados} />
                         </Grid>
+
                         <Grid
                             item
                             lg={8}
