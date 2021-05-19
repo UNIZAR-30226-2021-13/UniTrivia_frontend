@@ -90,7 +90,8 @@ class Board extends Component {
 
         puedoTirar: false,
         sounds: false,
-        music: false
+        music: false,
+        partidaEmpezada:false
 
     }
 
@@ -170,17 +171,22 @@ class Board extends Component {
     botonEmpezar = () => {
         console.log("Estoy en boton: username: "+this.state.username+"  y admin  "+this.state.admin);
         if(this.state.username===this.state.admin){
-            return(
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={this.iniciarPartidaa}
-                >
-                    Empezar Partida
-                </Button>
-            )
+            if(!this.state.partidaEmpezada){
+                return(
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={this.iniciarPartidaa}
+                    >
+                        Empezar Partida
+                    </Button>
+                )
+            }else{
+                return(<h6>ERES EL ADMIN</h6>)
+            }
+
         }
     }
 
@@ -297,16 +303,16 @@ class Board extends Component {
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
                 userList.push({
-                    ficha:users[i].imgs.ficha,
-                    nombre: users[i].jugador,
-                    banner:users[i].imgs.banner,
-                    avatar:users[i].imgs.avatar,
-                    coloresAcertados: users[i].coloresAcertados
+                    ficha:users.jugadores[i].imgs.ficha,
+                    nombre: users.jugadores[i].usuario,
+                    banner:users.jugadores[i].imgs.banner,
+                    avatar:users.jugadores[i].imgs.avatar,
+                    coloresAcertados: users.jugadores[i].quesitos
                 })
             }
-            console.log(users.jugadores);
-            this.setState({admin: userList[0],
-                esprimero:false, jugadores: userList});
+            console.log(userList);
+            this.setState({admin: userList[0].nombre,
+                esprimero:false, datosJugadores: userList});
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -365,8 +371,18 @@ class Board extends Component {
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
             console.log("Antiguo lider: "+antiguo+ " nuevo: "+nuevo);
-            var arrayJugadores = this.state.jugadores;
-            var indexUser = arrayJugadores.indexOf(antiguo);
+            var arrayJugadores = this.state.datosJugadores;
+            console.log(arrayJugadores)
+            let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
+            let length = arrayJugadores.length
+            console.log(arrayJugadores[0])
+            for(let i=0;i<length;i++){
+                if (arrayJugadores[i].nombre==antiguo) {
+                    indexUser = i;
+                }
+            }
+
+
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
@@ -455,6 +471,7 @@ class Board extends Component {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
+        this.setState({partidaEmpezada:true})
     }
 
     jugada = () => {
