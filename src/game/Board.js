@@ -245,6 +245,7 @@ class Board extends Component {
             console.log(users);
             console.log(users.jugadores.usuario);
             let list = [];
+            let gamers = [];
             for(let i = 0; i<users.jugadores.length; i++){
                 list.push(users.jugadores[i]);
                 gamers.push({
@@ -256,15 +257,14 @@ class Board extends Component {
             }
             console.log(list);
             console.log(gamers);
-            this.setState({admin: users.jugadores[0],
-                esprimero:false, datosJugadores: gamers});
+
 
             if(list.length > 1){
                 this.setState({admin: '',
-                    esprimero:false, jugadores: list});
+                    esprimero:false, datosJugadores: gamers});
             } else {
                 this.setState({admin: this.state.username,
-                    esprimero:true, jugadores: list});
+                    esprimero:true, datosJugadores: gamers});
             }
 
 
