@@ -16,7 +16,7 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import Room from "./room";
 import IconButton from "@material-ui/core/IconButton";
-import {ArrowBack, HelpOutline} from "@material-ui/icons";
+import {ArrowBack, HelpOutline, MusicNote, MusicOff, VolumeOff, VolumeUp} from "@material-ui/icons";
 import axios from "axios";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -25,6 +25,8 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Cheese from "./Cheese";
 import {withStyles} from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
+import musica from "../music/ascensor.mp3";
+import Sound from "react-sound";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -86,10 +88,19 @@ class Board extends Component {
         esprimero: true,
         nuevoJugador: false,
 
-        puedoTirar: false
+        puedoTirar: false,
+        sounds: false,
+        music: false
 
     }
 
+
+    cambiarSonido=()=>{
+        this.setState({sounds: !this.state.sounds})
+    }
+    cambiarMusica =()=>{
+        this.setState({music: !this.state.music})
+    }
     audio = new Audio(dados)
 
     activarDado(){
@@ -424,7 +435,7 @@ class Board extends Component {
 
     togglePlay = () => {
         this.setState({ play: !this.state.play }, () => {
-            this.state.play ? this.audio.play() : this.audio.pause();
+            this.state.sounds ? this.audio.play() : this.audio.pause();
         });
     }
 
@@ -689,6 +700,24 @@ class Board extends Component {
                                     </div>
                                 </Popup>
 
+                                <IconButton onClick={this.cambiarSonido} >
+                                    {this.state.sounds ? <VolumeUp color="primary"/>:<VolumeOff color="primary"/>}
+                                </IconButton>
+
+                                <IconButton onClick={this.cambiarMusica} color="secondary">
+                                    {this.state.music ? <MusicNote color="primary"/>:<MusicOff color="primary"/>}
+                                </IconButton>
+
+                                <Sound
+                                    url={musica}
+                                    playStatus={
+                                        this.state.music ?Sound.status.PLAYING:Sound.status.PAUSED
+                                    }
+                                    playFromPosition={300}
+                                    loop={true}
+                                    volume={20}
+                                />
+
 
                             </div>
                             <div
@@ -772,7 +801,7 @@ class Board extends Component {
                                         faceColor={'white'}
                                         dotColor={'black'}
                                         rollTime={2}
-                                        sound={'../music/dado.mp3'}
+                                        sound={this.state.sounds?'../music/dado.mp3':''}
                                         disableIndividual={!this.state.puedoTirar}
                                     />
 

@@ -12,7 +12,6 @@ import ChangePassword from "./ChangePassword";
 import Register from "./Register";
 import Menu from "./Menu";
 import Profile from './profile';
-import Settings from './Settings';
 import NoGuestRoute from "./Utils/NoGuestRoute";
 import Play from "./Play";
 import Game from "./Game";
@@ -55,7 +54,6 @@ function App(props) {
               <Route exact path="/ChangePassword" component={ChangePassword} />
               <Route path="/register" component={Register}/>
               <PrivateRoute path="/Menu" component={Menu}/>
-              <PrivateRoute path="/Settings" component={Settings}/>
               <PrivateRoute path="/Play" component={Play}/>
               <PrivateRoute path="/Game" component={Game}/>
               <PrivateRoute path="/CrearSala" component={CrearSala}/>

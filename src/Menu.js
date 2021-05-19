@@ -86,20 +86,7 @@ function Menu() {
                     Perfil
                 </Button>
             </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/Settings'}
-                >
-                    Ajustes
-                </Button>
 
-
-            </div>
             <div style={{marginTop: 100}}>
                 <Button
                     type="submit"

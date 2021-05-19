@@ -3,7 +3,7 @@ import {Card, CardHeader, Collapse, Grid} from '@material-ui/core';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import {ArrowBack, ExpandLess, ExpandMore} from "@material-ui/icons";
 import {FixedSizeList} from "react-window";
 import {makeStyles} from "@material-ui/core/styles";
 import {getToken} from "../Utils/Common";
@@ -12,6 +12,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
 import async from "async";
+import IconButton from "@material-ui/core/IconButton";
 
 let comprados_tipo = [];
 let catalogo_tipo_no_reps = [];
@@ -222,6 +223,10 @@ function Tienda (props){
     };
     return(
         <Card>
+            <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/Profile'}>
+                <ArrowBack color="primary"/>
+                Volver
+            </IconButton>
             <Grid
                 container
                 spacing={2}

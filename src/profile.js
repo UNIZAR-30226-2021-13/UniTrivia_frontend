@@ -16,6 +16,8 @@ import Items from './account/Items'
 import axios from "axios";
 import {setUserSession,getToken,removeUserSession} from "./Utils/Common";
 import Tienda from './tienda/Tienda';
+import {ArrowBack} from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
 
 
 
@@ -176,6 +178,10 @@ function Profile(props) {
             <Helmet>
                 <title>Account | Material Kit</title>
             </Helmet>
+            <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/menu'}>
+                <ArrowBack color="primary"/>
+                Volver
+            </IconButton>
             <Box
                 sx={{
                     backgroundColor: 'background.default',
