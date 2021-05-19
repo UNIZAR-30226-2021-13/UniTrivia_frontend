@@ -526,14 +526,18 @@ class ColourWheel extends Component {
 
   setValores(players,numplayers,quiensoy){
     let imgs=[]
+    let playernames=[]
+    console.log(players)
     for(var i=0;i<numplayers;i++){
-      this.state.playerName=players.nombre
+      playernames.push(players[i].nombre)
       imgs.push(players[i].ficha)
     }
-    //this.state.playerName=players
+    this.state.playerName=playernames
     this.state.numPlayers=numplayers
     this.state.quienSoy=quiensoy
     this.state.imagenes=imgs
+    this.setState({imagenes: imgs})
+    console.log(this.state.imagenes)
   }
 
 
@@ -884,10 +888,15 @@ class ColourWheel extends Component {
   }
 
   cargarImagen(){
-    const imageObj1 = new Image();
+    let images=[]
+    for(var i=0; i<this.state.imagenes.length;i++){
+      const imageObj1 = new Image();
+      imageObj1.src= '/images/fichas/'+this.state.imagenes[i]+'.png';
+      images.push(imageObj1)
+    }
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
-    imageObj1.src= '/images/avatars/avatar_6.png';
-    return imageObj1
+    //imageObj1.src= '/images/fichas/ficha0.png';
+    return images
   }
 
   drawPlayers () {
@@ -909,7 +918,7 @@ class ColourWheel extends Component {
 
     console.log(imageObj1)
     for(var i=0;i<this.state.numPlayers;i++){
-      console.log(this.state.playerName[i])
+      //console.log(this.state.playerName[i])
       console.log(this.state.positionsX[i])
       console.log(this.state.positionsY[i])
       /*this.ctx.fillText(
@@ -920,7 +929,7 @@ class ColourWheel extends Component {
 
 
       //imageObj1.crossOrigin = "Anonymous";
-      this.ctx.drawImage(imageObj1,this.state.positionsX[i],this.state.positionsY[i],20,20)
+      this.ctx.drawImage(imageObj1[i],this.state.positionsX[i],this.state.positionsY[i],25,25)
     }
 
 

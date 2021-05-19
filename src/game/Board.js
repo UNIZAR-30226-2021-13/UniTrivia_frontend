@@ -123,7 +123,7 @@ class Board extends Component {
                         <div>
                             <ListItem key={value} button>
                                 <ListItemAvatar>
-                                    <Avatar altP="Remy Sharp" src={"/images/avatars/"+value.avatar+".png"} />
+                                    <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
                                 </ListItemAvatar>
                                 <ListItemText id={labelId} primary={`${value.nombre}`} />
                                 <ListItemSecondaryAction>
@@ -280,11 +280,17 @@ class Board extends Component {
 
         })
 
-        conn.on('estadoPartida',(users)=>{
+        conn.on('estadoPartida',(users)=>{//arreglar
             console.log(users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
-                userList.push(users.jugadores[i].usuario)
+                userList.push({
+                    ficha:users[i].imgs.ficha,
+                    nombre: users[i].jugador,
+                    banner:users[i].imgs.banner,
+                    avatar:users[i].imgs.avatar,
+                    coloresAcertados: users[i].coloresAcertados
+                })
             }
             console.log(users.jugadores);
             this.setState({admin: userList[0],
@@ -431,7 +437,7 @@ class Board extends Component {
         }
         console.log(this.state.jugadores)
         console.log(this.colourWheel)
-        this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+        this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
 
         this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
