@@ -63,8 +63,8 @@ html {
 .category.green {
     background: #56b945;
 }
-.category.brown {
-    background: #a67a2f;
+.category.purple {
+    background: #7843f6;
 }
 .category.orange {
     background: #e7942e;
@@ -176,8 +176,8 @@ html {
     border-top: 1.2em solid #e5e112;
     transform: rotate(60deg);
 }
-.piece.brown {
-    border-top: 1.2em solid #a67a2f;
+.piece.purple {
+    border-top: 1.2em solid #7843f6;
     transform: rotate(120deg);
 }
 .piece.orange {

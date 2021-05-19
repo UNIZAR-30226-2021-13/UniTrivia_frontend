@@ -9,14 +9,14 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, Popper, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import Room from "./room";
 import IconButton from "@material-ui/core/IconButton";
-import {ArrowBack, HelpOutline} from "@material-ui/icons";
+import {ArrowBack, HelpOutline, MusicNote, MusicOff, VolumeOff, VolumeUp} from "@material-ui/icons";
 import axios from "axios";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -24,6 +24,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Cheese from "./Cheese";
 import {withStyles} from "@material-ui/core/styles";
+import Avatar from '@material-ui/core/Avatar';
+import musica from "../music/ascensor.mp3";
+import Sound from "react-sound";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -64,7 +67,6 @@ const useStyles = (theme) => ({
 
 
 class Board extends Component {
-
     state = {
         selectedColour: yourDefaultColour,
         dado: 0,
@@ -72,17 +74,33 @@ class Board extends Component {
         turno:'',
         admin:'',
         open:false,
-
-        coloresAcertados: ["yellow"],
+        datosJugadores:[{
+            avatar:"",
+            nombre:"",
+            coloresAcertados: [],
+            banner:"",
+            ficha:""
+        }],
+        coloresAcertados: [],
         jugadores: [],
         codigoSala: null,
         username: "",
         esprimero: true,
         nuevoJugador: false,
-        puedoTirar: false
+
+        puedoTirar: false,
+        sounds: false,
+        music: false
 
     }
 
+
+    cambiarSonido=()=>{
+        this.setState({sounds: !this.state.sounds})
+    }
+    cambiarMusica =()=>{
+        this.setState({music: !this.state.music})
+    }
     audio = new Audio(dados)
 
     constructor(props) {
@@ -126,24 +144,31 @@ class Board extends Component {
         })
     }
 
-    quesitos=()=>{
-        console.log("EStoy en quesitos");
+    rellenarQuesitos=(color)=>{
+        //this.state({coloresAcertados: color});
 
     }
 
     listarJugadores = (classes) => {
         console.log('listando jugadores')
-        console.log(this.state.jugadores)
+        console.log(this.state.datosJugadores)
         return(
-            <List dense className={classes.root}>
-                {this.state.jugadores.map((value) => {
+
+            <List dense className={classes.root} style={{backgroundImage: "/images/banners/banner2"}}>
+                {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
+                    console.log("Voy a imprimiRRRRRRRR")
+                    console.log(value)
+                    console.log(value.avatar)
                     return (
-                        <div>
-                            <ListItem key={value} button>
-                                <ListItemText id={labelId} primary={`${value}`} />
+                        <div style={{backgroundImage: "url(" + "/images/banners/banner0.jpg" + ")",backgroundSize: 'cover'}}>
+                            <ListItem key={value}  >
+                                <ListItemAvatar>
+                                    <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
+                                </ListItemAvatar>
+                                <ListItemText id={labelId} primary={`${value.nombre}`} />
                                 <ListItemSecondaryAction>
-                                    <Cheese color={this.state.coloresAcertados}></Cheese>
+                                    <Cheese color={value.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
                             </ListItem>
 
@@ -198,6 +223,16 @@ class Board extends Component {
             console.log(this.state.admin);
             if (!this.state.jugadores.includes(usuario)) {
                 console.log("Es nuevo de verdad");
+                const listDatos = this.state.datosJugadores.concat({
+                    ficha:user.imgs.ficha,
+                    nombre: user.jugador,
+                    banner:user.imgs.banner,
+                    avatar:user.imgs.avatar,
+                    coloresAcertados: []
+                })
+                console.log(listDatos);
+                this.setState({datosJugadores:listDatos});
+                console.log(this.state.datosJugadores);
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
             } else {
@@ -208,11 +243,21 @@ class Board extends Component {
         conn.on('cargarJugadores',(users)=>{
             console.log("Cargando jugadores...")
             console.log(users);
-            console.log(users.jugadores);
+            console.log(users.jugadores.usuario);
             let list = [];
             for(let i = 0; i<users.jugadores.length; i++){
-                list.push(users.jugadores[i].usuario);
+                list.push(users.jugadores[i]);
+                gamers.push({
+                    nombre:users.jugadores[i].usuario,
+                    ficha:users.jugadores[i].imgs.ficha,
+                    banner:users.jugadores[i].imgs.banner,
+                    avatar:users.jugadores[i].imgs.avatar,
+                    coloresAcertados: []});
             }
+            console.log(list);
+            console.log(gamers);
+            this.setState({admin: users.jugadores[0],
+                esprimero:false, datosJugadores: gamers});
 
             if(list.length > 1){
                 this.setState({admin: '',
@@ -238,9 +283,22 @@ class Board extends Component {
             if (!this.state.jugadores.includes(usuario)) {
                 console.log("Se reconecta");
                 const list = this.state.jugadores.concat(usuario);
+            if (!this.state.jugadores.includes(user)) {
+                console.log("Es nuevo de verdad");
+                const listDatos = this.state.datosJugadores.concat({
+                    ficha:user.imgs.ficha,
+                    nombre: user.jugador,
+                    banner:user.imgs.banner,
+                    avatar:user.imgs.avatar,
+                    coloresAcertados: []
+                })
+                console.log(listDatos);
+                this.setState({datosJugadores:listDatos});
+                const list = this.state.jugadores.concat(user);
                 this.setState({jugadores:list})
             } else {
                 console.log("Se intenta meter un usuario que ya estaba");
+
             }
         })
 
@@ -251,7 +309,13 @@ class Board extends Component {
             console.log(users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
-                userList.push(users.jugadores[i].usuario)
+                userList.push({
+                    ficha:users[i].imgs.ficha,
+                    nombre: users[i].jugador,
+                    banner:users[i].imgs.banner,
+                    avatar:users[i].imgs.avatar,
+                    coloresAcertados: users[i].coloresAcertados
+                })
             }
             console.log(users.jugadores);
             this.setState({admin: '',
@@ -261,30 +325,33 @@ class Board extends Component {
             //this.state.jugadores = users.jugadores;
             //this.setState({jugadores: users.jugadores})
             console.log("Volviendo a la partida");
+            let casillas = [];
+            for(let i = 0; i < users.jugadores.length; i++){
+                casillas.push(users.jugadores[i].casilla)
+            }
+            //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
             let quienSoy=0
-            for(var i=0;i<this.state.jugadores.length;i++){
-                if(this.state.jugadores[i]===getUser()){
+            for(var i=0;i<this.state.datosJugadores.length;i++){
+                if(this.state.datosJugadores[i].nombre===getUser()){
                     quienSoy=i
                 }
             }
-            //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
-            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
-            console.log('dibujand')
-
-            //this.drawCenterCircle()
-            this.colourWheel.inicializarTablero()
+            this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
+            this.colourWheel.cargarPartida(casillas,quienSoy)
         })
 
 
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
+            var arrayDatosJugadores = this.state.datosJugadores;
             var indexUser = arrayJugadores.indexOf(user);
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+                arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores})
+                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -297,11 +364,13 @@ class Board extends Component {
             console.log("Entramos en abandono de partida "+this.state.jugadores);
             var arrayJugadores = this.state.jugadores;
             var indexUser = arrayJugadores.indexOf(user);
+            var arrayDatosJugadores = this.state.datosJugadores;
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona la partida");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
+                arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores})
+                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -358,17 +427,17 @@ class Board extends Component {
             console.log(id);
             console.log(this.state.codigoSala)
         })
-        //console.log("El identificador es :"+ this.state.codigoSala);
+        console.log("El identificador es :"+ this.state.codigoSala);
 
         conn.on('comienzoPartida', () => {
             console.log("Comienza la partida");
             let quienSoy=0
-            for(var i=0;i<this.state.jugadores.length;i++){
-                if(this.state.jugadores[i]===getUser()){
+            for(var i=0;i<this.state.datosJugadores.length;i++){
+                if(this.state.datosJugadores[i].nombre===getUser()){
                     quienSoy=i
                 }
             }
-            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+            this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
             console.log('dibujand')
 
             //this.drawCenterCircle()
@@ -385,7 +454,7 @@ class Board extends Component {
 
     togglePlay = () => {
         this.setState({ play: !this.state.play }, () => {
-            this.state.play ? this.audio.play() : this.audio.pause();
+            this.state.sounds ? this.audio.play() : this.audio.pause();
         });
     }
 
@@ -399,7 +468,7 @@ class Board extends Component {
         }
         console.log(this.state.jugadores)
         console.log(this.colourWheel)
-        this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
+        this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
 
         this.colourWheel.iniciarPartida(() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
@@ -455,11 +524,43 @@ class Board extends Component {
 
 
     handleQuesitos=(response)=>{
-        console.log('quesito de'+response.quesito)
-        const colors = this.state.jugadores.concat("pink");
-        this.setState({coloresAcertados: colors})
-        console.log(this.state.coloresAcertados)
-
+        console.log(response);
+        console.log('quesito de'+response.quesito);
+        let color;
+        switch (response.quesito) {
+            case "Historia":
+                color = "yellow";
+                break;
+            case "Deportes":
+                color = "orange";
+                break;
+            case "Entretenimiento":
+                color = "pink";
+                break;
+            case "Ciencias":
+                color = "green";
+                break;
+            case "Geografia":
+                color = "blue";
+                break;
+            case "Cultura General":
+                color = "purple";
+                break;
+        }
+        const colors = this.state.coloresAcertados;
+        colors.push(color);
+        console.log(colors);
+        this.setState({coloresAcertados:colors});
+        console.log(this.state.coloresAcertados);
+        var arrayDatosJugadores=this.state.datosJugadores;
+        for(var i=0;i<arrayDatosJugadores.length;i++){
+            if(arrayDatosJugadores[i].nombre===response.user){
+                arrayDatosJugadores[i].coloresAcertados.push(color)
+            }
+        }
+        this.setState({datosJugadores: arrayDatosJugadores});
+        //this.setState({})
+        //console.log(this.state.coloresAcertados)
     }
 
 
@@ -627,6 +728,24 @@ class Board extends Component {
                                     </div>
                                 </Popup>
 
+                                <IconButton onClick={this.cambiarSonido} >
+                                    {this.state.sounds ? <VolumeUp color="primary"/>:<VolumeOff color="primary"/>}
+                                </IconButton>
+
+                                <IconButton onClick={this.cambiarMusica} color="secondary">
+                                    {this.state.music ? <MusicNote color="primary"/>:<MusicOff color="primary"/>}
+                                </IconButton>
+
+                                <Sound
+                                    url={musica}
+                                    playStatus={
+                                        this.state.music ?Sound.status.PLAYING:Sound.status.PAUSED
+                                    }
+                                    playFromPosition={300}
+                                    loop={true}
+                                    volume={20}
+                                />
+
 
                             </div>
                             <div
@@ -710,7 +829,7 @@ class Board extends Component {
                                         faceColor={'white'}
                                         dotColor={'black'}
                                         rollTime={2}
-                                        sound={'../music/dado.mp3'}
+                                        sound={this.state.sounds?'../music/dado.mp3':''}
                                         disableIndividual={!this.state.puedoTirar}
                                     />
 
