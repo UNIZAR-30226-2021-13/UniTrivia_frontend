@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddBox from '@material-ui/icons/AddBox';
-import {Card, CardHeader, Collapse, Typography} from "@material-ui/core";
+import {Card, CardHeader, Collapse, Typography, Button, Grid, CardActions} from "@material-ui/core";
 import PropTypes from 'prop-types';
 import {FixedSizeList} from 'react-window';
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
@@ -185,6 +185,7 @@ renderRowFichas.propTypes = {
 
 function Items(props) {
     const profile = props.comprados;
+    const coins = props.coins;
     const classes = useStyles();
     const [openAvatar, setOpenAvatar] = useState(false);
     const [openBanner, setOpenBanner] = useState(false);
@@ -192,6 +193,7 @@ function Items(props) {
 
     if(profile != null) {
         console.log(profile);
+        console.log(coins);
         avatares = [];
         banners = [];
         fichas = [];
@@ -219,6 +221,18 @@ function Items(props) {
     const handleClickFi = () => {
         setOpenFicha(!openFicha);
     };
+
+    const irATiendaAvatares = () =>{
+        props.onResponse("Avatar")
+    }
+
+    const irATiendaBanners = () =>{
+        props.onResponse("Banner")
+    }
+
+    const irATiendaFichas = () =>{
+        props.onResponse("Ficha")
+    }
 
   return (
       <Card>
@@ -265,6 +279,32 @@ function Items(props) {
           </div>
 
         </List>
+        <CardActions>
+         <Button
+            color="primary"
+            fullWidth
+            variant="text"
+            onClick={irATiendaAvatares}
+         >
+             Obtener Avatares
+         </Button>
+          <Button
+              color="primary"
+              fullWidth
+              variant="text"
+              onClick={irATiendaBanners}
+          >
+              Obtener Banners
+          </Button>
+          <Button
+              color="primary"
+              fullWidth
+              variant="text"
+              onClick={irATiendaFichas}
+          >
+              Obtener Fichas
+          </Button>
+        </CardActions>
       </Card>
 
   );

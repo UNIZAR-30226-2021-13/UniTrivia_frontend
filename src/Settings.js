@@ -1,7 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
-import PlaySound from "./PlaySound";
+import {MusicNote, MusicOff, Speaker, VolumeMute, VolumeMuteOutlined, VolumeOff, VolumeUp} from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
+import Sound from 'react-sound';
+import musica from './music/ascensor.mp3'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -26,29 +29,39 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Settings(){
-    const classes = useStyles();
-    const [play, setPlay] = useState("On");
-    const [music, setMusic] = useState("On");
-    function changePlay(){
-        if(play=="On"){
-            setPlay("Off")
-        }else {
-            setPlay("On")
-        }
-    } 
-    function changeMusic(){
-        if(music=="On"){
-            setMusic("Off")
-        }else if (music=="Off"){
-            setMusic("On")
-        }
-    }
-    return(
-        <div className={classes.paper}>
+    const [sounds, setSounds] = useState(false);
+    const [music, setMusic] = useState(false);
 
-            <Button className={classes.but} onClick={() => changePlay()}>Sonido {play}</Button>
-            <Button className={classes.but} onClick={() => changeMusic()}>Musica {music}</Button>
+    const cambiarSonido = () =>{
+        setSounds(!sounds);
+    }
+    const cambiarMusica = () =>{
+        setMusic(!music);
+    }
+
+    return(
+        <div>
+            <div>
+                <IconButton onClick={cambiarSonido}>
+                    {sounds ? <VolumeUp/>:<VolumeOff/>}
+                </IconButton>
+            </div>
+            <div>
+                <IconButton onClick={cambiarMusica}>
+                    {music ? <MusicNote/>:<MusicOff/>}
+                </IconButton>
+            </div>
+            <Sound
+                url={musica}
+                playStatus={
+                    music ?Sound.status.PLAYING:Sound.status.PAUSED
+                }
+                playFromPosition={300}
+                loop={true}
+                volume={20}
+            />
         </div>
-    );
+        );
+
 }
 export default Settings;

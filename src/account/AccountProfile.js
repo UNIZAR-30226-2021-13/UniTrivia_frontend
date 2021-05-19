@@ -7,13 +7,40 @@ import React, {useEffect} from 'react'
 //                     >
 //                         {`${moment().format('hh:mm A')} ${user.timezone}`}
 //                     </Typography>
-import {Avatar, Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography} from '@material-ui/core';
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Divider,
+    Grid,
+    makeStyles,
+    Typography
+} from '@material-ui/core';
 import Banner from 'react-js-banner';
 
-
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
+    small: {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
+    },
+    large: {
+        width: theme.spacing(13),
+        height: theme.spacing(13),
+    },
+}));
 
 
 function AccountProfile(props) {
+    const classes = useStyles();
     const profiles=props;
     let avatar = '/images/avatars/' + props.avatar + '.jpg';
     let banner = '/images/banners/' + props.banner + '.jpg';
@@ -48,7 +75,7 @@ function AccountProfile(props) {
                         <Avatar
                             title='Avatar'
                             src={avatar}
-                            sx={{ width: 100, height: 100 }}
+                            className={classes.large}
 
 
                         />
@@ -60,15 +87,10 @@ function AccountProfile(props) {
                         xs={6}
 
                     >
-
-                        <img
+                        <Avatar
                             title='Forma Ficha'
                             src={ficha}
-                            sx={{
-                                alignItems: 'center',
-                                display: 'flex',
-                                flexDirection: 'row'
-                            }}
+                            className={classes.large}
 
 
                         />
