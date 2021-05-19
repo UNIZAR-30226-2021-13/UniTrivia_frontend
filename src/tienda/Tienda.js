@@ -223,7 +223,7 @@ function Tienda (props){
     };
     return(
         <Card>
-            <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/Profile'}>
+            <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/profile'}>
                 <ArrowBack color="primary"/>
                 Volver
             </IconButton>
