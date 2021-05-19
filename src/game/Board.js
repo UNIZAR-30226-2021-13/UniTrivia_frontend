@@ -113,15 +113,16 @@ class Board extends Component {
         console.log('listando jugadores')
         console.log(this.state.datosJugadores)
         return(
-            <List dense className={classes.root}>
+
+            <List dense className={classes.root} style={{backgroundImage: "/images/banners/banner2"}}>
                 {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     console.log("Voy a imprimiRRRRRRRR")
                     console.log(value)
                     console.log(value.avatar)
                     return (
-                        <div>
-                            <ListItem key={value} button>
+                        <div style={{backgroundImage: "url(" + "/images/banners/banner0.jpg" + ")",backgroundSize: 'cover'}}>
+                            <ListItem key={value}  >
                                 <ListItemAvatar>
                                     <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
                                 </ListItemAvatar>
