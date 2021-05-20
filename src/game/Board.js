@@ -122,18 +122,13 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
-        console.log('listando jugadores')
-        console.log(this.state.datosJugadores)
         return(
 
-            <List dense className={classes.root} style={{backgroundImage: "/images/banners/banner2"}}>
+            <List dense className={classes.root}>
                 {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
-                    console.log("Voy a imprimiRRRRRRRR")
-                    console.log(value)
-                    console.log(value.avatar)
                     return (
-                        <div style={{backgroundImage: "url(" + "/images/banners/banner0.jpg" + ")",backgroundSize: 'cover'}}>
+                        <div style={{backgroundImage: "url(" + "/images/banners/"+value.banner+".jpg" + ")",backgroundSize: 'cover'}}>
                             <ListItem key={value}  >
                                 <ListItemAvatar>
                                     <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
@@ -169,7 +164,7 @@ class Board extends Component {
 
 
     botonEmpezar = () => {
-        console.log("Estoy en boton: username: "+this.state.username+"  y admin  "+this.state.admin);
+
         if(this.state.username===this.state.admin){
             if(!this.state.partidaEmpezada){
                 return(
@@ -183,8 +178,6 @@ class Board extends Component {
                         Empezar Partida
                     </Button>
                 )
-            }else{
-                return(<h6>ERES EL ADMIN</h6>)
             }
 
         }
@@ -195,12 +188,8 @@ class Board extends Component {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
-            console.log(response)
             this.setState({username:response.data._id})
-            console.log(this.state.jugadores);
-            console.log(response.data._id);
             if (this.state.jugadores.length==0 &&  this.state.esprimero) {
-                console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
                 this.setState({
@@ -215,8 +204,6 @@ class Board extends Component {
                     }
                     ]
                     })
-            } else {
-                console.log("Se intenta meter un usuario que ya estaba");
             }
         }).catch((code) => {
             console.log(code.response)
@@ -224,10 +211,7 @@ class Board extends Component {
 
         conn.on('nuevoJugador',(user)=> {
             const usuario = user.jugador;
-            console.log(user);
-            console.log(this.state.admin);
             if (!this.state.jugadores.includes(usuario)) {
-                console.log("Es nuevo de verdad");
                 const listDatos = this.state.datosJugadores.concat({
                     ficha:user.imgs.ficha,
                     nombre: user.jugador,
@@ -235,13 +219,9 @@ class Board extends Component {
                     avatar:user.imgs.avatar,
                     coloresAcertados: []
                 })
-                console.log(listDatos);
                 this.setState({datosJugadores:listDatos});
-                console.log(this.state.datosJugadores);
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
-            } else {
-                console.log("Se intenta meter un usuario que ya estaba");
             }
         })
         conn.on('cargarJugadores',(users)=>{
@@ -271,6 +251,9 @@ class Board extends Component {
         conn.on('reconexionJugador',(user)=> {
             console.log(user);
             console.log(this.state.admin);
+            let esta=false
+            var arrayjugadores=this.state.datosJugadores
+
             if (!this.state.jugadores.includes(user)) {
                 console.log("Es nuevo de verdad");
                 const listDatos = this.state.datosJugadores.concat({
@@ -313,10 +296,7 @@ class Board extends Component {
             console.log(userList);
             this.setState({admin: userList[0].nombre,
                 esprimero:false, datosJugadores: userList});
-            //console.log(users.jugadores.prototype);
-            //setJugadores([...users.jugadores]);
-            //this.state.jugadores = users.jugadores;
-            //this.setState({jugadores: users.jugadores})
+
             console.log("Volviendo a la partida");
             let casillas = [];
             for(let i = 0; i < users.jugadores.length; i++){
@@ -324,26 +304,42 @@ class Board extends Component {
             }
             //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
             let quienSoy=0
-            for(var i=0;i<this.state.datosJugadores.length;i++){
+            for(let i=0;i<this.state.datosJugadores.length;i++){
                 if(this.state.datosJugadores[i].nombre===getUser()){
                     quienSoy=i
                 }
             }
+            this.setState({partidaEmpezada:true})
             this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
+            console.log(casillas)
             this.colourWheel.cargarPartida(casillas,quienSoy)
         })
 
         conn.on('abandonoSala',(user)=>{
             console.log("Entramos en abandono de sala "+this.state.jugadores);
-            var arrayJugadores = this.state.jugadores;
-            var arrayDatosJugadores = this.state.datosJugadores;
-            var indexUser = arrayJugadores.indexOf(user);
+            var arrayJugadores = this.state.datosJugadores;
+            //var arrayDatosJugadores = this.state.datosJugadores;
+            //var indexUser = arrayJugadores.indexOf(user);
+            let quienSoy
+            let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
+            let length = arrayJugadores.length
+            //console.log(arrayJugadores[0])
+            for(let i=0;i<length;i++){
+                if (arrayJugadores[i].nombre===user) {
+                    indexUser = i;
+                }
+                if(arrayJugadores[i].nombre===user){
+                    quienSoy=i;
+                }
+            }
+
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                arrayDatosJugadores.splice(indexUser,1);
+                //arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
+                this.setState({datosJugadores:arrayJugadores})
+                this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -353,15 +349,23 @@ class Board extends Component {
 
         conn.on('jugadorSale',(user)=>{
             console.log("Entramos en abandono de partida "+this.state.jugadores);
-            var arrayJugadores = this.state.jugadores;
-            var indexUser = arrayJugadores.indexOf(user);
-            var arrayDatosJugadores = this.state.datosJugadores;
+            var arrayJugadores = this.state.datosJugadores;
+            //var indexUser = arrayJugadores.indexOf(user);
+            //var arrayDatosJugadores = this.state.datosJugadores;
+            let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
+            let length = arrayJugadores.length
+            //console.log(arrayJugadores[0])
+            for(let i=0;i<length;i++){
+                if (arrayJugadores[i].nombre==user) {
+                    indexUser = i;
+                }
+            }
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona la partida");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                arrayDatosJugadores.splice(indexUser,1);
+                //arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores,datosJugadores:arrayDatosJugadores})
+                this.setState({jugadores: arrayJugadores,datosJugadores:arrayJugadores})
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -381,8 +385,6 @@ class Board extends Component {
                     indexUser = i;
                 }
             }
-
-
             if(indexUser>-1){//no ha dado error
                 console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
@@ -423,10 +425,7 @@ class Board extends Component {
         conn.emit("obtenerIdSala",(id)=>{
             //this.state.codigoSala = id;
             this.setState({codigoSala: id});
-            console.log(id);
-            console.log(this.state.codigoSala)
         })
-        console.log("El identificador es :"+ this.state.codigoSala);
 
         conn.on('comienzoPartida', () => {
             console.log("Comienza la partida");
@@ -525,38 +524,38 @@ class Board extends Component {
         console.log(response);
         console.log('quesito de'+response.quesito);
         let color;
-        switch (response.quesito) {
-            case "Historia":
-                color = "yellow";
-                break;
-            case "Deportes":
-                color = "orange";
-                break;
-            case "Entretenimiento":
-                color = "pink";
-                break;
-            case "Ciencias":
-                color = "green";
-                break;
-            case "Geografia":
-                color = "blue";
-                break;
-            case "Cultura General":
-                color = "purple";
-                break;
-        }
-        const colors = this.state.coloresAcertados;
-        colors.push(color);
-        console.log(colors);
-        this.setState({coloresAcertados:colors});
-        console.log(this.state.coloresAcertados);
-        var arrayDatosJugadores=this.state.datosJugadores;
-        for(var i=0;i<arrayDatosJugadores.length;i++){
-            if(arrayDatosJugadores[i].nombre===response.user){
-                arrayDatosJugadores[i].coloresAcertados.push(color)
+        if(response.quesito!=="") {
+            switch (response.quesito) {
+                case "Historia":
+                    color = "yellow";
+                    break;
+                case "Deportes":
+                    color = "orange";
+                    break;
+                case "Entretenimiento":
+                    color = "pink";
+                    break;
+                case "Ciencias":
+                    color = "green";
+                    break;
+                case "Geografia":
+                    color = "blue";
+                    break;
+                case "Cultura General":
+                    color = "purple";
+                    break;
             }
+            const colors = this.state.coloresAcertados;
+            colors.push(color);
+            this.setState({coloresAcertados: colors});
+            var arrayDatosJugadores = this.state.datosJugadores;
+            for (var i = 0; i < arrayDatosJugadores.length; i++) {
+                if (arrayDatosJugadores[i].nombre === response.user) {
+                    arrayDatosJugadores[i].coloresAcertados.push(color)
+                }
+            }
+            this.setState({datosJugadores: arrayDatosJugadores});
         }
-        this.setState({datosJugadores: arrayDatosJugadores});
         //this.setState({})
         //console.log(this.state.coloresAcertados)
     }
@@ -708,11 +707,11 @@ class Board extends Component {
                                     <div>
                                         <h5>INFORMACIÓN</h5>
                                         <li><font size={2}>AMARILLO: historia</font></li>
-                                        <li><font size={2}>VERDE: historia</font></li>
-                                        <li><font size={2}>ROSA: historia</font></li>
-                                        <li><font size={2}>MORADO: historia</font></li>
-                                        <li><font size={2}>NARANJA: historia</font></li>
-                                        <li><font size={2}>AZUL: historia</font></li>
+                                        <li><font size={2}>VERDE: Ciencias</font></li>
+                                        <li><font size={2}>ROSA: Entretenimiento</font></li>
+                                        <li><font size={2}>MORADO: Cultura General</font></li>
+                                        <li><font size={2}>NARANJA: Deportes</font></li>
+                                        <li><font size={2}>AZUL: Geografia</font></li>
                                         <li><font size={2}>BLANCO: tira otra vez</font></li>
                                     </div>
                                 </Popup>
