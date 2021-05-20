@@ -65,9 +65,10 @@ function Quiz(props) {
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
     const pickAnswer = (e) => {
-
+        console.log(e)
         let userAnswer = e.target.outerText;
-
+        console.log(quiz[number])
+        console.log(userAnswer)
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
             props.onResponse({result: 1, casillaInfo: props.pregunta});

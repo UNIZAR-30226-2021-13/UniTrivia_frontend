@@ -954,9 +954,10 @@ class ColourWheel extends Component {
     console.log(response);
     console.log(response.result);
     this.setState({pintarQuesito:true})
+
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
       quesito: response.casillaInfo.casilla.tipo==="Quesito"?response.casillaInfo.casilla.categoria:"",
-      finTurno: response.result===0//?true:false ,
+      finTurno: response.result===0 || (response.casillaInfo.casilla.tipo==="Quesito" && response.result===1) //?true:false ,
     }, (res)=>{
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);

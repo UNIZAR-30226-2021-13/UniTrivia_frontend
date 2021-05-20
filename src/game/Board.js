@@ -253,8 +253,13 @@ class Board extends Component {
             console.log(this.state.admin);
             let esta=false
             var arrayjugadores=this.state.datosJugadores
+            for(let i=0;i<arrayjugadores.length;i++){
+                if(arrayjugadores[i].nombre===user){
+                    esta=true
+                }
+            }
 
-            if (!this.state.jugadores.includes(user)) {
+            if (!esta) {
                 console.log("Es nuevo de verdad");
                 const listDatos = this.state.datosJugadores.concat({
                     ficha:user.imgs.ficha,
