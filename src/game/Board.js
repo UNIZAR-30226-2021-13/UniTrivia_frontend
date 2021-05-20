@@ -91,8 +91,8 @@ class Board extends Component {
         puedoTirar: false,
         sounds: false,
         music: false,
-        partidaEmpezada:false
-
+        partidaEmpezada:false,
+        yes:true
     }
 
 
