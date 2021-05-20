@@ -104,6 +104,35 @@ class Board extends Component {
     }
     audio = new Audio(dados)
 
+    constructor(props) {
+        super(props);
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+                jwt: getToken()
+            }}).then((response) => {
+            this.setState({username:response.data._id})
+            console.log(this.state.jugadores);
+            console.log(response.data._id);
+            console.log("no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
+            if (this.state.jugadores.length == 0 &&  this.state.esprimero) {
+                console.log("Es el primero, lo ponemos como admin");
+                const list = this.state.jugadores.concat(response.data._id);
+                //this.state.admin = response.data._id;
+                this.setState({jugadores:list,
+                    admin: response.data._id})
+
+
+            } else if (this.state.jugadores.length == 1 &&  this.state.esprimero){
+                this.setState({admin: response.data._id})
+
+            } else {
+                console.log("Se intenta meter un usuario que ya estaba");
+
+            }
+        }).catch((code) => {
+            console.log(code.response)
+        });
+    }
+
     activarDado(){
         this.setState({
             puedoTirar: true
@@ -188,8 +217,12 @@ class Board extends Component {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
+            console.log(response)
             this.setState({username:response.data._id})
+            console.log(this.state.jugadores);
+            console.log(response.data._id);
             if (this.state.jugadores.length==0 &&  this.state.esprimero) {
+                console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
                 this.setState({
@@ -204,12 +237,15 @@ class Board extends Component {
                     }
                     ]
                     })
+            } else {
+                console.log("Se intenta meter un usuario que ya estaba");
             }
         }).catch((code) => {
             console.log(code.response)
         });
 
         conn.on('nuevoJugador',(user)=> {
+            console.log("Cargando nuevo jugador...")
             const usuario = user.jugador;
             if (!this.state.jugadores.includes(usuario)) {
                 const listDatos = this.state.datosJugadores.concat({
@@ -240,8 +276,17 @@ class Board extends Component {
             }
             console.log(list);
             console.log(gamers);
-            this.setState({admin: users.jugadores[0],
-                esprimero:false, datosJugadores: gamers});
+
+
+            if(list.length > 1){
+                this.setState({admin: '',
+                    esprimero:false, datosJugadores: gamers});
+            } else {
+                this.setState({admin: this.state.username,
+                    esprimero:true, datosJugadores: gamers});
+            }
+
+
             //console.log(users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
@@ -249,7 +294,7 @@ class Board extends Component {
         })
 
         conn.on('reconexionJugador',(user)=> {
-            console.log(user);
+            /*console.log(user);
             console.log(this.state.admin);
             let esta=false
             var arrayjugadores=this.state.datosJugadores
@@ -283,7 +328,7 @@ class Board extends Component {
                 }
             }
             this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
-
+*/
         })
 
         conn.on('estadoPartida',(users)=>{//arreglar
@@ -353,7 +398,7 @@ class Board extends Component {
         })
 
         conn.on('jugadorSale',(user)=>{
-            console.log("Entramos en abandono de partida "+this.state.jugadores);
+            /*console.log("Entramos en abandono de partida "+this.state.jugadores);
             var arrayJugadores = this.state.datosJugadores;
             //var indexUser = arrayJugadores.indexOf(user);
             //var arrayDatosJugadores = this.state.datosJugadores;
@@ -376,6 +421,8 @@ class Board extends Component {
                 //this.state.jugadores = arrayJugadores;
                 this.setState({jugadores: arrayJugadores})
             }
+            */
+            alert("El jugador " + user + "ha abandonado la partida")
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
