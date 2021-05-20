@@ -307,11 +307,13 @@ class Board extends Component {
         conn.on('estadoPartida',(users)=>{
             console.log("Cargando estado partida...")
             console.log(users);
+            console.log(users.jugadores[0].usuario);
+            console.log(users.jugadores[0].imgs);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
                 userList.push({
                     ficha:users[i].imgs.ficha,
-                    nombre: users[i].jugador,
+                    nombre: users[i].usuario,
                     banner:users[i].imgs.banner,
                     avatar:users[i].imgs.avatar,
                     coloresAcertados: users[i].coloresAcertados
