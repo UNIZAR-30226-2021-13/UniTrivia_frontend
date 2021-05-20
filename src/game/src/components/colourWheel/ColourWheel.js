@@ -311,9 +311,10 @@ class ColourWheel extends Component {
 
       for (let j=0; j<this.state.posiblesJugadas.length; j++){
         console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
-        if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
-          this.state.casillaActualInfo=this.state.posiblesJugadas[j];
-          this.setState({casillaActualInfo: this.state.posiblesJugadas[j]})
+        var arrayPosiblesJugadas=this.state.posiblesJugadas
+        if(arrayPosiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+          //this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+          this.setState({casillaActualInfo: arrayPosiblesJugadas[j]})
         }
       }
       if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
