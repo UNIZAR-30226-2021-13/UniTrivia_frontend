@@ -81,6 +81,7 @@ class Board extends Component {
             banner:"",
             ficha:""
         }],
+        desconectados: [],
         coloresAcertados: [],
         jugadores: [],
         codigoSala: null,
@@ -151,10 +152,21 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
-        return(
+        console.log("Entrando a listar jugadores...")
 
+        let desconectados = this.state.desconectados;
+        let datosJugadores = this.state.datosJugadores;
+
+        //datosJugadores.some((user) => desconectados.includes(user.nombre)) ? color = '#D64728' : color = '#000000';
+        console.log(desconectados)
+
+        return(
             <List dense className={classes.root}>
-                {this.state.datosJugadores.map((value) => {
+                {datosJugadores.map((value) => {
+                    let color = '';
+                    desconectados.includes(value.nombre) ? color = '#D64728' : color = '#000000';
+                    console.log(color)
+
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     return (
                         <div style={{backgroundImage: "url(" + "/images/banners/"+value.banner+".jpg" + ")",backgroundSize: 'cover'}}>
@@ -162,7 +174,15 @@ class Board extends Component {
                                 <ListItemAvatar>
                                     <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
                                 </ListItemAvatar>
-                                <ListItemText id={labelId} primary={`${value.nombre}`} />
+                                <ListItemText
+                                    id={labelId}
+                                    disableTypography
+                                    primary={
+                                        <Typography type="body2" style={{ color: color }}>
+                                            {value.nombre}
+                                        </Typography>
+                                    }
+                                />
                                 <ListItemSecondaryAction>
                                     <Cheese color={value.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
@@ -258,6 +278,7 @@ class Board extends Component {
                 this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
+                conn.emit("mensaje", "El jugador " + usuario + " ha entrado a la sala.");
             }
         })
         conn.on('cargarJugadores',(users)=>{
@@ -294,41 +315,23 @@ class Board extends Component {
         })
 
         conn.on('reconexionJugador',(user)=> {
-            /*console.log(user);
-            console.log(this.state.admin);
-            let esta=false
-            var arrayjugadores=this.state.datosJugadores
-            for(let i=0;i<arrayjugadores.length;i++){
-                if(arrayjugadores[i].nombre===user){
-                    esta=true
-                }
-            }
+            let desconectados = this.state.desconectados;
+            let arrayJugadores = this.state.datosJugadores;
+            let nombre = user.jugador;
+            let indexUser = desconectados.indexOf(nombre)
 
-            if (!esta) {
-                console.log("Es nuevo de verdad");
-                const listDatos = this.state.datosJugadores.concat({
-                    ficha:user.imgs.ficha,
-                    nombre: user.jugador,
-                    banner:user.imgs.banner,
-                    avatar:user.imgs.avatar,
-                    coloresAcertados: []
-                })
-                console.log(listDatos);
-                this.setState({datosJugadores:listDatos});
-                const list = this.state.jugadores.concat(user);
-                this.setState({jugadores:list})
+            if(indexUser > -1){ //si esta reconocido como desconectado lo elimina
+               desconectados.splice(indexUser,1);
+                this.setState({desconectados: desconectados})
+
+            }else if (!arrayJugadores.some((elemento) => elemento.nombre === nombre)){ //si no, comprueba que esté en la partida
+                console.log("ERROR AL ENCONTRAR JUGADOR: NO ESTABA EN LA PARTIDA");
             } else {
-                console.log("Se intenta meter un usuario que ya estaba");
+                console.log("AVISO AL ENCONTRAR JUGADOR: NO ESTABA EN DESCONECTADOS");
+            }
 
-            }
-            let quienSoy
-            for(var i=0;i<this.state.jugadores.length;i++){
-                if(this.state.jugadores[i]===getUser()){
-                    quienSoy=i
-                }
-            }
-            this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
-*/
+            conn.emit("mensaje", "El jugador " + nombre + " se ha reconectado.");
+
         })
 
         conn.on('estadoPartida',(users)=>{//arreglar
@@ -390,6 +393,8 @@ class Board extends Component {
                 //this.state.jugadores = arrayJugadores;
                 this.setState({datosJugadores:arrayJugadores})
                 this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
+                conn.emit("mensaje", "El jugador " + user + " Ha abandonado la sala.");
+
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -398,31 +403,18 @@ class Board extends Component {
         })
 
         conn.on('jugadorSale',(user)=>{
-            /*console.log("Entramos en abandono de partida "+this.state.jugadores);
-            var arrayJugadores = this.state.datosJugadores;
-            //var indexUser = arrayJugadores.indexOf(user);
-            //var arrayDatosJugadores = this.state.datosJugadores;
-            let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
-            let length = arrayJugadores.length
-            //console.log(arrayJugadores[0])
-            for(let i=0;i<length;i++){
-                if (arrayJugadores[i].nombre==user) {
-                    indexUser = i;
-                }
-            }
-            if(indexUser>-1){//no ha dado error
-                console.log("Hemos sacado el index del jugador que abandona la partida");
-                arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
-                //arrayDatosJugadores.splice(indexUser,1);
-                //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores,datosJugadores:arrayJugadores})
+            console.log("Jugador saliendo...");
+            let desconectados = this.state.desconectados;
+
+            if(!desconectados.includes(user)){ //si no está lo mete
+                desconectados.push(user);
+                console.log(desconectados)
+                this.setState({desconectados: desconectados})
+
             }else{
-                console.log("ha dado error el indexOf");
-                //this.state.jugadores = arrayJugadores;
-                this.setState({jugadores: arrayJugadores})
+                console.log("POSIBLE ERROR AL DESCONECTAR JUGADOR: YA ESTABA DESCONECTADO");
             }
-            */
-            alert("El jugador " + user + "ha abandonado la partida")
+            conn.emit("mensaje", "El jugador " + user + "ha abandonado la partida");
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
