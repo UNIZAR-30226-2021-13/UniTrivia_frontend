@@ -49,53 +49,48 @@ const Question = styled.div`
 
 function Quiz(props) {
 
-    //console.log(props.pregunta)
-    let question = props.pregunta.pregunta.pregunta; //se sacaría de props  pregunta.pregunta
+    console.log(props.pregunta)
+        let question = props.pregunta.pregunta.pregunta; //se sacaría de props  pregunta.pregunta
+        let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
+        let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
     //let question = "preguntita brother"; //se sacaría de props
-
-    let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
-    let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
-
-
 
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
     const [pts, setPts] = useState(0);
 
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
-
-    const pickAnswer = (e) => {
-        console.log(e)
-        let userAnswer = e.target.outerText;
-        console.log(quiz[number])
-        console.log(userAnswer)
-        if (quiz[number].answer === userAnswer){
-            setPts(pts + 1);
-            props.onResponse({result: 1, casillaInfo: props.pregunta});
-        }else{
-            props.onResponse({result: 0, casillaInfo: props.pregunta});
-        }
-        setNumber(number + 1);
-
+    function sleep(ms){
+        return new Promise((resolve)=>{
+            setTimeout(resolve,ms);
+        });
+    }
+    async function pickAnswer (e){
+        //setTimeout(function (e){
+        //await sleep(1000)
+            console.log(e)
+            var userAnswer = e.target.outerText;
+            console.log(e.target.outerText)
+            console.log(quiz[number])
+            console.log(userAnswer)
+            if (quiz[number].answer === userAnswer){
+                setPts(pts + 1);
+                props.onResponse({result: 1, casillaInfo: props.pregunta});
+            }else{
+                props.onResponse({result: 0, casillaInfo: props.pregunta});
+            }
+            setNumber(number + 1);
+        //},1000)
     }
 
     useEffect(() => {
-
-
         let pregunta_global = {
             question: question,
             options: shuffle([...incorrect_answers, correct_answer]),
             answer: correct_answer
         }
         setQuiz([pregunta_global]);
-
-
-
     }, []);
-
-
-
-
 
     return (
         <div>
@@ -104,20 +99,16 @@ function Quiz(props) {
 
             <>
                 <Question dangerouslySetInnerHTML={{ __html: quiz[number].question }}></Question>
-
                 <Options>
                     {quiz[number].options.map((item, index) => (
                         <Option key={index} dangerouslySetInnerHTML={{ __html: item }} onClick={pickAnswer}></Option>
                     ))}
                 </Options>
             </>
-
             }
             {
-
                 number === 1 && <GameOver pts={pts}/>
             }
-
         </QuizWindow>
         </div>
     )

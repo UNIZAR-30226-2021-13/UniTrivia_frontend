@@ -307,17 +307,18 @@ class ColourWheel extends Component {
     console.log(this.state.puedoMover)
     this.state.desactivado=false
     if(opac===255 && this.state.puedoMover===true){
-
-
+      //var arrayPosiblesJugadas
       for (let j=0; j<this.state.posiblesJugadas.length; j++){
         console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
-        var arrayPosiblesJugadas=this.state.posiblesJugadas
-        if(arrayPosiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
-          //this.state.casillaActualInfo=this.state.posiblesJugadas[j];
-          this.setState({casillaActualInfo: arrayPosiblesJugadas[j]})
+        //arrayPosiblesJugadas=this.state.posiblesJugadas
+        if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
+          this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+          this.setState({casillaActualInfo: this.state.posiblesJugadas[j]})
+
         }
       }
-      if(this.state.casillaActualInfo.casilla.tipo==="Dado"){
+      //var casilla = this.state.casillaActualInfo.casilla.tipo
+      if(this.state.casillaActualInfo.casilla.tipo ==="Dado"){
         this.props.activarDado();
         this.state.desactivado=true
         this.state.puedoMover=true;
@@ -338,7 +339,6 @@ class ColourWheel extends Component {
       this.drawRadius()
       this.drawSpacers()
       this.drawCenterCircle()
-
     }
     this.setState(
         {
@@ -958,7 +958,7 @@ class ColourWheel extends Component {
 
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
       quesito: response.casillaInfo.casilla.tipo==="Quesito"?response.casillaInfo.casilla.categoria:"",
-      finTurno: response.result===0 || (response.casillaInfo.casilla.tipo==="Quesito" && response.result===1) //?true:false ,
+      finTurno: response.result===0 //?true:false ,
     }, (res)=>{
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);

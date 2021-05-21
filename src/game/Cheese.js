@@ -5,7 +5,7 @@ import './Cheese.css';
 
 function Cheese (props){
         let cheeses = []
-    console.log(props.color);
+
         props.color.forEach((color)=>{
             cheeses.push(<div className={"piece " + color}></div>)})
         //cheeses.push(<div className={"piece " + "blue"}></div>)

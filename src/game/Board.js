@@ -157,10 +157,10 @@ class Board extends Component {
                 {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     return (
-                        <div style={{backgroundImage: "url(" + "/images/banners/"+value.banner+".jpg" + ")",backgroundSize: 'cover'}}>
-                            <ListItem key={value}  >
+                        <div key = {value} style={{backgroundImage: "url(" + "/images/banners/"+value.banner+".jpg" + ")",backgroundSize: 'cover'}}>
+                            <ListItem key={value.nombre}  >
                                 <ListItemAvatar>
-                                    <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
+                                    <Avatar altp="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
                                 </ListItemAvatar>
                                 <ListItemText id={labelId} primary={`${value.nombre}`} />
                                 <ListItemSecondaryAction>
@@ -723,26 +723,17 @@ class Board extends Component {
         )*/
 
         return (
-            <Grid container>
-                <Grid item xs={2} direction="row">
-                    <div>
-                        <h2>
-                            Sala
-                        </h2>
-                        <div>
-                            {this.listarJugadores(classes)}
-                        </div>
-                        <div>
-                            {/*this.devolverCodigoSala()*/}
-                            <h6>El codigo de la sala es {this.state.codigoSala}</h6>
-
-                        </div>
-                        <div>
-                            {this.botonEmpezar()}
-                        </div>
+            <Grid container key={"general"}>
+                <Grid container item xs={2} direction="row" key={"room"}>
+                    <div key={"sala"}>
+                        <h2> Sala </h2>
+                        {this.listarJugadores(classes)}
+                        {/*this.devolverCodigoSala()*/}
+                        <h6>El codigo de la sala es {this.state.codigoSala}</h6>
+                        {this.botonEmpezar()}
                     </div>
                 </Grid>
-                <Grid item xs={8} >
+                <Grid item xs={8} key={"otro"}>
                     <Card style={{ color: green[500] }} >
                         <CardContent>
 
@@ -856,11 +847,8 @@ class Board extends Component {
                                     }}
                                     onClick={this.togglePlay}
                                     disabled={!this.state.puedoTirar}
-
-
-
                                 >
-                                    <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
+                                <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
                                     <ReactDice
                                         numDice={1}
                                         rollDone={this.rollDoneCallback2}
@@ -872,11 +860,8 @@ class Board extends Component {
                                         sound={this.state.sounds?'../music/dado.mp3':''}
                                         disableIndividual={!this.state.puedoTirar}
                                     />
-
                                 </Button>
-
                             </div>
-
                         </CardContent>
                     </Card>
                 </Grid>
