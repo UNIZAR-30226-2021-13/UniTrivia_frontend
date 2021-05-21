@@ -69,8 +69,8 @@ function Quiz(props) {
         //setTimeout(function (e){
         //await sleep(1000)
             console.log(e)
-            var userAnswer = e.target.outerText;
-            console.log(e.target.outerText)
+            var userAnswer = e.target.innerText;
+            console.log(e.target.innerText)
             console.log(quiz[number])
             console.log(userAnswer)
             if (quiz[number].answer === userAnswer){
@@ -80,6 +80,7 @@ function Quiz(props) {
                 props.onResponse({result: 0, casillaInfo: props.pregunta});
             }
             setNumber(number + 1);
+            //console.log(key);
         //},1000)
     }
 
