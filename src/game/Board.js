@@ -118,9 +118,18 @@ class Board extends Component {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
-                this.setState({jugadores:list,
-                    admin: response.data._id})
-
+                this.setState({
+                    jugadores:list,
+                    admin: response.data._id,
+                    datosJugadores:[{
+                        avatar: response.data.avtr,
+                        banner: response.data.bnr,
+                        ficha: response.data.fich,
+                        nombre: response.data._id,
+                        coloresAcertados: []
+                    }
+                    ]
+                })
 
             } else if (this.state.jugadores.length == 1 &&  this.state.esprimero){
                 this.setState({admin: response.data._id})
@@ -234,35 +243,6 @@ class Board extends Component {
 
 
     componentDidMount(){
-        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
-                jwt: getToken()
-            }}).then((response) => {
-            console.log(response)
-            this.setState({username:response.data._id})
-            console.log(this.state.jugadores);
-            console.log(response.data._id);
-            if (this.state.jugadores.length==0 &&  this.state.esprimero) {
-                console.log("Es el primero, lo ponemos como admin");
-                const list = this.state.jugadores.concat(response.data._id);
-                //this.state.admin = response.data._id;
-                this.setState({
-                    jugadores:list,
-                    admin: response.data._id,
-                    datosJugadores:[{
-                        avatar: response.data.avtr,
-                        banner: response.data.bnr,
-                        ficha: response.data.fich,
-                        nombre: response.data._id,
-                        coloresAcertados: []
-                    }
-                    ]
-                    })
-            } else {
-                console.log("Se intenta meter un usuario que ya estaba");
-            }
-        }).catch((code) => {
-            console.log(code.response)
-        });
 
         conn.on('nuevoJugador',(user)=> {
             console.log("Cargando nuevo jugador...")
@@ -278,9 +258,9 @@ class Board extends Component {
                 this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
-                conn.emit("mensaje", "El jugador " + usuario + " ha entrado a la sala.");
             }
         })
+
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores.usuario);
@@ -329,8 +309,6 @@ class Board extends Component {
             } else {
                 console.log("AVISO AL ENCONTRAR JUGADOR: NO ESTABA EN DESCONECTADOS");
             }
-
-            conn.emit("mensaje", "El jugador " + nombre + " se ha reconectado.");
 
         })
 
@@ -393,7 +371,6 @@ class Board extends Component {
                 //this.state.jugadores = arrayJugadores;
                 this.setState({datosJugadores:arrayJugadores})
                 this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
-                conn.emit("mensaje", "El jugador " + user + " Ha abandonado la sala.");
 
             }else{
                 console.log("ha dado error el indexOf");
@@ -414,7 +391,6 @@ class Board extends Component {
             }else{
                 console.log("POSIBLE ERROR AL DESCONECTAR JUGADOR: YA ESTABA DESCONECTADO");
             }
-            conn.emit("mensaje", "El jugador " + user + "ha abandonado la partida");
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
