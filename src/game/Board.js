@@ -27,6 +27,8 @@ import {withStyles} from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
 import musica from "../music/ascensor.mp3";
 import Sound from "react-sound";
+import {CountdownCircleTimer} from "react-countdown-circle-timer";
+import {color} from "@material-ui/system";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -92,7 +94,8 @@ class Board extends Component {
         sounds: false,
         music: false,
         partidaEmpezada:false,
-        yes:true
+        yes:true,
+
     }
 
 
@@ -151,18 +154,32 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
-        return(
+        return (
 
             <List dense className={classes.root}>
                 {this.state.datosJugadores.map((value) => {
                     const labelId = `checkbox-list-secondary-label-${value}`;
+                    let error;
+                    if (value.banner === 'banner0' || value.banner === 'banner4') {
+                        error = 'black'
+                    } else {
+                        error = 'white'
+                    }
+
                     return (
-                        <div style={{backgroundImage: "url(" + "/images/banners/"+value.banner+".jpg" + ")",backgroundSize: 'cover'}}>
-                            <ListItem key={value}  >
+                        <div style={{
+                            backgroundImage: "url(" + "/images/banners/" + value.banner + ".jpg" + ")",
+                            backgroundSize: 'cover', color: error ,blockSize: 100, alignContent: 'stretch',
+                            border: 'solid', borderColor: 'black', textSizeAdjust: 'auto'
+                        }}>
+                            <ListItem key={value}>
                                 <ListItemAvatar>
-                                    <Avatar altP="Remy Sharp" src={"/images/fichas/"+value.ficha+".png"} />
+                                    <Avatar altP="Remy Sharp" src={"/images/fichas/" + value.ficha + ".png"}/>
                                 </ListItemAvatar>
-                                <ListItemText id={labelId} primary={`${value.nombre}`} />
+                                <ListItemAvatar>
+                                    <Avatar altP="Remy Sharp" src={"/images/avatars/" + value.avatar + ".jpg"}/>
+                                </ListItemAvatar>
+                                <ListItemText id={labelId} primary={`${value.nombre}`}/>
                                 <ListItemSecondaryAction>
                                     <Cheese color={value.coloresAcertados}></Cheese>
                                 </ListItemSecondaryAction>
@@ -329,6 +346,14 @@ class Board extends Component {
             }
             this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
 */
+            /*let quienSoy
+            for(var i=0;i<this.state.jugadores.length;i++){
+                if(this.state.jugadores[i]===getUser()){
+                    quienSoy=i
+                }
+            }
+            this.colourWheel.setQuienSoy(quienSoy)*/
+            console.log('holaaa ')
         })
 
         conn.on('estadoPartida',(users)=>{//arreglar
@@ -354,8 +379,10 @@ class Board extends Component {
             }
             //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
             let quienSoy=0
-            for(let i=0;i<this.state.datosJugadores.length;i++){
-                if(this.state.datosJugadores[i].nombre===getUser()){
+            for(let i=0;i<users.jugadores.length;i++){
+                console.log(users.jugadores[i].usuario)
+                console.log(getUser())
+                if(users.jugadores[i].usuario===getUser()){
                     quienSoy=i
                 }
             }
@@ -725,22 +752,26 @@ class Board extends Component {
         return (
             <Grid container>
                 <Grid item xs={2} direction="row">
-                    <div>
-                        <h2>
-                            Sala
-                        </h2>
-                        <div>
-                            {this.listarJugadores(classes)}
-                        </div>
-                        <div>
-                            {/*this.devolverCodigoSala()*/}
-                            <h6>El codigo de la sala es {this.state.codigoSala}</h6>
+                    <Card >
+                        <CardContent>
+                            <div style={{height: "fit-content"}}>
+                                <h2>
+                                    Sala
+                                </h2>
+                                <div>
+                                    {this.listarJugadores(classes)}
+                                </div>
+                                <div>
+                                    {/*this.devolverCodigoSala()*/}
+                                    <h6 style={{ font: 'arial'}}>CÓDIGO: {this.state.codigoSala}</h6>
 
-                        </div>
-                        <div>
-                            {this.botonEmpezar()}
-                        </div>
-                    </div>
+                                </div>
+                                <div>
+                                    {this.botonEmpezar()}
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </Grid>
                 <Grid item xs={8} >
                     <Card style={{ color: green[500] }} >
@@ -775,6 +806,8 @@ class Board extends Component {
                                 <IconButton onClick={this.cambiarMusica} color="secondary">
                                     {this.state.music ? <MusicNote color="primary"/>:<MusicOff color="primary"/>}
                                 </IconButton>
+
+
 
                                 <Sound
                                     url={musica}
@@ -836,6 +869,7 @@ class Board extends Component {
 
                                     <Card style={{ color: green[500] }} >
                                         <CardContent>
+
                                             <Typography>Fin de la partida.</Typography>
                                             <Button href={'/menu'}>Volver al menú</Button>
                                         </CardContent>

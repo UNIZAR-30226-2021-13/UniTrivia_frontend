@@ -30,6 +30,7 @@ import {getPlayers, getUser} from "../../../../Utils/Common";
 import throttle from 'lodash.throttle';
 import Popup from "reactjs-popup";
 import {green} from "@material-ui/core/colors";
+import {CountdownCircleTimer} from "react-countdown-circle-timer";
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
@@ -313,7 +314,7 @@ class ColourWheel extends Component {
         console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
         var arrayPosiblesJugadas=this.state.posiblesJugadas
         if(arrayPosiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
-          //this.state.casillaActualInfo=this.state.posiblesJugadas[j];
+          this.state.casillaActualInfo=this.state.posiblesJugadas[j];
           this.setState({casillaActualInfo: arrayPosiblesJugadas[j]})
         }
       }
@@ -532,6 +533,10 @@ class ColourWheel extends Component {
     //this.drawPlayers()
   }
 
+  setQuienSoy(quiensoy){
+    this.setState({quiensoy: quiensoy});
+  }
+
   setValores(players,numplayers,quiensoy){
     let imgs=[]
     let playernames=[]
@@ -540,9 +545,11 @@ class ColourWheel extends Component {
       playernames.push(players[i].nombre)
       imgs.push(players[i].ficha)
     }
-    this.state.playerName=playernames
+    /*this.state.playerName=playernames
     this.state.numPlayers=numplayers
-    this.state.quienSoy=quiensoy
+    this.state.numPlayers=numplayers*/
+    console.log('quiensoy: '+quiensoy)
+    this.setState({playerName:playernames,numPlayers:numplayers,quiensoy: quiensoy})
     this.state.imagenes=imgs
     this.setState({imagenes: imgs})
     console.log(this.state.imagenes)
@@ -983,7 +990,7 @@ class ColourWheel extends Component {
 
   handleClose = () => {
 
-    this.state.open=false;
+    this.setState({open: false})
   };
   getOpen(){
     return this.state.open
@@ -1047,7 +1054,29 @@ class ColourWheel extends Component {
 
                       <Card style={{ color: green[500] }} >
                         <CardContent>
-                          <Typography>Responda a la pregunta.</Typography>
+
+                          <Typography align={'left'}>Responda a la pregunta.</Typography>
+                          <div align={'right'}>
+                          <CountdownCircleTimer
+                              onComplete={() => {
+                                console.log('timer')
+
+                                conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
+                                  quesito: "",
+                                  finTurno: true ,
+                                }, (res)=>{
+                                  console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+                                  this.props.activarDado();
+                                });
+                                this.handleClose()
+                              }}
+                              isPlaying
+                              duration={60}
+                              initialRemainingTime={60}
+                              colors="#A30000"
+                              size={80}
+                          />
+                          </div>
                           <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
                         </CardContent>
                       </Card>

@@ -56,7 +56,7 @@ function Quiz(props) {
     let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
     let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
 
-
+    console.log(correct_answer)
 
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
@@ -73,6 +73,7 @@ function Quiz(props) {
             setPts(pts + 1);
             props.onResponse({result: 1, casillaInfo: props.pregunta});
         }else{
+            console.log('fallaste'+ quiz[number].answer +' '+userAnswer)
             props.onResponse({result: 0, casillaInfo: props.pregunta});
         }
         setNumber(number + 1);
