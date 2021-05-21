@@ -66,7 +66,8 @@ function Quiz(props) {
 
     const pickAnswer = (e) => {
         console.log(e)
-        let userAnswer = e.target.outerText;
+        var userAnswer = e.target.innerText;
+        console.log(e.target.innerText)
         console.log(quiz[number])
         console.log(userAnswer)
         if (quiz[number].answer === userAnswer){

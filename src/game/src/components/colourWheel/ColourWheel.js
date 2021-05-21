@@ -549,8 +549,8 @@ class ColourWheel extends Component {
     this.state.numPlayers=numplayers
     this.state.numPlayers=numplayers*/
     console.log('quiensoy: '+quiensoy)
-    this.setState({playerName:playernames,numPlayers:numplayers,quiensoy: quiensoy})
-    this.state.imagenes=imgs
+    this.setState({quienSoy: quiensoy})
+    this.setState({playerName:playernames,numPlayers:numplayers})
     this.setState({imagenes: imgs})
     console.log(this.state.imagenes)
   }
@@ -772,6 +772,7 @@ class ColourWheel extends Component {
     let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
     //this.state.positionsX[player]=coords.x;
     //this.state.positionsY[player]=coords.y;
+    console.log('player'+player);
     const vecx=this.state.positionsX;
     vecx[player]=coords.x;
     const vecy=this.state.positionsY;
@@ -906,6 +907,7 @@ class ColourWheel extends Component {
     let images=[]
     for(var i=0; i<this.state.imagenes.length;i++){
       const imageObj1 = new Image();
+      imageObj1.onload = ()=>{};
       imageObj1.src= '/images/fichas/'+this.state.imagenes[i]+'.png';
       images.push(imageObj1)
     }
@@ -930,6 +932,8 @@ class ColourWheel extends Component {
     //imageObj1.src= '/images/avatars/avatar_6.png';
     const imageObj1=this.cargarImagen()
     console.log(this.state.numPlayers)
+    console.log('imagenes')
+    console.log(this.state.imagenes)
 
     console.log(imageObj1)
     for(var i=0;i<this.state.numPlayers;i++){
@@ -944,7 +948,10 @@ class ColourWheel extends Component {
 
 
       //imageObj1.crossOrigin = "Anonymous";
+
       this.ctx.drawImage(imageObj1[i],this.state.positionsX[i],this.state.positionsY[i],25,25)
+
+      
     }
 
 
