@@ -9,7 +9,7 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, ListItemAvatar, Modal, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
@@ -121,9 +121,18 @@ class Board extends Component {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
-                this.setState({jugadores:list,
-                    admin: response.data._id})
-
+                this.setState({
+                    jugadores:list,
+                    admin: response.data._id,
+                    datosJugadores:[{
+                        avatar: response.data.avtr,
+                        banner: response.data.bnr,
+                        ficha: response.data.fich,
+                        nombre: response.data._id,
+                        coloresAcertados: []
+                    }
+                    ]
+                })
 
             } else if (this.state.jugadores.length == 1 &&  this.state.esprimero){
                 this.setState({admin: response.data._id})
@@ -155,7 +164,6 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
-
         console.log("Entrando a listar jugadores...")
 
         let desconectados = this.state.desconectados;
@@ -164,8 +172,7 @@ class Board extends Component {
         //datosJugadores.some((user) => desconectados.includes(user.nombre)) ? color = '#D64728' : color = '#000000';
         console.log(desconectados)
 
-        return (
-
+        return(
             <List dense className={classes.root}>
                 {datosJugadores.map((value) => {
                     let color = '';
@@ -253,35 +260,6 @@ class Board extends Component {
 
 
     componentDidMount(){
-        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
-                jwt: getToken()
-            }}).then((response) => {
-            console.log(response)
-            this.setState({username:response.data._id})
-            console.log(this.state.jugadores);
-            console.log(response.data._id);
-            if (this.state.jugadores.length==0 &&  this.state.esprimero) {
-                console.log("Es el primero, lo ponemos como admin");
-                const list = this.state.jugadores.concat(response.data._id);
-                //this.state.admin = response.data._id;
-                this.setState({
-                    jugadores:list,
-                    admin: response.data._id,
-                    datosJugadores:[{
-                        avatar: response.data.avtr,
-                        banner: response.data.bnr,
-                        ficha: response.data.fich,
-                        nombre: response.data._id,
-                        coloresAcertados: []
-                    }
-                    ]
-                    })
-            } else {
-                console.log("Se intenta meter un usuario que ya estaba");
-            }
-        }).catch((code) => {
-            console.log(code.response)
-        });
 
         conn.on('nuevoJugador',(user)=> {
             console.log("Cargando nuevo jugador...")
@@ -297,9 +275,9 @@ class Board extends Component {
                 this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
-                conn.emit("mensaje", "El jugador " + usuario + " ha entrado a la sala.");
             }
         })
+
         conn.on('cargarJugadores',(users)=>{
             console.log(users);
             console.log(users.jugadores.usuario);
@@ -340,7 +318,7 @@ class Board extends Component {
             let indexUser = desconectados.indexOf(nombre)
 
             if(indexUser > -1){ //si esta reconocido como desconectado lo elimina
-                desconectados.splice(indexUser,1);
+               desconectados.splice(indexUser,1);
                 this.setState({desconectados: desconectados})
 
             }else if (!arrayJugadores.some((elemento) => elemento.nombre === nombre)){ //si no, comprueba que esté en la partida
@@ -348,8 +326,7 @@ class Board extends Component {
             } else {
                 console.log("AVISO AL ENCONTRAR JUGADOR: NO ESTABA EN DESCONECTADOS");
             }
-
-            conn.emit("mensaje", "El jugador " + nombre + " se ha reconectado.");
+            //this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
         })
 
         conn.on('estadoPartida',(users)=>{//arreglar
@@ -412,7 +389,7 @@ class Board extends Component {
                 //this.state.jugadores = arrayJugadores;
                 this.setState({datosJugadores:arrayJugadores})
                 this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
-                conn.emit("mensaje", "El jugador " + user + " Ha abandonado la sala.");
+
             }else{
                 console.log("ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
@@ -432,7 +409,6 @@ class Board extends Component {
             }else{
                 console.log("POSIBLE ERROR AL DESCONECTAR JUGADOR: YA ESTABA DESCONECTADO");
             }
-            conn.emit("mensaje", "El jugador " + user + "ha abandonado la partida");
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
@@ -566,6 +542,40 @@ class Board extends Component {
         )
     }
 
+    heGanado(){
+        let aux = this.state.datosJugadores;
+        let index = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
+        return aux[index].coloresAcertados.length === 6;
+    }
+
+    finPartida(){
+        let aux = this.state.datosJugadores;
+        aux.sort(function(a, b){
+            const A = a.coloresAcertados.length;
+            const B = b.coloresAcertados.length;
+            if(B < A){
+                return -1;
+            } else if(B > A){
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        let result = "RESULTADOS: \n";
+        let pos = 1;
+        let incr = 0;
+        for(let i = 0; i<aux.length; i++){
+            if(i > 0 && aux[i].coloresAcertados.length < aux[i-1].coloresAcertados.length) {
+                pos += incr;
+                incr = 1;
+            } else {
+                incr++;
+            }
+            result += pos.toString() + ". " + aux[i].nombre + "\n";
+        }
+        return result;
+    }
 
     handleOpen = () => {
 
@@ -574,9 +584,24 @@ class Board extends Component {
     };
 
     handleClose = () => {
-
         this.setState({open:false});
+        let cantidad = 0;
+        if(this.heGanado()){
+            cantidad = 20;
+        } else {
+            cantidad = 10;
+        }
+
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+                cantidad: cantidad,jwt: getToken()
+            }}).then((response) => {
+            console.log(response)
+        }).catch((code) => {
+            console.log(code.response)
+        });
+
     };
+
     getOpen(){
         return this.state.open
     }
@@ -843,24 +868,29 @@ class Board extends Component {
                                     onResponse={this.handleQuesitos}
 
                                 />
-                                <Popup
-                                    open={this.getOpen()}
-                                    onClose={this.handleClose}
-                                    aria-labelledby="simple-modal-title"
-                                    aria-describedby="simple-modal-description"
+
+                                <Modal
+                                    show={this.getOpen}
+                                    onHide={this.handleClose}
+                                    backdrop="static"
+                                    keyboard={false}
                                 >
-
-                                    <Card style={{ color: green[500] }} >
-                                        <CardContent>
-
-                                            <Typography>Fin de la partida.</Typography>
-                                            <Button href={'/menu'}>Volver al menú</Button>
-                                        </CardContent>
-                                    </Card>
-
-
-                                </Popup>
-
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Fin de la partida</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        {this.finPartida()}
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button
+                                            variant="primary"
+                                            href={'/menu'}
+                                            onClick={this.handleClose}
+                                        >
+                                            Aceptar
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
 
 
                                 <Button
