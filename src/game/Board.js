@@ -9,7 +9,7 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, ListItemAvatar, Modal, Popper, Typography} from "@material-ui/core";
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
@@ -512,8 +512,6 @@ class Board extends Component {
 
     }
 
-
-
     rollDoneCallback2 =(num) =>{
         setTimeout(()=>{this.rollDoneCallback(num)}, 1000);//2000
     }
@@ -524,6 +522,40 @@ class Board extends Component {
         )
     }
 
+    heGanado(){
+        let aux = this.state.datosJugadores;
+        let index = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
+        return aux[index].coloresAcertados.length === 6;
+    }
+
+    finPartida(){
+        let aux = this.state.datosJugadores;
+        aux.sort(function(a, b){
+            const A = a.coloresAcertados.length;
+            const B = b.coloresAcertados.length;
+            if(B < A){
+                return -1;
+            } else if(B > A){
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        let result = "RESULTADOS: \n";
+        let pos = 1;
+        let incr = 0;
+        for(let i = 0; i<aux.length; i++){
+            if(i > 0 && aux[i].coloresAcertados.length < aux[i-1].coloresAcertados.length) {
+                pos += incr;
+                incr = 1;
+            } else {
+                incr++;
+            }
+            result += pos.toString() + ". " + aux[i].nombre + "\n";
+        }
+        return result;
+    }
 
     handleOpen = () => {
 
@@ -532,9 +564,24 @@ class Board extends Component {
     };
 
     handleClose = () => {
-
         this.setState({open:false});
+        let cantidad = 0;
+        if(this.heGanado()){
+            cantidad = 20;
+        } else {
+            cantidad = 10;
+        }
+
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+                cantidad: cantidad,jwt: getToken()
+            }}).then((response) => {
+            console.log(response)
+        }).catch((code) => {
+            console.log(code.response)
+        });
+
     };
+
     getOpen(){
         return this.state.open
     }
@@ -795,23 +842,29 @@ class Board extends Component {
                                     onResponse={this.handleQuesitos}
 
                                 />
-                                <Popup
-                                    open={this.getOpen()}
-                                    onClose={this.handleClose}
-                                    aria-labelledby="simple-modal-title"
-                                    aria-describedby="simple-modal-description"
+
+                                <Modal
+                                    show={this.getOpen}
+                                    onHide={this.handleClose}
+                                    backdrop="static"
+                                    keyboard={false}
                                 >
-
-                                    <Card style={{ color: green[500] }} >
-                                        <CardContent>
-                                            <Typography>Fin de la partida.</Typography>
-                                            <Button href={'/menu'}>Volver al menú</Button>
-                                        </CardContent>
-                                    </Card>
-
-
-                                </Popup>
-
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Fin de la partida</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        {this.finPartida()}
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button
+                                            variant="primary"
+                                            href={'/menu'}
+                                            onClick={this.handleClose}
+                                        >
+                                            Aceptar
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal>
 
 
                                 <Button
