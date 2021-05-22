@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
+import {Card, CardContent} from "@material-ui/core";
 
 //const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
 const ENDPOINT = "http://localhost:3000/api/partida";
@@ -29,6 +30,104 @@ const Div=styled.div`
     width: 50%;
   }
 `;
+
+const StyledMenu = styled.nav`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #effaff;
+  transform: ${({open}) => open ? 'translateX(0)' : 'translateX(-100%)'};
+  height: 90vh;
+  text-align: center;
+  padding: 1rem;
+
+
+  transition: transform 0.3s ease-in-out;
+
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+
+  a {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 1rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #343078;
+      cursor: pointer;
+    }
+  }
+
+  button {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 1rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #343078;
+      cursor: pointer;
+    }
+  }
+
+  H1 {
+    font-size: 4rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+  H2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+`
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -187,132 +286,88 @@ function Play(props) {
     });
 
     return (
+            <Card>
+                <CardContent>
 
-        <Div>
-            <h3>UniTrivia</h3>
-            JUGAR<br/><br/>
-            <div>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={partidaAleatoria}
-                    disabled={esReconexion}
-                >
-                    Partida aleatoria
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={crearSala}
-                    disabled={esReconexion}
-                >
-                    Crear sala
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={abrirModal}
-                    disabled={esReconexion}
-                >
-                    Unirse a sala
-                </Button>
+                    <StyledMenu open={true}>
+                        <h1>UNITRIVIA</h1>
+                        <h2>JUGAR</h2>
+                        <a onClick={partidaAleatoria}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="about us">🔎</span>
+                            PARTIDA ALEATORIA
+                        </a>
+                        <a  onClick={crearSala}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="price">🛠</span>
+                            CREAR SALA
+                        </a>
+                        <a onClick={abrirModal}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="contact">🤝</span>
+                            UNIRSE A SALA
+                        </a>
+                        <Modal isOpen={modalAbierto == true}>
+                            <ModalHeader>
+                                Escriba el código de sala
+                            </ModalHeader>
+                            <ModalBody>
 
-                <Modal isOpen={modalAbierto == true}>
-                    <ModalHeader>
-                        Escriba el código de sala
-                    </ModalHeader>
-                    <ModalBody>
+                                <form className={classes.form} noValidate>
+                                    <TextField
 
-                        <form className={classes.form} noValidate>
-                            <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="code"
+                                        label="Código"
+                                        name="code"
+                                        autoComplete="Codigo"
+                                        autoFocus
+                                        {...code}
 
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="code"
-                                label="Código"
-                                name="code"
-                                autoComplete="Codigo"
-                                autoFocus
-                                {...code}
+                                    />
+                                </form>
 
-                            />
-                        </form>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={unirseSala}
 
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={unirseSala}
+                                >
+                                    Confirmar Código
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={abrirModal}
 
-                        >
-                            Confirmar Código
+                                >
+                                    Cerrar
+                                </Button>
+
+                            </ModalFooter>
+                        </Modal>
+                        <Button onClick={reconexion}
+                           disabled={!esReconexion}>
+                            <span role="img" aria-label="contact">🔄</span>
+                            RECONECTAR
                         </Button>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="secondary"
-                            onClick={abrirModal}
+                        <a href={'/Menu'}>
+                            <span role="img" aria-label="contact">⬅</span>
+                            ATRÁS
+                        </a>
+                    </StyledMenu>
 
-                        >
-                            Cerrar
-                        </Button>
+                </CardContent>
+            </Card>
 
-                    </ModalFooter>
-                </Modal>
-
-            </div>
-
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={reconexion}
-                    disabled={!esReconexion}
-                >
-                    Reconectar a partida
-                </Button>
-            </div>
-            <div style={{marginTop: 100}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Menu'}
-                >
-                    Atrás
-                </Button>
-
-
-            </div>
-
-
-
-
-
-
-        </Div>
     );
 }
 

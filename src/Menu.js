@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {getUser, removeUserSession} from "./Utils/Common";
+import {Card, CardContent} from "@material-ui/core";
 
 const But=styled.button`
   background-color: #fce2e2;
@@ -20,6 +21,104 @@ const Div=styled.div`
     width: 50%;
   }
 `;
+
+const StyledMenu = styled.nav`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #effaff;
+  transform: ${({open}) => open ? 'translateX(0)' : 'translateX(-100%)'};
+  height: 90vh;
+  text-align: center;
+  padding: 2rem;
+
+
+  transition: transform 0.3s ease-in-out;
+
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+
+  a {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #343078;
+    }
+  }
+
+  H1 {
+    font-size: 4rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+  H2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+`
+
+const A = styled.a`
+  font-size: 2rem;
+  text-transform: uppercase;
+  padding: 2rem 0;
+  font-weight: bold;
+  letter-spacing: 0.5rem;
+  color: #0D0C1D;
+  text-decoration: none;
+  transition: color 0.3s linear;
+  
+
+  @media (max-width: 576px) {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  &:hover {
+    color: #343078;
+    
+  }
+`
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,49 +157,27 @@ function Menu() {
 
     return (
 
-        <Div>
-            <h3>UniTrivia</h3>
-            MENÚ<br/><br/>
-            <div>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Play'}
-                    className={classes.submit}
-                >
-                    Jugar
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    href={'/profile'}
-                    disabled={getUser() == null}
-                >
-                    Perfil
-                </Button>
-            </div>
+        <Card>
+            <CardContent>
 
-            <div style={{marginTop: 100}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Login'}
-                    onClick={removeUserSession}
-                >
-                    Cerrar sesión
-                </Button>
+            <StyledMenu open={true}>
+                <h1>UNITRIVIA</h1>
+                <h2>MENÚ</h2>
+                <a href="/Play">
+                    <span role="img" aria-label="about us">🎮️</span>
+                    JUGAR
+                </a>
+                <a href="/profile">
+                    <span role="img" aria-label="price">💇‍♀️</span>
+                    PERFIL
+                </a>
+                <a href="/Login">
+                    <span role="img" aria-label="contact">❌</span>
+                    CERRAR SESIÓN
+                </a>
+            </StyledMenu>
 
-
-            </div>
+                </CardContent>
 
             {/*<But>hole</But>
                 <Popup trigger={<button> Trigger</button>} position="top center">
@@ -110,7 +187,7 @@ function Menu() {
                 */}
 
 
-        </Div>
+        </Card>
     );
 }
 
