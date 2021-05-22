@@ -538,7 +538,7 @@ class Board extends Component {
     }
 
     jugada = () => {
-        let dado=this.state.dado
+        let dado= 4;//this.state.dado
         console.log('num'+this.state.dado)
         this.colourWheel.jugada(dado,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
