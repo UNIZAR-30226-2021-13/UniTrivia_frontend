@@ -1076,7 +1076,7 @@ class ColourWheel extends Component {
                           <CountdownCircleTimer
                               onComplete={() => {
                                 console.log('timer')
-
+                                this.setState({botonCerrar:false});
                                 conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
                                   quesito: "",
                                   finTurno: true ,
