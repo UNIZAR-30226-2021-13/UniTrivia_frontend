@@ -69,7 +69,8 @@ class ColourWheel extends Component {
       imagenes: [],
       mostrarFicha:false,
       pintarQuesito:false,
-      prueba: false
+      prueba: false,
+      botonCerrar: true
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -971,6 +972,7 @@ class ColourWheel extends Component {
   handleResponseFromQuiz=(response)=>{
     console.log(response);
     console.log(response.result);
+    this.setState({botonCerrar:false})
     this.setState({pintarQuesito:true})
 
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
@@ -1001,6 +1003,7 @@ class ColourWheel extends Component {
   handleClose = () => {
 
     this.setState({open: false})
+    this.setState({botonCerrar:true})
   };
   getOpen(){
     return this.state.open
@@ -1091,7 +1094,7 @@ class ColourWheel extends Component {
                           />
                           </div>
                           <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
-                          <Button onClick={this.handleClose} style={{color: 'red'}}>CERRAR</Button>
+                          <Button onClick={this.handleClose} style={{color: 'red'}} disabled={this.state.botonCerrar}>CERRAR</Button>
                         </CardContent>
                       </Card>
 
