@@ -167,11 +167,11 @@ function Menu() {
                     <span role="img" aria-label="about us">🎮️</span>
                     JUGAR
                 </Button>
-                <Button href="/profile">
+                <Button href="/profile" disabled={getUser() == null}>
                     <span role="img" aria-label="price">💇‍♀️</span>
                     PERFIL
                 </Button>
-                <Button href="/Login">
+                <Button href="/Login" onClick={removeUserSession}>
                     <span role="img" aria-label="contact">❌</span>
                     CERRAR SESIÓN
                 </Button>

@@ -207,15 +207,9 @@ class ColourWheel extends Component {
       vecy[indice]=coords.y;
       this.setState({positionsX: vecx,positionsY: vecy})
       this.inicializarTablero()
-      if(res.ques!=""){//ARREGLAR
-        if(this.state.pintarQuesito){
-          this.setState({pintarQuesito:false})
-          this.props.onResponse({quesito: res.ques, user: res.user});
-        }else {
-          this.props.onResponse({quesito: "", user: res.user});
-        }
+      console.log("AQUIIIII " + res.ques);
+      this.props.onResponse({quesito: res.ques, user: res.user});
 
-      }
 
 
     })
@@ -976,8 +970,8 @@ class ColourWheel extends Component {
     this.setState({pintarQuesito:true})
 
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
-      quesito: response.casillaInfo.casilla.tipo==="Quesito"?response.casillaInfo.casilla.categoria:"",
-      finTurno: response.result===0 || (response.casillaInfo.casilla.tipo==="Quesito" && response.result===1) //?true:false ,
+      quesito: response.casillaInfo.casilla.tipo==="Quesito"&&response.result===1?response.casillaInfo.casilla.categoria:"",
+      finTurno: response.result===0  //?true:false ,
     }, (res)=>{
       console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
       console.log(res['info']);

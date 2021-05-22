@@ -266,12 +266,25 @@ class Board extends Component {
         conn.on('nuevoJugador',(user)=> {
             console.log("Cargando nuevo jugador...")
             const usuario = user.jugador;
+
             if (!this.state.jugadores.includes(usuario)) {
+                let ficha;
+                let banner;
+                let avatar;
+                if(user.imgs.ficha == "" || user.imgs.ficha == null){
+                    ficha = "avatar0";
+                    banner = "banner0";
+                    avatar = "ficha0";
+                }else{
+                    ficha = user.imgs.ficha;
+                    banner = user.imgs.banner;
+                    avatar = user.imgs.avatar;
+                }
                 const listDatos = this.state.datosJugadores.concat({
-                    ficha:user.imgs.ficha,
+                    ficha:ficha,
                     nombre: user.jugador,
-                    banner:user.imgs.banner,
-                    avatar:user.imgs.avatar,
+                    banner:banner,
+                    avatar:avatar,
                     coloresAcertados: []
                 })
                 this.setState({datosJugadores:listDatos});
@@ -286,12 +299,24 @@ class Board extends Component {
             let list = [];
             let gamers = [];
             for(let i = 0; i<users.jugadores.length; i++){
+                let ficha;
+                let banner;
+                let avatar;
+                if(users.jugadores[i].imgs == null || users.jugadores[i].imgs == ""){
+                    ficha = "avatar0";
+                    banner = "banner0";
+                    avatar = "ficha0";
+                }else{
+                    ficha = users.jugadores[i].imgs.ficha;
+                    banner = users.jugadores[i].imgs.banner;
+                    avatar = users.jugadores[i].imgs.avatar;
+                }
                 list.push(users.jugadores[i]);
                 gamers.push({
                     nombre:users.jugadores[i].usuario,
-                    ficha:users.jugadores[i].imgs.ficha,
-                    banner:users.jugadores[i].imgs.banner,
-                    avatar:users.jugadores[i].imgs.avatar,
+                    ficha:ficha,
+                    banner:banner,
+                    avatar:avatar,
                     coloresAcertados: []});
             }
             console.log(list);
@@ -538,7 +563,7 @@ class Board extends Component {
     }
 
     jugada = () => {
-        let dado= 4;//this.state.dado
+        let dado= this.state.dado;
         console.log('num'+this.state.dado)
         this.colourWheel.jugada(dado,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
@@ -637,27 +662,37 @@ class Board extends Component {
         console.log(response);
         console.log('quesito de'+response.quesito);
         let color;
-        if(response.quesito!=="") {
-            switch (response.quesito) {
-                case "Historia":
-                    color = "yellow";
-                    break;
-                case "Deportes":
-                    color = "orange";
-                    break;
-                case "Entretenimiento":
-                    color = "pink";
-                    break;
-                case "Ciencias":
-                    color = "green";
-                    break;
-                case "Geografia":
-                    color = "blue";
-                    break;
-                case "Cultura General":
-                    color = "purple";
-                    break;
+        switch (response.quesito) {
+            case "Historia":
+                color = "yellow";
+                break;
+            case "Deportes":
+                color = "orange";
+                break;
+            case "Entretenimiento":
+                color = "pink";
+                break;
+            case "Ciencias":
+                color = "green";
+                break;
+            case "Geografia":
+                color = "blue";
+                break;
+            case "Cultura General":
+                color = "purple";
+                break;
+        }
+        var exito = false;
+        for(let i=0;i<this.state.coloresAcertados.length;i++){
+            console.log(this.state.coloresAcertados[i])
+            console.log(response.quesito)
+            if(this.state.coloresAcertados[i]===color){
+                exito = true
             }
+        }
+
+        if(response.quesito!=="" && !exito) {
+
             const colors = this.state.coloresAcertados;
             colors.push(color);
             this.setState({coloresAcertados: colors});
@@ -896,18 +931,19 @@ class Board extends Component {
                                 />
 
                                 <Modal
-                                    show={this.getOpen}
-                                    onHide={this.handleClose}
-                                    backdrop="static"
-                                    keyboard={false}
+                                    isOpen={this.getOpen()}
+                                    onClose={this.handleClose}
+                                    aria-labelledby="simple-modal-title"
+                                    aria-describedby="simple-modal-description"
+                                    disableBackdropClick={true}
                                 >
-                                    <Modal.Header closeButton>
-                                        <Modal.Title>Fin de la partida</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
+                                    <h2>
+                                        Fin de la partida
+                                    </h2>
+                                    <div>
                                         {this.finPartida()}
-                                    </Modal.Body>
-                                    <Modal.Footer>
+                                    </div>
+                                    <div>
                                         <Button
                                             variant="primary"
                                             href={'/menu'}
@@ -915,7 +951,7 @@ class Board extends Component {
                                         >
                                             Aceptar
                                         </Button>
-                                    </Modal.Footer>
+                                    </div>
                                 </Modal>
 
 
