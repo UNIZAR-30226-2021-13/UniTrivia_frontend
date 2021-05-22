@@ -24,7 +24,6 @@ function Chat(props){
     conn.on('nuevoJugador',(user)=> {
         const usuario = user.jugador;
         addResponseMessage("El jugador " + usuario + " ha entrado a la sala.");
-
     })
 
     conn.on('reconexionJugador',(user)=> {
