@@ -68,7 +68,8 @@ class ColourWheel extends Component {
       open: false,
       imagenes: [],
       mostrarFicha:false,
-      pintarQuesito:false
+      pintarQuesito:false,
+      prueba: false
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -907,7 +908,9 @@ class ColourWheel extends Component {
     let images=[]
     for(var i=0; i<this.state.imagenes.length;i++){
       const imageObj1 = new Image();
-      imageObj1.onload = ()=>{};
+      imageObj1.onload = ()=>{
+        this.setState({prueba: !this.state.prueba})
+      };
       imageObj1.src= '/images/fichas/'+this.state.imagenes[i]+'.png';
       images.push(imageObj1)
     }
@@ -1052,11 +1055,14 @@ class ColourWheel extends Component {
                   <div>
 
 
-                    <Popup
+                    <Modal
                         open={this.getOpen()}
                         onClose={this.handleClose}
                         aria-labelledby="simple-modal-title"
                         aria-describedby="simple-modal-description"
+                        disableBackdropClick={this.getOpen()}
+
+
                     >
 
                       <Card style={{ color: green[500] }} >
@@ -1085,11 +1091,12 @@ class ColourWheel extends Component {
                           />
                           </div>
                           <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
+                          <Button onClick={this.handleClose} style={{color: 'red'}}>CERRAR</Button>
                         </CardContent>
                       </Card>
 
 
-                    </Popup>
+                    </Modal>
                   </div>
               )}
             </PopupState>

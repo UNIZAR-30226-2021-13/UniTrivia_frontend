@@ -9,7 +9,9 @@ import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/C
 import {get} from "react-hook-form";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, ListItemAvatar, Modal, Popper, Typography} from "@material-ui/core";
+import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
+import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
+
 import {green} from "@material-ui/core/colors";
 import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
@@ -333,12 +335,36 @@ class Board extends Component {
             console.log(users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
+                let color=[];
+                for(let j=0; j< users.jugadores[i].quesitos.length ; j++){
+                    switch (users.jugadores[i].quesitos[j]) {
+                        case "Historia":
+                            color.push( "yellow");
+                            break;
+                        case "Deportes":
+                            color.push( "orange");
+                            break;
+                        case "Entretenimiento":
+                            color.push( "pink");
+                            break;
+                        case "Ciencias":
+                            color.push( "green");
+                            break;
+                        case "Geografia":
+                            color.push( "blue");
+                            break;
+                        case "Cultura General":
+                            color.push( "purple");
+                            break;
+                    }
+                }
+
                 userList.push({
                     ficha:users.jugadores[i].imgs.ficha,
                     nombre: users.jugadores[i].usuario,
                     banner:users.jugadores[i].imgs.banner,
                     avatar:users.jugadores[i].imgs.avatar,
-                    coloresAcertados: users.jugadores[i].quesitos
+                    coloresAcertados: color
                 })
             }
             console.log(userList);

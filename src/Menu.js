@@ -163,18 +163,18 @@ function Menu() {
             <StyledMenu open={true}>
                 <h1>UNITRIVIA</h1>
                 <h2>MENÚ</h2>
-                <a href="/Play">
+                <Button href="/Play">
                     <span role="img" aria-label="about us">🎮️</span>
                     JUGAR
-                </a>
-                <a href="/profile">
+                </Button>
+                <Button href="/profile">
                     <span role="img" aria-label="price">💇‍♀️</span>
                     PERFIL
-                </a>
-                <a href="/Login">
+                </Button>
+                <Button href="/Login">
                     <span role="img" aria-label="contact">❌</span>
                     CERRAR SESIÓN
-                </a>
+                </Button>
             </StyledMenu>
 
                 </CardContent>

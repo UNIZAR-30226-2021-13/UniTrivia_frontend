@@ -292,21 +292,21 @@ function Play(props) {
                     <StyledMenu open={true}>
                         <h1>UNITRIVIA</h1>
                         <h2>JUGAR</h2>
-                        <a onClick={partidaAleatoria}
+                        <Button onClick={partidaAleatoria}
                            disabled={esReconexion}>
                             <span role="img" aria-label="about us">🔎</span>
                             PARTIDA ALEATORIA
-                        </a>
-                        <a  onClick={crearSala}
+                        </Button>
+                        <Button  onClick={crearSala}
                            disabled={esReconexion}>
                             <span role="img" aria-label="price">🛠</span>
                             CREAR SALA
-                        </a>
-                        <a onClick={abrirModal}
+                        </Button>
+                        <Button onClick={abrirModal}
                            disabled={esReconexion}>
                             <span role="img" aria-label="contact">🤝</span>
                             UNIRSE A SALA
-                        </a>
+                        </Button>
                         <Modal isOpen={modalAbierto == true}>
                             <ModalHeader>
                                 Escriba el código de sala
