@@ -220,13 +220,8 @@ function Play(props) {
             console.assert(!debug,conn.disconnected);
             console.assert(!debug,conn.nsp);
             console.assert(!debug,conn);
-            let sala="";
-            conn.emit("obtenerIdSala",(id)=>{
-                //this.state.codigoSala = id;
-                sala = id;
-            })
-            console.assert(!debug,sala)
-            if(conn.connected === true && sala !== ""){
+
+            if(conn.connected === true ){
                 console.assert(!debug,"Conectado");
                 props.history.push('/Game');
             }else{

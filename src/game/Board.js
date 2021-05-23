@@ -94,6 +94,7 @@ class Board extends Component {
         music: false,
         partidaEmpezada:false,
         yes:true,
+        desconexion: false
 
     }
 
@@ -521,7 +522,7 @@ class Board extends Component {
         })
 
         conn.emit("obtenerIdSala",(id)=>{
-            //this.state.codigoSala = id;
+            //this.state.codigoSala = id
             this.setState({codigoSala: id});
         })
 
@@ -545,7 +546,17 @@ class Board extends Component {
 
 
         })
+
+
+        conn.on('disconnect', () => {
+            console.log('disconection')
+            this.setState({desconexion: true})
+
+
+        })
     }
+
+
 
     componentWillUnmount() {
         this.audio.removeEventListener('ended', () => this.setState({ play: false }));
@@ -727,6 +738,17 @@ class Board extends Component {
 
 
     render () {
+        if (this.state.desconexion){
+            return (
+                <div>
+                    Ha habido un error
+                    <br></br>
+                    <Button href={'/Play'} style={{color:'red'}}>
+                        Volver
+                    </Button>
+                </div>
+            )
+        }
         const {classes} = this.props
         const { selectedColour } = this.state
         let audio = new Audio("../music/dado.mp3")
