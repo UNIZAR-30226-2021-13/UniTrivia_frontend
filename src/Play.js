@@ -13,7 +13,7 @@ import {Card, CardContent} from "@material-ui/core";
 const ENDPOINT = "https://unitrivia.herokuapp.com/api/partida";
 //const ENDPOINT = "http://localhost:3000/api/partida";
 
-const debug = true;
+const debug = false;
 
 export let conn = undefined;
 

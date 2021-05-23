@@ -29,7 +29,7 @@ import Sound from "react-sound";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
-const debug = true;
+const debug = false;
 
 const useStyles = (theme) => ({
     root: {
@@ -412,17 +412,19 @@ class Board extends Component {
                 casillas.push(users.jugadores[i].casilla)
             }
             //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
-            let quienSoy=0
-            for(let i=0;i<this.state.datosJugadores.length;i++){
-                if(this.state.datosJugadores[i].nombre===getUser()){
-                    quienSoy=i
-                }
+
+            let aux = this.state.datosJugadores;
+            let quienSoy = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
+
+            if(quienSoy > -1) {
+                this.setState({partidaEmpezada: true})
+                this.colourWheel.setValores(this.state.datosJugadores, this.state.datosJugadores.length, quienSoy)
+                console.assert(!debug, casillas)
+                this.colourWheel.cargarPartida(casillas, quienSoy)
+                this.colourWheel.drawPlayers()
+            } else {
+                console.log("ERROR: FALLO AL ENCONTRARME MI NOMBRE DE USUARIO")
             }
-            this.setState({partidaEmpezada:true})
-            this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
-            console.assert(!debug,casillas)
-            this.colourWheel.cargarPartida(casillas,quienSoy)
-            this.colourWheel.drawPlayers()
         })
 
         conn.on('abandonoSala',(user)=>{
