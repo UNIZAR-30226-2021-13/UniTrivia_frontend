@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import {getToken, getUser, removeUserSession} from "./Utils/Common";
 import {io,socketIOClient} from "socket.io-client";
-//import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
+import axios from "axios";
+import {Card, CardContent} from "@material-ui/core";
 
 const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
+//const ENDPOINT = "http://localhost:3000/api/partida";
 
 export let conn = undefined;
 
@@ -23,11 +26,108 @@ const Div=styled.div`
   flex-direction: column;
   width: 70%;
   margin: 2em auto;
-
   @media screen and (min-width: 1180px) {
     width: 50%;
   }
 `;
+
+const StyledMenu = styled.nav`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #effaff;
+  transform: ${({open}) => open ? 'translateX(0)' : 'translateX(-100%)'};
+  height: 90vh;
+  text-align: center;
+  padding: 1rem;
+
+
+  transition: transform 0.3s ease-in-out;
+
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+
+  a {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 1rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #343078;
+      cursor: pointer;
+    }
+  }
+
+  button {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 1rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    &:hover {
+      color: #343078;
+      cursor: pointer;
+    }
+  }
+
+  H1 {
+    font-size: 4rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+  H2 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    padding: 2rem 0;
+    font-weight: bold;
+    letter-spacing: 0.5rem;
+    color: #0D0C1D;
+    text-decoration: none;
+    transition: color 0.3s linear;
+
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+
+  }
+
+`
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,13 +164,16 @@ function Play(props) {
     const classes = useStyles();
     const [connPassed, Pass] = useState(null);
     const [modalAbierto ,modalAbiertoState] = useState(false);
-
+    let [esReconexion, setReconexion] = useState(false);
     const code = useFormInput('');
-    console.log(getToken())
+
+    useEffect( () => {
+
+
+    }, []);
+
     const crearSala = ()=>{
         console.log("comienza crearSala");
-        let sala=undefined;
-        let conectado=false;
         conn = io(ENDPOINT,{
             extraHeaders:{
                 jwt: getToken(),
@@ -78,24 +181,22 @@ function Play(props) {
                 priv:"true"
             }
         });
-
-
-       conn.on("connect",()=>{
-           conectado=conn.connected;
-           console.log(conn.connected);
-           console.log(conectado);
-           console.log(conn.disconnected);
-           console.log(conn.nsp);
-           console.log(conn);
-           if(conectado==true){
-               console.log("Conectado");
-               props.history.push('/Game');
-           }else{
-               console.log("no conectado");
-               alert("Fallo al crear sala");
-           }
+        conn.on("connect",()=>{
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
+                console.log("Conectado");
+                props.history.push('/Game');
+            }else{
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
+            }
         })
+
     }
+
 
     const abrirModal = () =>{
         modalAbiertoState(!modalAbierto);
@@ -103,7 +204,6 @@ function Play(props) {
 
     const unirseSala = ()=>{
         let salaAct = code.value;
-        let conectado = undefined;
         console.log(salaAct);
 
         conn = io(ENDPOINT,{
@@ -113,37 +213,39 @@ function Play(props) {
                 sala: salaAct
             }
         });
-
         conn.on("connect",()=>{
-            conectado=conn.connected;
-            if(conectado==true){
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
                 console.log("Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("no conectado");
-                alert("Fallo al unirse a sala");
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
             }
         })
     }
 
     const partidaAleatoria = () =>{
-        let conectado = undefined;
-
         conn = io(ENDPOINT,{
             extraHeaders:{
                 jwt:getToken(),
                 operacion: "buscarPartida"
             }
         });
-
         conn.on("connect",()=>{
-            conectado=conn.connected;
-            if(conectado==true){
+            console.log(conn.connected);
+            console.log(conn.disconnected);
+            console.log(conn.nsp);
+            console.log(conn);
+            if(conn.connected === true){
                 console.log("Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("no conectado");
-                alert("Fallo al buscar partida aleatoria");
+                console.log("No conectado");
+                alert("Fallo al conectar con el servidor");
             }
         })
     }
@@ -174,129 +276,98 @@ function Play(props) {
         })
     }
 
+    axios.get(ENDPOINT + "/reconexion",{headers: {
+            jwt: getToken()
+        }}).then((response) => {
+        setReconexion(response.data !== "");
+
+    }).catch((code, message) => {
+        console.log(code.response)
+    });
+
     return (
+            <Card>
+                <CardContent>
 
-        <Div>
-            <h3>UniTrivia</h3>
-            JUGAR<br/><br/>
-            <div>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={partidaAleatoria}
-                >
-                    Partida aleatoria
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={crearSala}
-                >
-                    Crear sala
-                </Button>
-            </div>
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={abrirModal}
-                >
-                    Unirse a sala
-                </Button>
-
-                <Modal isOpen={modalAbierto == true}>
-                    <ModalHeader>
-                        Escriba el código de sala
-                    </ModalHeader>
-                    <ModalBody>
-
-                        <form className={classes.form} noValidate>
-                            <TextField
-
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="code"
-                                label="Código"
-                                name="code"
-                                autoComplete="Codigo"
-                                autoFocus
-                                {...code}
-
-                            />
-                        </form>
-
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={unirseSala}
-
-                        >
-                            Confirmar Código
+                    <StyledMenu open={true}>
+                        <h1>UNITRIVIA</h1>
+                        <h2>JUGAR</h2>
+                        <Button onClick={partidaAleatoria}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="about us">🔎</span>
+                            PARTIDA ALEATORIA
                         </Button>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="secondary"
-                            onClick={abrirModal}
-
-                        >
-                            Cerrar
+                        <Button  onClick={crearSala}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="price">🛠</span>
+                            CREAR SALA
                         </Button>
+                        <Button onClick={abrirModal}
+                           disabled={esReconexion}>
+                            <span role="img" aria-label="contact">🤝</span>
+                            UNIRSE A SALA
+                        </Button>
+                        <Modal isOpen={modalAbierto == true}>
+                            <ModalHeader>
+                                Escriba el código de sala
+                            </ModalHeader>
+                            <ModalBody>
 
-                    </ModalFooter>
-                </Modal>
+                                <form className={classes.form} noValidate>
+                                    <TextField
 
-            </div>
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        fullWidth
+                                        id="code"
+                                        label="Código"
+                                        name="code"
+                                        autoComplete="Codigo"
+                                        autoFocus
+                                        {...code}
 
-            <div style={{marginTop: 10}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.submit}
-                    onClick={reconexion}
-                >
-                    Reconectar a partida
-                </Button>
-            </div>
-            <div style={{marginTop: 100}}>
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    href={'/Menu'}
-                >
-                    Atrás
-                </Button>
+                                    />
+                                </form>
 
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={unirseSala}
 
-            </div>
+                                >
+                                    Confirmar Código
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={abrirModal}
 
+                                >
+                                    Cerrar
+                                </Button>
 
+                            </ModalFooter>
+                        </Modal>
+                        <Button onClick={reconexion}
+                           disabled={!esReconexion}>
+                            <span role="img" aria-label="contact">🔄</span>
+                            RECONECTAR
+                        </Button>
+                        <a href={'/Menu'}>
+                            <span role="img" aria-label="contact">⬅</span>
+                            ATRÁS
+                        </a>
+                    </StyledMenu>
 
+                </CardContent>
+            </Card>
 
-
-
-        </Div>
     );
 }
 

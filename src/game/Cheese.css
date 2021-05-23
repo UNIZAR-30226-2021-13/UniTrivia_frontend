@@ -1,0 +1,211 @@
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+html {
+    font-size: 20px;
+    font-family: 'Slabo 27px', serif;
+}
+@media (max-width: 350px) {
+    html {
+        font-size: 16px;
+    }
+}
+/*body {
+    background: #a2bec5;
+}*/
+.container {
+    max-width: 350px;
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    background: #1b3861;
+    box-shadow: 0.25em 0.25em 0.5em #333;
+}
+@media (max-width: 350px) {
+    .container {
+        max-width: 270px;
+    }
+}
+.game-container {
+    width: 92%;
+    margin: 0.8em auto;
+    border: 0.15em solid #ecba1d;
+}
+.game-container h1 {
+    text-align: center;
+    margin: 0.4em 0.2em 0 0;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ecba1d;
+    font-family: 'Great Vibes', cursive;
+    background: #1b3861;
+}
+.questions-container {
+    width: 100%;
+    background: white;
+    margin: 1em auto 0;
+}
+.category {
+    height: 1em;
+    color: white;
+    padding: 0.2em 1.2em 1.3em;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+.category.yellow {
+    background: #e5e112;
+}
+.category.blue {
+    background: #72aae7;
+}
+.category.green {
+    background: #56b945;
+}
+.category.purple {
+    background: #7843f6;
+}
+.category.orange {
+    background: #e7942e;
+}
+.category.pink {
+    background: #dd82ae;
+}
+.question {
+    background: #ddd;
+    padding: 0.7em 2em;
+}
+.options > li {
+    padding: 0.9em 2em;
+    color: #777;
+}
+.options > li:hover {
+    color: #111;
+    cursor: pointer;
+}
+.modal-container {
+    width: 280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    background: #1b3861;
+    top: 7.7em;
+    left: 1.8em;
+    position: absolute;
+}
+@media (max-width: 350px) {
+    .modal-container {
+        width: 220px;
+        left: 10%;
+    }
+}
+.modal {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0.5em 0;
+    width: 95%;
+    height: 100%;
+    background: #1b3861;
+    color: #ecba1d;
+    font-family: 'Great Vibes', cursive;
+    border: 0.15em solid #ecba1d;
+}
+.modal h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 0.5em 0;
+    text-align: center;
+}
+.correct .message, .incorrect .message {
+    font-size: 2.5rem;
+}
+.play-again {
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+.cheese-container {
+    padding: 1em 0 2em;
+}
+.cheese {
+    transform: rotate(1440deg);
+    width: 3.1em;
+    height: 3.1em;
+    background: #b7af17;
+    border-radius: 50%;
+    position: relative;
+    border: 0.25em solid #efe115;
+}
+.cheese:before {
+    position: absolute;
+    border-radius:100%;
+    content: "";
+    background: linear-gradient(transparent 48.5%, #efe115 48.5%, #efe115 51.5%, transparent 51.5%), linear-gradient(60deg, transparent 48.5%, #efe115 48.5%, #efe115 51.5%, transparent 51.5%), linear-gradient(120deg, transparent 48.5%, #efe115 48.5%, #efe115 51.5%, transparent 51.5%);
+    width: 2.5em;
+    height: 2.5em;
+    top: 0;
+    left: 0;
+}
+/*.cheese:after {
+    position: absolute;
+    border-radius: 50%;
+    content: "";
+    width: 0.75em;
+    height: 0.75em;
+    top: 2.125em;
+    left: 2.125em;
+    background: #efe115;
+}*/
+.piece {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0.1em;
+    left: 0.4em;
+    border-radius: 50%;
+    border-left: 0.9em solid transparent;
+    border-right: 0.9em solid transparent;
+    transform-origin: 0.9em 1.25em;
+}
+.piece.blue {
+    border-top: 1.2em solid #72aae7;
+}
+.piece.yellow {
+    border-top: 1.2em solid #e5e112;
+    transform: rotate(60deg);
+}
+.piece.purple {
+    border-top: 1.2em solid #7843f6;
+    transform: rotate(120deg);
+}
+.piece.orange {
+    border-top: 1.2em solid #e7942e;
+    transform: rotate(180deg);
+}
+.piece.green {
+    border-top: 1.2em solid #56b945;
+    transform: rotate(240deg);
+}
+.piece.pink {
+    border-top: 1.2em solid #dd82ae;
+    transform: rotate(300deg);
+}
+.spin {
+    animation: spin 3s;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    75% {
+        transform: rotate(1440deg);
+    }
+    87.5% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

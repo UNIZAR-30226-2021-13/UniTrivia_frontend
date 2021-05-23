@@ -56,6 +56,8 @@ function Quiz(props) {
     let incorrect_answers = props.pregunta.pregunta.resps_inc; //se sacaría de props
     let correct_answer = props.pregunta.pregunta.resp_c; //se sacaría de props
 
+    console.log(correct_answer)
+
     const [quiz, setQuiz] = useState([]);
     const [number, setNumber] = useState(0);
     const [pts, setPts] = useState(0);
@@ -63,13 +65,16 @@ function Quiz(props) {
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
     const pickAnswer = (e) => {
-
-        let userAnswer = e.target.outerText;
-
+        console.log(e)
+        var userAnswer = e.target.innerText;
+        console.log(e.target.innerText)
+        console.log(quiz[number])
+        console.log(userAnswer)
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
             props.onResponse({result: 1, casillaInfo: props.pregunta});
         }else{
+            console.log('fallaste'+ quiz[number].answer +' '+userAnswer)
             props.onResponse({result: 0, casillaInfo: props.pregunta});
         }
         setNumber(number + 1);
@@ -95,6 +100,7 @@ function Quiz(props) {
 
 
     return (
+        <div>
         <QuizWindow>
             { quiz[number] &&
 
@@ -115,6 +121,7 @@ function Quiz(props) {
             }
 
         </QuizWindow>
+        </div>
     )
 }
 

@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Widget, addResponseMessage  } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
 import {conn} from "../Play";
+import {getUser} from "../Utils/Common";
 
 const io = require("socket.io-client");
 const http = require("http");
 
 
-
-
-
-
-
 function Chat(props){
+
     console.log("estoy en chat");
     console.log(conn);
 
@@ -23,6 +20,24 @@ function Chat(props){
             priv: "true"
         }
     });*/
+
+    conn.on('nuevoJugador',(user)=> {
+        const usuario = user.jugador;
+        addResponseMessage("El jugador " + usuario + " ha entrado a la sala.");
+    })
+
+    conn.on('reconexionJugador',(user)=> {
+        const nombre = user.jugador;
+        addResponseMessage("El jugador " + nombre + " se ha reconectado.");
+    })
+
+    conn.on('abandonoSala',(user)=>{
+        addResponseMessage("El jugador " + user + " ha abandonado la sala.");
+    })
+
+    conn.on('jugadorSale',(user)=>{
+        addResponseMessage("El jugador " + user + " ha abandonado la partida");
+    })
 
     conn.on('chat', ({usuario, msg})=>{
         let msgFull = 'Mensaje de ' + usuario + ': ' + msg;

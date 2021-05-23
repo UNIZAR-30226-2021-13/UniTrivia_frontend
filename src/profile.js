@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import {
     Box,
     Container,
-    Grid
+    Grid, Link
 } from '@material-ui/core';
 import AccountProfile from './account/AccountProfile';
 import AccountProfileDetails from './account/AccountProfileDetails';
@@ -15,6 +15,9 @@ import Stats from './account/Stats'
 import Items from './account/Items'
 import axios from "axios";
 import {setUserSession,getToken,removeUserSession} from "./Utils/Common";
+import Tienda from './tienda/Tienda';
+import {ArrowBack} from "@material-ui/icons";
+import IconButton from "@material-ui/core/IconButton";
 
 
 
@@ -124,11 +127,61 @@ function Profile(props) {
 
     }
 
+    const irATiendaAvatares = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'Avatar'
+            }
+        })
+    }
+
+    const irATiendaBanners = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'Banner'
+            }
+        })
+    }
+
+    const irATiendaFichas = () =>{
+        props.history.push({
+            pathname: '/Tienda',
+            state:{
+                actual_coins: coins,
+                comprados: comprados,
+                tipo: 'Ficha'
+            }
+        })
+    }
+
+    function handleResponseFromItem(response){
+
+        console.log(response);
+        if(response == "Avatar"){
+            irATiendaAvatares();
+        }else if(response == "Banner"){
+            irATiendaBanners();
+        }else if(response == "Ficha"){
+            irATiendaFichas();
+        }
+    }
+
+
     return (
         <>
             <Helmet>
                 <title>Account | Material Kit</title>
             </Helmet>
+            <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/menu'}>
+                <ArrowBack color="primary"/>
+                Volver
+            </IconButton>
             <Box
                 sx={{
                     backgroundColor: 'background.default',
@@ -147,7 +200,7 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <AccountProfile user={username} mail={email} avatar={avatar}/>
+                            <AccountProfile user={username} mail={email} avatar={avatar} banner={banner} ficha={ficha}/>
                         </Grid>
                         <Grid
                             item
@@ -171,8 +224,9 @@ function Profile(props) {
                             md={6}
                             xs={12}
                         >
-                            <Items comprados={comprados} />
+                            <Items comprados={comprados} coins={coins} onResponse={handleResponseFromItem.bind()}/>
                         </Grid>
+
                         <Grid
                             item
                             lg={8}

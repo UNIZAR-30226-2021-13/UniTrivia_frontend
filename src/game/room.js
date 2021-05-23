@@ -2,21 +2,34 @@ import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {Card, CardContent, TextField} from '@material-ui/core';
 //import {io,socketIOClient} from "socket.io-client";
-import {getToken, setPlayers} from "../Utils/Common";
+import Cheese from './Cheese';
+//import Cheese from './Cheese';
+import {getToken} from "../Utils/Common";
 
 import {conn} from "../Play";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
-import ColourWheel from './src/components/colourWheel/ColourWheel'
-import Board from "./Board";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Checkbox from '@material-ui/core/Checkbox';
+import Avatar from '@material-ui/core/Avatar';
+
 
 const io = require("socket.io-client");
 const http = require("http");
 
+
+const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
+
 const useStyles = makeStyles((theme) => ({
     root: {
-        height: '100vh',
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
     },
     image: {
         backgroundImage: 'url(https://img.freepik.com/vector-gratis/modelo-inconsutil-pregunta-papel-aislada-realista-decoracion-invitacion-concepto-concurso-trivia_269299-1004.jpg?size=626&ext=jpg)',
@@ -45,18 +58,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-
 function Room(props) {
     const classes = useStyles();
+    let [coloresAcertados,setColoresAcertados]=useState(["yellow","pink"])
     let [jugadores,setJugadores] = useState([]);
     let [codigoSala,setCodigoSala] = useState(null);
     let [username,setUsername]=useState("");
     let [admin,setAdmin] = useState('');
     let esprimero=true;
     let [nuevoJugador,setNuevoJugador]=useState(false);
-
-
 
     useEffect(() => {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
@@ -125,6 +135,7 @@ function Room(props) {
         }
     })
     const quesitos=()=>{
+        console.log("EStoy en quesitos");
         conn.on('estadoPartida',(info)=>{
             console.log(info);
         })
@@ -135,10 +146,23 @@ function Room(props) {
             <li key="{jugador}">{jugador}</li>
         )
         return(
-            <div>
-                <h4>Jugadores en la sala</h4>
-                <h6>{listJugadores}</h6>
-            </div>
+            <List dense className={classes.root}>
+                {jugadores.map((value) => {
+                    const labelId = `checkbox-list-secondary-label-${value}`;
+                    return (
+                        <div>
+                            <ListItem key={value} button>
+                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                <ListItemSecondaryAction>
+                                    <Cheese color={coloresAcertados}></Cheese>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+
+                        </div>
+
+                    );
+                })}
+            </List>
         )
     }
     const devolverCodigoSala = () => {
@@ -154,17 +178,10 @@ function Room(props) {
         )
     }
     const empezarPartida=()=>{
-        console.log(jugadores)
-        setPlayers(jugadores)
-        conn.emit('comienzoPartida',(res)=>{
-            console.log("Al comenzar partida: " + res.res + " " + res.info);
+        conn.on('comienzoPartida',()=>{
+            console.log("Comienza la partida");
         })
-
     }
-    conn.on('comienzoPartida',()=>{
-        setPlayers(jugadores)
-        console.log("Comienza la partida");
-    })
     const botonEmpezar = () => {
         console.log("Estoy en boton: username: "+username+"  y admin  "+admin);
         if(username===admin){
@@ -175,7 +192,7 @@ function Room(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    onClick={empezarPartida()}
+                    onClick={empezarPartida}
                 >
                     Empezar Partida
                 </Button>
@@ -185,11 +202,10 @@ function Room(props) {
     return (
         <div>
             <div>
-                SALA
+                Hola
             </div>
             <div>
                 {listarJugadores()}
-                {quesitos()}
             </div>
             <div>
                 {devolverCodigoSala()}

@@ -63,6 +63,21 @@ function Stats(props) {
               >
                 <TextField
                     fullWidth
+                    label="Coins"
+                    name="question"
+                    value={profile.coins}
+                    defaultValue={'0'}
+                    variant="outlined"
+                    disabled={true}
+                />
+              </Grid>
+              <Grid
+                  item
+                  md={6}
+                  xs={12}
+              >
+                <TextField
+                    fullWidth
                     label="Partidas ganadas"
                     name="email"
                     defaultValue={'0'}
@@ -78,9 +93,9 @@ function Stats(props) {
               >
                 <TextField
                     fullWidth
-                    label="Monedas obtenidas"
+                    label="Partidas Perdidas"
                     name="question"
-                    value={profile.coins}
+                    value={profile.jugadas-profile.ganadas}
                     defaultValue={'0'}
                     variant="outlined"
                     disabled={true}
