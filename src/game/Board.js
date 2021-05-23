@@ -107,12 +107,10 @@ class Board extends Component {
     }
     audio = new Audio(dados)
 
-    promesa = undefined;
-
     constructor(props) {
         super(props);
 
-        this.promesa = axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
+        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
 
@@ -423,8 +421,7 @@ class Board extends Component {
             }
 
             console.log(this.state.username)
-            //await this.sleep(1000);
-            await this.promesa;
+            await this.sleep(1000);
             let quienSoy = userList.findIndex((jugador) => (jugador.nombre === this.state.username));
 
             if(quienSoy > -1) {
@@ -675,7 +672,7 @@ class Board extends Component {
     }
 
 
-    handleQuesitos=(response)=>{
+    handleQuesitos= async (response)=>{
         console.assert(!debug,response);
         console.assert(!debug,'quesito de'+response.quesito);
         let color;
@@ -713,6 +710,7 @@ class Board extends Component {
             let colors = this.state.coloresAcertados;
             colors.push(color);
             this.setState({coloresAcertados: colors});
+            await this.sleep(500);
             var arrayDatosJugadores = this.state.datosJugadores;
             for (var i = 0; i < arrayDatosJugadores.length; i++) {
                 if (arrayDatosJugadores[i].nombre === response.user) {
