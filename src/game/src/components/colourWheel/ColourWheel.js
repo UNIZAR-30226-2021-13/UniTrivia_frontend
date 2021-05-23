@@ -3,13 +3,7 @@
 
 import React, {Component, useState} from 'react'
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import PopupState from 'material-ui-popup-state';
 import Quiz from '../../Quiz/Quiz'
 
 import PropTypes from 'prop-types'
@@ -24,11 +18,9 @@ import {
   produceRgbShades
 } from '../../utils/utils'
 import hexStrings from '../../utils/hexStrings'
-import {Box, Card, CardContent, Modal, Popover, Typography} from '@material-ui/core'
+import {Card, CardContent, Modal,  Typography} from '@material-ui/core'
 import {conn} from '../../../../Play'
-import {getPlayers, getToken, getUser} from "../../../../Utils/Common";
-import throttle from 'lodash.throttle';
-import Popup from "reactjs-popup";
+import {getToken, getUser} from "../../../../Utils/Common";
 import {green} from "@material-ui/core/colors";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import axios from "axios";
@@ -71,7 +63,8 @@ class ColourWheel extends Component {
       mostrarFicha:false,
       pintarQuesito:false,
       prueba: false,
-      botonCerrar: true
+      botonCerrar: true,
+      contestada: false
     }
 
     // Initialised just before the DOM has loaded; after constructor().
@@ -484,7 +477,7 @@ class ColourWheel extends Component {
       console.log(res['info']);
       this.state.posiblesJugadas=res['info'];
       console.log(this.state.posiblesJugadas);
-      if(res['res']!='err'){
+      if(res['res']!=='err'){
         if(res['info']==="No es el turno."){
           console.log('no turno')
           this.state.puedoMover=false;
@@ -559,8 +552,6 @@ class ColourWheel extends Component {
 
     const { radius } = this.props
 
-    const height = radius * 2
-    const width = radius * 2
     console.log(this.state.playerName)
     this.setState(
         {
@@ -993,7 +984,7 @@ class ColourWheel extends Component {
     if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
       this.props.onResponse({quesito: response.casillaInfo.casilla.categoria,user: getUser()});
     }
-
+    this.setState({contestada: true})
     //this.handleClose()
 
 
@@ -1008,6 +999,7 @@ class ColourWheel extends Component {
 
     this.setState({open: false})
     this.setState({botonCerrar:true})
+    this.setState({contestada: false})
   };
   getOpen(){
     return this.state.open
@@ -1019,32 +1011,7 @@ class ColourWheel extends Component {
 
 
     const { radius, dynamicCursor } = this.props
-    /*
-        conn.on("jugada",(res)=>{
-          console.log(res)
-          let indice=0;
-          for(var i=0;i<this.state.numPlayers;i++){
-            if(this.state.playerName[i]===res.user){
-              indice=i
-            }
-          }
-          let coords=getCoordByCasilla(res.casilla,indice)
-          this.state.positionsX[indice]=coords.x;
-          this.state.positionsY[indice]=coords.y;
-          this.inicializarTablero()
-        })
-    */
 
-    /*
-    conn.on('nuevoJugador', (user) => {
-      console.log("Entra en la sala: " + user);
-    })
-
-    conn.on('turno', (info) => {
-      console.log("Turno de: " + info);
-
-    })
-    */
 
 
     return dynamicCursor ? (
@@ -1080,13 +1047,16 @@ class ColourWheel extends Component {
                           <CountdownCircleTimer
                               onComplete={() => {
                                 console.log('timer')
-                                conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
-                                  quesito: "",
-                                  finTurno: true ,
-                                }, (res)=>{
-                                  console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
-                                  this.props.activarDado();
-                                });
+                                if(!this.state.contestada){
+                                  conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
+                                    quesito: "",
+                                    finTurno: true ,
+                                  }, (res)=>{
+                                    console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+                                    this.props.activarDado();
+                                  });
+                                }
+
                                 this.handleClose()
                               }}
                               isPlaying

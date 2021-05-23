@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Widget, addResponseMessage  } from 'react-chat-widget';
 import 'react-chat-widget/lib/styles.css';
 import {conn} from "../Play";
-import {getUser} from "../Utils/Common";
 
-const io = require("socket.io-client");
-const http = require("http");
+
 
 
 function Chat(props){

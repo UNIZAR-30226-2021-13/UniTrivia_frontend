@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import {getToken, getUser, removeUserSession} from "./Utils/Common";
-import {io,socketIOClient} from "socket.io-client";
+import {getToken} from "./Utils/Common";
+import {io} from "socket.io-client";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
+import {Modal, ModalHeader, ModalBody, ModalFooter} from "reactstrap";
 import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import {Card, CardContent} from "@material-ui/core";
 
-const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
+const ENDPOINT = "https://unitrivia.herokuapp.com/api/partida";
 //const ENDPOINT = "http://localhost:3000/api/partida";
 
 export let conn = undefined;

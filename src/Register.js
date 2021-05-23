@@ -1,20 +1,14 @@
 import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import axios from 'axios';
-import { setUserSession } from './Utils/Common';
-import { useForm } from 'react-hook-form';
 
 
 function Copyright() {
@@ -115,18 +109,18 @@ export default function Register(props) {
         setError(null);
         setLoading(true);
 
-        username.value == '' ? setUser(true) : setUser(false);
-        password.value == '' ? setPass(true) : setPass(false);
-        email.value == '' ? setEmail(true) : setEmail(false);
-        question.value == '' ? setQuestion(true) : setQuestion(false);
-        answer.value == '' ? setAns(true) : setAns(false);
-        if(reppassword.value == ''){
+        username.value === '' ? setUser(true) : setUser(false);
+        password.value === '' ? setPass(true) : setPass(false);
+        email.value === '' ? setEmail(true) : setEmail(false);
+        question.value === '' ? setQuestion(true) : setQuestion(false);
+        answer.value === '' ? setAns(true) : setAns(false);
+        if(reppassword.value === ''){
             setNoRep(true)
             setErr('introduce la contraseña')
         }else{
             setNoRep(false)
         }
-        if(password.value!=reppassword.value){
+        if(password.value!==reppassword.value){
             setDist(true)
             setErr('las contraseñas no coinciden')
         }else{
@@ -135,7 +129,7 @@ export default function Register(props) {
 
 
 
-        if(username.value!='' && password.value!='' && email.value!='' && question.value!=''&& answer.value!='' && password.value==reppassword.value) {
+        if(username.value!=='' && password.value!=='' && email.value!=='' && question.value!==''&& answer.value!=='' && password.value===reppassword.value) {
 
 //https://unitrivia.herokuapp.com/api/register
             axios.post('https://unitrivia.herokuapp.com/api/register', {}, {

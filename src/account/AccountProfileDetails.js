@@ -1,31 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 
-import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
+import {Card, CardContent, CardHeader, Divider, Grid, TextField} from '@material-ui/core';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
-];
+
 
 function AccountProfileDetails(props) {
   const profile=props;
 
 
-
-
-  const handleChange = (event) => {
-
-  };
 
   return (
       <form

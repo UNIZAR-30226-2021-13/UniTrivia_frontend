@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {Card, CardHeader, Collapse, Grid} from '@material-ui/core';
+import {Card, CardHeader, Grid} from '@material-ui/core';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import {ArrowBack, ExpandLess, ExpandMore} from "@material-ui/icons";
+import {ArrowBack} from "@material-ui/icons";
 import {FixedSizeList} from "react-window";
 import {makeStyles} from "@material-ui/core/styles";
 import {getToken} from "../Utils/Common";
@@ -11,12 +11,9 @@ import axios from "axios";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import PropTypes from "prop-types";
-import async from "async";
 import IconButton from "@material-ui/core/IconButton";
 
-let comprados_tipo = [];
-let catalogo_tipo_no_reps = [];
-let tipo = undefined;
+
 
 const useStyles = makeStyles((theme) => ({
 
@@ -49,7 +46,7 @@ function Tienda (props){
     console.log(tipo);
     let header = null;
 
-    if(tipo == "Avatar"){
+    if(tipo === "Avatar"){
         header = "Bienvenido a la Tienda de Avatares"
         for (let i = 0; i < comprados.length; i++) {
             let word = comprados[i];
@@ -57,19 +54,19 @@ function Tienda (props){
                 comprados_tipo.push(word);
             }
         }
-    }else if(tipo == "Banner"){
+    }else if(tipo === "Banner"){
         header = "Bienvenido a la Tienda de Banners"
         for (let i = 0; i < comprados.length; i++) {
             let word = comprados[i];
-            if (word[0] == 'b') {
+            if (word[0] === 'b') {
                 comprados_tipo.push(word);
             }
         }
-    }else if(tipo == "Ficha"){
+    }else if(tipo === "Ficha"){
         header = "Bienvenido a la Tienda de Formas de Ficha"
         for (let i = 0; i < comprados.length; i++) {
             let word = comprados[i];
-            if (word[0] == 'f') {
+            if (word[0] === 'f') {
                 comprados_tipo.push(word);
             }
         }
@@ -94,7 +91,7 @@ function Tienda (props){
                 let lo_tengo = false;
                 for(let j = 0; j < comprados_tipo.length; j++){
                     console.log(catalogo_tipo[i].nombre);
-                    if(catalogo_tipo[i].nombre == comprados_tipo[j]){
+                    if(catalogo_tipo[i].nombre === comprados_tipo[j]){
                         lo_tengo = true;
                     }
 
@@ -104,7 +101,7 @@ function Tienda (props){
                     index++;
                 }
             }
-            if(catalogo_tipo_no_reps.length == 0){
+            if(catalogo_tipo_no_reps.length === 0){
                 alert("Ya tienes todos los objetos")
             }
             console.log(catalogo_tipo_no_reps.length);
@@ -151,7 +148,7 @@ function Tienda (props){
         }
 
         let current = undefined;
-        if(tipo == "Avatar"){
+        if(tipo === "Avatar"){
             current = '/images/avatars/' + cat[index].nombre + '.jpg';
             return(
 
@@ -170,7 +167,7 @@ function Tienda (props){
                 </ListItem>
 
             )
-        }else if(tipo == "Banner"){
+        }else if(tipo === "Banner"){
             current = '/images/banners/' + cat[index].nombre + '.jpg';
             return(
                 <div>
@@ -192,7 +189,7 @@ function Tienda (props){
                 </div>
 
             )
-        }else if(tipo == "Ficha"){
+        }else if(tipo === "Ficha"){
             current = '/images/fichas/' + cat[index].nombre + '.png';
             return(
 

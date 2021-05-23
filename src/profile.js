@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import { Helmet } from 'react-helmet';
 import {
     Box,
     Container,
-    Grid, Link
+    Grid,
 } from '@material-ui/core';
 import AccountProfile from './account/AccountProfile';
 import AccountProfileDetails from './account/AccountProfileDetails';
@@ -14,8 +13,7 @@ import SettingsPassword from './settings/SettingsPassword';
 import Stats from './account/Stats'
 import Items from './account/Items'
 import axios from "axios";
-import {setUserSession,getToken,removeUserSession} from "./Utils/Common";
-import Tienda from './tienda/Tienda';
+import {getToken,removeUserSession} from "./Utils/Common";
 import {ArrowBack} from "@material-ui/icons";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -163,11 +161,11 @@ function Profile(props) {
     function handleResponseFromItem(response){
 
         console.log(response);
-        if(response == "Avatar"){
+        if(response === "Avatar"){
             irATiendaAvatares();
-        }else if(response == "Banner"){
+        }else if(response === "Banner"){
             irATiendaBanners();
-        }else if(response == "Ficha"){
+        }else if(response === "Ficha"){
             irATiendaFichas();
         }
     }
