@@ -637,31 +637,9 @@ class Board extends Component {
 
     finPartida(){
         let aux = this.state.datosJugadores;
-        aux.sort(function(a, b){
-            const A = a.coloresAcertados.length;
-            const B = b.coloresAcertados.length;
-            if(B < A){
-                return -1;
-            } else if(B > A){
-                return 1;
-            } else {
-                return 0;
-            }
-        });
+        let index = aux.findIndex((jugador) => jugador.coloresAcertados.length === 6);
+        return  "GANADOR: " + aux[index].nombre;
 
-        let result = "RESULTADOS: \n";
-        let pos = 1;
-        let incr = 0;
-        for(let i = 0; i<aux.length; i++){
-            if(i > 0 && aux[i].coloresAcertados.length < aux[i-1].coloresAcertados.length) {
-                pos += incr;
-                incr = 1;
-            } else {
-                incr++;
-            }
-            result += pos.toString() + ". " + aux[i].nombre + "\n";
-        }
-        return result;
     }
 
     handleOpen = () => {
