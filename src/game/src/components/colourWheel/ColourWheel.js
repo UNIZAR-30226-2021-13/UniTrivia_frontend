@@ -1026,7 +1026,7 @@ class ColourWheel extends Component {
                               size={80}
                           />
                           </div>
-                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz} > </Quiz>
+                          <Quiz  pregunta={this.getPosiblesJugadas()} onResponse={this.handleResponseFromQuiz.bind(this)} > </Quiz>
                           <Button onClick={this.handleClose} style={{color: 'red'}} disabled={this.state.botonCerrar}>CERRAR</Button>
                         </CardContent>
                       </Card>

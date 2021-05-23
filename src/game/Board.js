@@ -853,7 +853,7 @@ class Board extends Component {
                                     animated
                                     desactivarDado={this.desactivarDado.bind(this)}
                                     activarDado={this.activarDado.bind(this)}
-                                    onResponse={this.handleQuesitos}
+                                    onResponse={this.handleQuesitos.bind(this)}
                                     username={this.state.username}
 
                                 />

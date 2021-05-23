@@ -47,7 +47,13 @@ const Question = styled.div`
   margin: 0 auto;
 `;
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function Quiz(props) {
+
+
 
     let question = props.pregunta.pregunta.pregunta; //se sacaría de props  pregunta.pregunta
     //let question = "preguntita brother"; //se sacaría de props
@@ -63,7 +69,8 @@ function Quiz(props) {
 
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-    const pickAnswer = (e) => {
+    const pickAnswer = async(e) => {
+        await sleep(500)
         var userAnswer = e.target.innerText;
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
