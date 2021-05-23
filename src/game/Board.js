@@ -109,11 +109,6 @@ class Board extends Component {
 
     constructor(props) {
         super(props);
-        conn.emit("obtenerIdSala",(id)=>{
-            //this.state.codigoSala = id
-            this.setState({codigoSala: id});
-            console.log("Ejecutando obtenerIdSala...")
-        })
 
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
@@ -121,6 +116,11 @@ class Board extends Component {
 
                 console.log("Recuperando datos del usuario...")
             this.setState({username:response.data._id})
+            conn.emit("obtenerIdSala",(id)=>{
+                //this.state.codigoSala = id
+                this.setState({codigoSala: id});
+                console.log("Ejecutando obtenerIdSala...")
+            })
             console.assert(!debug,"no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
             if (this.state.jugadores.length === 0 &&  this.state.esprimero) {
                 console.assert(!debug,"Es el primero, lo ponemos como admin");
@@ -420,12 +420,11 @@ class Board extends Component {
                 casillas.push(users.jugadores[i].casilla)
             }
 
-            let aux = this.state.datosJugadores;
-            let quienSoy = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
+            let quienSoy = userList.findIndex((jugador) => (jugador.nombre === this.state.username));
 
             if(quienSoy > -1) {
                 this.setState({partidaEmpezada: true})
-                this.colourWheel.setValores(this.state.datosJugadores, this.state.datosJugadores.length, quienSoy)
+                this.colourWheel.setValores(userList, userList.length, quienSoy)
                 console.assert(!debug, casillas)
                 this.colourWheel.cargarPartida(casillas, quienSoy)
                 this.colourWheel.drawPlayers()
@@ -458,7 +457,7 @@ class Board extends Component {
                 //arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
                 this.setState({datosJugadores:arrayJugadores})
-                this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
+                this.colourWheel.setValores(arrayJugadores, arrayJugadores.length, quienSoy)
 
             }else{
                 console.assert(!debug,"ha dado error el indexOf");

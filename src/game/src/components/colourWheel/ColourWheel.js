@@ -844,6 +844,8 @@ class ColourWheel extends Component {
   }
 
   cargarImagen(){
+    console.log("Poniendo imagenes...")
+    console.log(this.state.imagenes)
     let images=[]
     for(var i=0; i<this.state.imagenes.length;i++){
       const imageObj1 = new Image();
@@ -859,6 +861,9 @@ class ColourWheel extends Component {
   }
 
   drawPlayers () {
+    console.log("Escribiendo jugadores...")
+    console.log(this.state.playerName)
+
     const { radius } = this.props
 
     const height = radius * 2
