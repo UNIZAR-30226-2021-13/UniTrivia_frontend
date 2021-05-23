@@ -361,7 +361,7 @@ class Board extends Component {
             //this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
         })
 
-        conn.on('estadoPartida',(users)=>{//arreglar
+        conn.on('estadoPartida',async (users)=>{//arreglar
             console.assert(!debug,users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
@@ -420,6 +420,8 @@ class Board extends Component {
                 casillas.push(users.jugadores[i].casilla)
             }
 
+            console.log(this.state.username)
+            await this.sleep(1000);
             let quienSoy = userList.findIndex((jugador) => (jugador.nombre === this.state.username));
 
             if(quienSoy > -1) {
@@ -554,6 +556,9 @@ class Board extends Component {
     }
 
 
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     componentWillUnmount() {
         this.audio.removeEventListener('ended', () => this.setState({ play: false }));
