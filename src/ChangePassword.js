@@ -117,7 +117,7 @@ function ChangePassword(props) {
 
                 axios.post('https://unitrivia.herokuapp.com/api/login/recover/password', {}, {
                     headers: {
-                        jwt: getToken(),
+                        username: username.value,
                         res: answer.value,
                         newpassword: newPassword.value
                     }
