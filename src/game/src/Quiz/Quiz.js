@@ -47,9 +47,7 @@ const Question = styled.div`
   margin: 0 auto;
 `;
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 function Quiz(props) {
 
@@ -69,9 +67,10 @@ function Quiz(props) {
 
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-    const pickAnswer = async(e) => {
-        await sleep(500)
+    const pickAnswer = (e) => {
+
         var userAnswer = e.target.innerText;
+
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
             props.onResponse({result: 1, casillaInfo: props.pregunta});

@@ -917,11 +917,16 @@ class ColourWheel extends Component {
     return this.state.casillaActualInfo
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
-  handleResponseFromQuiz=(response)=>{
+  handleResponseFromQuiz= async (response)=>{
+
 
     this.setState({botonCerrar:false})
     this.setState({pintarQuesito:true})
+    await this.sleep(500)
 
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
       quesito: response.casillaInfo.casilla.tipo==="Quesito"&&response.result===1?response.casillaInfo.casilla.categoria:"",
