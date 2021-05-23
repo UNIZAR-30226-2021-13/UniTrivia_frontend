@@ -92,19 +92,19 @@ function Login(props) {
     setError(null);
     setLoading(true);
 
-      if(username.value==''){
+      if(username.value===''){
           setUser(true);
       }else{
           setUser(false);
       }
-      if(password.value == ''){
+      if(password.value === ''){
           setPass(true);
       }else{
           setPass(false);
       }
 
 
-    if(username.value!='' && password.value != ''){
+    if(username.value!=='' && password.value !== ''){
         axios.get('https://unitrivia.herokuapp.com/api/login', { headers:{
                 username: username.value,
                 password: password.value

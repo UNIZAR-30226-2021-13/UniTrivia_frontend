@@ -1,22 +1,19 @@
-import React, {Component, useEffect, useState} from 'react'
+import React, {Component} from 'react'
 
 // react-colour-wheel:
 import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
-import {getPlayers, getSoyAdmin, getToken, getUser, setPlayers} from "../Utils/Common";
-import {get} from "react-hook-form";
+import {getToken, getUser} from "../Utils/Common";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
-import {Card, CardContent, Grid, ListItemAvatar, Popper, Typography} from "@material-ui/core";
-import {Modal, ModalHeader, ModalBody, ModalFooter, Input, Label} from "reactstrap";
+import {Card, CardContent, Grid, ListItemAvatar, Typography} from "@material-ui/core";
+import {Modal} from "reactstrap";
 
 import {green} from "@material-ui/core/colors";
-import Quiz from "./src/Quiz/Quiz";
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import Room from "./room";
 import IconButton from "@material-ui/core/IconButton";
 import {ArrowBack, HelpOutline, MusicNote, MusicOff, VolumeOff, VolumeUp} from "@material-ui/icons";
 import axios from "axios";
@@ -29,8 +26,6 @@ import {withStyles} from "@material-ui/core/styles";
 import Avatar from '@material-ui/core/Avatar';
 import musica from "../music/ascensor.mp3";
 import Sound from "react-sound";
-import {CountdownCircleTimer} from "react-countdown-circle-timer";
-import {color} from "@material-ui/system";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
@@ -119,7 +114,7 @@ class Board extends Component {
             console.log(this.state.jugadores);
             console.log(response.data._id);
             console.log("no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
-            if (this.state.jugadores.length == 0 &&  this.state.esprimero) {
+            if (this.state.jugadores.length === 0 &&  this.state.esprimero) {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
@@ -136,7 +131,7 @@ class Board extends Component {
                     ]
                 })
 
-            } else if (this.state.jugadores.length == 1 &&  this.state.esprimero){
+            } else if (this.state.jugadores.length === 1 &&  this.state.esprimero){
                 this.setState({admin: response.data._id})
 
             } else {
@@ -271,7 +266,7 @@ class Board extends Component {
                 let ficha;
                 let banner;
                 let avatar;
-                if(user.imgs == null || user.imgs.ficha == ""){
+                if(user.imgs == null || user.imgs.ficha === ""){
                     ficha = "ficha0";
                     banner = "banner0";
                     avatar = "avatar0";
@@ -303,7 +298,7 @@ class Board extends Component {
                 let ficha;
                 let banner;
                 let avatar;
-                if(users.jugadores[i].imgs == null || users.jugadores[i].imgs == ""){
+                if(users.jugadores[i].imgs == null || users.jugadores[i].imgs === ""){
                     ficha = "ficha0";
                     banner = "banner0";
                     avatar = "avatar0";

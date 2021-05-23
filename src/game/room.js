@@ -14,16 +14,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Checkbox from '@material-ui/core/Checkbox';
-import Avatar from '@material-ui/core/Avatar';
 
-
-const io = require("socket.io-client");
-const http = require("http");
-
-
-const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -66,7 +57,6 @@ function Room(props) {
     let [username,setUsername]=useState("");
     let [admin,setAdmin] = useState('');
     let esprimero=true;
-    let [nuevoJugador,setNuevoJugador]=useState(false);
 
     useEffect(() => {
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
@@ -75,7 +65,7 @@ function Room(props) {
             setUsername(response.data._id);
             console.log(jugadores);
             console.log(response.data._id);
-            if (jugadores.length==0 &&  esprimero) {
+            if (jugadores.length === 0 &&  esprimero) {
                 console.log("Es el primero, lo ponemos como admin");
                 const list = jugadores.concat(response.data._id);
                 setAdmin(response.data._id);

@@ -13,7 +13,6 @@ import {
   TextField
 } from '@material-ui/core';
 import axios from "axios";
-import {setUserSession} from "../Utils/Common";
 
 const SettingsPassword = (props) => {
   const [values, setValues] = useState({
