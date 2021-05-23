@@ -632,13 +632,22 @@ class Board extends Component {
     heGanado(){
         let aux = this.state.datosJugadores;
         let index = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
-        return aux[index].coloresAcertados.length === 6;
+        if(index > -1){
+            return aux[index].coloresAcertados.length === 6;
+        } else {
+            return false;
+        }
     }
 
     finPartida(){
         let aux = this.state.datosJugadores;
         let index = aux.findIndex((jugador) => jugador.coloresAcertados.length === 6);
-        return  "GANADOR: " + aux[index].nombre;
+        if(index > -1){
+            return  "GANADOR: " + aux[index].nombre;
+        } else {
+            return  "";
+        }
+
 
     }
 
