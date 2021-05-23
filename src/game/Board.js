@@ -109,9 +109,17 @@ class Board extends Component {
 
     constructor(props) {
         super(props);
+        conn.emit("obtenerIdSala",(id)=>{
+            //this.state.codigoSala = id
+            this.setState({codigoSala: id});
+            console.log("Ejecutando obtenerIdSala...")
+        })
+
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
             }}).then((response) => {
+
+                console.log("Recuperando datos del usuario...")
             this.setState({username:response.data._id})
             console.assert(!debug,"no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
             if (this.state.jugadores.length === 0 &&  this.state.esprimero) {
@@ -411,7 +419,6 @@ class Board extends Component {
             for(let i = 0; i < users.jugadores.length; i++){
                 casillas.push(users.jugadores[i].casilla)
             }
-            //TODO: cargar un estado de partida de forma dinámica, es decir, distinto del inicial
 
             let aux = this.state.datosJugadores;
             let quienSoy = aux.findIndex((jugador) => (jugador.nombre === this.state.username));
@@ -518,11 +525,6 @@ class Board extends Component {
         conn.on('finDelJuego', (usuario) => {
             console.assert(!debug,"Fin del juego, gana: " + usuario);
             this.handleOpen()
-        })
-
-        conn.emit("obtenerIdSala",(id)=>{
-            //this.state.codigoSala = id
-            this.setState({codigoSala: id});
         })
 
         conn.on('comienzoPartida', (res) => {
