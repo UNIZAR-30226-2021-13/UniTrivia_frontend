@@ -10,8 +10,8 @@ import TextField from "@material-ui/core/TextField";
 import axios from "axios";
 import {Card, CardContent} from "@material-ui/core";
 
-//const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
-const ENDPOINT = "http://localhost:3000/api/partida";
+const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
+//const ENDPOINT = "http://localhost:3000/api/partida";
 
 export let conn = undefined;
 

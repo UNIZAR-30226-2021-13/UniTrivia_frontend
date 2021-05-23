@@ -23,7 +23,7 @@ const io = require("socket.io-client");
 const http = require("http");
 
 
-const ENDPOINT = "http://localhost:3000/api/partida";
+const ENDPOINT = "http://unitrivia.herokuapp.com/api/partida";
 
 const useStyles = makeStyles((theme) => ({
     root: {
