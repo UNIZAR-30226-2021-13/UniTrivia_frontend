@@ -113,9 +113,9 @@ function Home(props) {
 
     useEffect(() => {
 
-        if(getUser()!=null){
+        /*if(getUser()!=null){
             props.history.push('/menu');
-        }
+        }*/
     }, []);
   return (
       <React.Fragment >
@@ -124,7 +124,7 @@ function Home(props) {
           <StyledMenu open={true}>
               <h1>UNITRIVIA</h1>
               <h2></h2>
-              <Button href="/Play">
+              <Button href="/Login">
                   <span role="img" aria-label="about us">🔓</span>
                   LOGIN
               </Button>

@@ -29,6 +29,7 @@ import Sound from "react-sound";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
+const debug = false;
 
 const useStyles = (theme) => ({
     root: {
@@ -111,11 +112,9 @@ class Board extends Component {
                 jwt: getToken()
             }}).then((response) => {
             this.setState({username:response.data._id})
-            console.log(this.state.jugadores);
-            console.log(response.data._id);
-            console.log("no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
+            console.assert(!debug,"no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
             if (this.state.jugadores.length === 0 &&  this.state.esprimero) {
-                console.log("Es el primero, lo ponemos como admin");
+                console.assert(!debug,"Es el primero, lo ponemos como admin");
                 const list = this.state.jugadores.concat(response.data._id);
                 //this.state.admin = response.data._id;
                 this.setState({
@@ -135,11 +134,11 @@ class Board extends Component {
                 this.setState({admin: response.data._id})
 
             } else {
-                console.log("Se intenta meter un usuario que ya estaba");
+                console.assert(!debug,"Se intenta meter un usuario que ya estaba");
 
             }
         }).catch((code) => {
-            console.log(code.response)
+            console.assert(!debug,code.response)
         });
     }
 
@@ -161,20 +160,20 @@ class Board extends Component {
     }
 
     listarJugadores = (classes) => {
-        console.log("Entrando a listar jugadores...")
+        console.assert(!debug,"Entrando a listar jugadores...")
 
         let desconectados = this.state.desconectados;
         let datosJugadores = this.state.datosJugadores;
 
         //datosJugadores.some((user) => desconectados.includes(user.nombre)) ? color = '#D64728' : color = '#000000';
-        console.log(desconectados)
+        console.assert(!debug,desconectados)
 
         return(
             <List dense className={classes.root}>
                 {datosJugadores.map((value) => {
                     let color = '';
                     desconectados.includes(value.nombre) ? color = '#D64728' : color = '#000000';
-                    console.log(color)
+                    console.assert(!debug,color)
 
                     const labelId = `checkbox-list-secondary-label-${value}`;
                     let error;
@@ -226,10 +225,10 @@ class Board extends Component {
                 //this.state.codigoSala = id;
                 this.setCodigoSala(id)
                 this.setState({codigoSala: id});
-                console.log(id);
-                console.log(this.state.codigoSala)
+                console.assert(!debug,id);
+                console.assert(!debug,this.state.codigoSala)
             })
-            console.log("El identificador es :"+ this.state.codigoSala);
+            console.assert(!debug,"El identificador es :"+ this.state.codigoSala);
 
         }
     */
@@ -259,7 +258,7 @@ class Board extends Component {
     componentDidMount(){
 
         conn.on('nuevoJugador',(user)=> {
-            console.log("Cargando nuevo jugador...")
+            console.assert(!debug,"Cargando nuevo jugador...")
             const usuario = user.jugador;
 
             if (!this.state.jugadores.includes(usuario)) {
@@ -282,7 +281,7 @@ class Board extends Component {
                     avatar:avatar,
                     coloresAcertados: []
                 })
-                console.log(listDatos);
+                console.assert(!debug,listDatos);
                 this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
@@ -290,8 +289,8 @@ class Board extends Component {
         })
 
         conn.on('cargarJugadores',(users)=>{
-            console.log(users);
-            console.log(users.jugadores.usuario);
+            console.assert(!debug,users);
+            console.assert(!debug,users.jugadores.usuario);
             let list = [];
             let gamers = [];
             for(let i = 0; i<users.jugadores.length; i++){
@@ -315,8 +314,8 @@ class Board extends Component {
                     avatar:avatar,
                     coloresAcertados: []});
             }
-            console.log(list);
-            console.log(gamers);
+            console.assert(!debug,list);
+            console.assert(!debug,gamers);
 
 
             if(list.length > 1){
@@ -328,7 +327,7 @@ class Board extends Component {
             }
 
 
-            //console.log(users.jugadores.prototype);
+            //console.assert(!debug,users.jugadores.prototype);
             //setJugadores([...users.jugadores]);
             //this.state.jugadores = users.jugadores;
             //this.setState({jugadores: users.jugadores})
@@ -345,15 +344,15 @@ class Board extends Component {
                 this.setState({desconectados: desconectados})
 
             }else if (!arrayJugadores.some((elemento) => elemento.nombre === nombre)){ //si no, comprueba que esté en la partida
-                console.log("ERROR AL ENCONTRAR JUGADOR: NO ESTABA EN LA PARTIDA");
+                console.assert(!debug,"ERROR AL ENCONTRAR JUGADOR: NO ESTABA EN LA PARTIDA");
             } else {
-                console.log("AVISO AL ENCONTRAR JUGADOR: NO ESTABA EN DESCONECTADOS");
+                console.assert(!debug,"AVISO AL ENCONTRAR JUGADOR: NO ESTABA EN DESCONECTADOS");
             }
             //this.colourWheel.setValores(this.state.jugadores,this.state.jugadores.length,quienSoy)
         })
 
         conn.on('estadoPartida',(users)=>{//arreglar
-            console.log(users);
+            console.assert(!debug,users);
             let userList = [];
             for(let i = 0; i < users.jugadores.length; i++){
                 let color=[];
@@ -388,11 +387,11 @@ class Board extends Component {
                     coloresAcertados: color
                 })
             }
-            console.log(userList);
+            console.assert(!debug,userList);
             this.setState({admin: userList[0].nombre,
                 esprimero:false, datosJugadores: userList});
 
-            console.log("Volviendo a la partida");
+            console.assert(!debug,"Volviendo a la partida");
             let casillas = [];
             for(let i = 0; i < users.jugadores.length; i++){
                 casillas.push(users.jugadores[i].casilla)
@@ -406,20 +405,20 @@ class Board extends Component {
             }
             this.setState({partidaEmpezada:true})
             this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
-            console.log(casillas)
+            console.assert(!debug,casillas)
             this.colourWheel.cargarPartida(casillas,quienSoy)
             this.colourWheel.drawPlayers()
         })
 
         conn.on('abandonoSala',(user)=>{
-            console.log("Entramos en abandono de sala "+this.state.jugadores);
+            console.assert(!debug,"Entramos en abandono de sala "+this.state.jugadores);
             var arrayJugadores = this.state.datosJugadores;
             //var arrayDatosJugadores = this.state.datosJugadores;
             //var indexUser = arrayJugadores.indexOf(user);
             let quienSoy
             let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
             let length = arrayJugadores.length
-            //console.log(arrayJugadores[0])
+            //console.assert(!debug,arrayJugadores[0])
             for(let i=0;i<length;i++){
                 if (arrayJugadores[i].nombre===user) {
                     indexUser = i;
@@ -430,7 +429,7 @@ class Board extends Component {
             }
 
             if(indexUser>-1){//no ha dado error
-                console.log("Hemos sacado el index del jugador que abandona");
+                console.assert(!debug,"Hemos sacado el index del jugador que abandona");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
                 //arrayDatosJugadores.splice(indexUser,1);
                 //this.state.jugadores = arrayJugadores;
@@ -438,60 +437,60 @@ class Board extends Component {
                 this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
 
             }else{
-                console.log("ha dado error el indexOf");
+                console.assert(!debug,"ha dado error el indexOf");
                 //this.state.jugadores = arrayJugadores;
                 this.setState({jugadores: arrayJugadores})
             }
         })
 
         conn.on('jugadorSale',(user)=>{
-            console.log("Jugador saliendo...");
+            console.assert(!debug,"Jugador saliendo...");
             let desconectados = this.state.desconectados;
 
             if(!desconectados.includes(user)){ //si no está lo mete
                 desconectados.push(user);
-                console.log(desconectados)
+                console.assert(!debug,desconectados)
                 this.setState({desconectados: desconectados})
 
             }else{
-                console.log("POSIBLE ERROR AL DESCONECTAR JUGADOR: YA ESTABA DESCONECTADO");
+                console.assert(!debug,"POSIBLE ERROR AL DESCONECTAR JUGADOR: YA ESTABA DESCONECTADO");
             }
         })
 
         conn.on('cambioLider',({antiguo,nuevo})=>{
-            console.log("Antiguo lider: "+antiguo+ " nuevo: "+nuevo);
+            console.assert(!debug,"Antiguo lider: "+antiguo+ " nuevo: "+nuevo);
             var arrayJugadores = this.state.datosJugadores;
-            console.log(arrayJugadores)
+            console.assert(!debug,arrayJugadores)
             let indexUser = 0 //arrayJugadores.nombre.indexOf(antiguo);
             let length = arrayJugadores.length
-            console.log(arrayJugadores[0])
+            console.assert(!debug,arrayJugadores[0])
             for(let i=0;i<length;i++){
                 if (arrayJugadores[i].nombre==antiguo) {
                     indexUser = i;
                 }
             }
             if(indexUser>-1){//no ha dado error
-                console.log("Hemos sacado el index del jugador que abandona(en cambio Lider)");
+                console.assert(!debug,"Hemos sacado el index del jugador que abandona(en cambio Lider)");
                 arrayJugadores.splice(indexUser,1); // quitamos el usuario del array de jugadores
                 //this.state.jugadores = arrayJugadores;
                 this.setState({jugadores: arrayJugadores,
                     admin: nuevo})
                 //this.state.admin = nuevo;
             }else{
-                console.log("ha dado error el indexOf");
+                console.assert(!debug,"ha dado error el indexOf");
 
             }
         })
         /*
         conn.on('estadoPartida',(info)=>{
-            console.log(info);
+            console.assert(!debug,info);
         })*/
 
         this.audio.addEventListener('ended', () => this.setState({ play: false }));
 
         conn.on('turno', (info) => {
-            console.log("Turno de: " + info);
-            console.log(getUser())
+            console.assert(!debug,"Turno de: " + info);
+            console.assert(!debug,getUser())
             //this.state.turno=info
             this.setState({turno:info})
             if(info===getUser() || !getUser()){
@@ -503,7 +502,7 @@ class Board extends Component {
         })
 
         conn.on('finDelJuego', (usuario) => {
-            console.log("Fin del juego, gana: " + usuario);
+            console.assert(!debug,"Fin del juego, gana: " + usuario);
             this.handleOpen()
         })
 
@@ -513,7 +512,7 @@ class Board extends Component {
         })
 
         conn.on('comienzoPartida', () => {
-            console.log("Comienza la partida");
+            console.assert(!debug,"Comienza la partida");
             let quienSoy=0
             for(var i=0;i<this.state.datosJugadores.length;i++){
                 if(this.state.datosJugadores[i].nombre===getUser()){
@@ -521,7 +520,7 @@ class Board extends Component {
                 }
             }
             this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
-            console.log('dibujand')
+            console.assert(!debug,'dibujand')
 
             //this.drawCenterCircle()
             this.colourWheel.inicializarTablero()
@@ -547,8 +546,8 @@ class Board extends Component {
                 quienSoy=i
             }
         }
-        console.log(this.state.jugadores)
-        console.log(this.colourWheel)
+        console.assert(!debug,this.state.jugadores)
+        console.assert(!debug,this.colourWheel)
         this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
 
         this.colourWheel.iniciarPartida(() => {
@@ -560,7 +559,7 @@ class Board extends Component {
 
     jugada = () => {
         let dado= this.state.dado;
-        console.log('num'+this.state.dado)
+        console.assert(!debug,'num'+this.state.dado)
         this.colourWheel.jugada(dado,() => {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
@@ -568,10 +567,10 @@ class Board extends Component {
     }
 
     rollDoneCallback =(num) =>{
-        console.log(`You rolled a ${num}`)
+        console.assert(!debug,`You rolled a ${num}`)
         //this.state.dado={num}
         this.setState({dado: num})
-        console.log(`sacaste un `+this.state.dado)
+        console.assert(!debug,`sacaste un `+this.state.dado)
         this.jugada()
 
 
@@ -647,8 +646,8 @@ class Board extends Component {
 
 
     handleQuesitos=(response)=>{
-        console.log(response);
-        console.log('quesito de'+response.quesito);
+        console.assert(!debug,response);
+        console.assert(!debug,'quesito de'+response.quesito);
         let color;
         switch (response.quesito) {
             case "Historia":
@@ -672,8 +671,8 @@ class Board extends Component {
         }
         var exito = false;
         for(let i=0;i<this.state.coloresAcertados.length;i++){
-            console.log(this.state.coloresAcertados[i])
-            console.log(response.quesito)
+            console.assert(!debug,this.state.coloresAcertados[i])
+            console.assert(!debug,response.quesito)
             if(this.state.coloresAcertados[i]===color){
                 exito = true
             }
@@ -693,7 +692,7 @@ class Board extends Component {
             this.setState({datosJugadores: arrayDatosJugadores});
         }
         //this.setState({})
-        //console.log(this.state.coloresAcertados)
+        //console.assert(!debug,this.state.coloresAcertados)
     }
 
 
@@ -702,113 +701,14 @@ class Board extends Component {
         const { selectedColour } = this.state
         let audio = new Audio("../music/dado.mp3")
 
-
-//                    backgroundImage: 'url(https://vips.org/wp-content/uploads/2018/09/question-background.png)',
         const start = () => {
             audio.play()
         }
-//onClick={this.togglePlay}
 
-
-        /*
-        return (
-            <div
-                style={{
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex',
-                    backgroundColor: '#353833',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}
-            >
-                <div style={{ textAlign: 'center', color: '#FFFFFF' }}>
-                    <h1><span>UniTrivia</span></h1>
-                </div>
-                <div style={{ textAlign: 'right', color: '#FFFFFF' }}>
-                    <h1><span>Turno de :{this.state.turno}</span></h1>
-                </div>
-
-                <ColourWheel
-                    numPlayers={JSON.parse(getPlayers()).length}
-                    playerName={JSON.parse(getPlayers())}
-                    radius={250}
-                    padding={10}
-                    lineWidth={50}
-                    onColourSelected={(rgb) => this.setState({ selectedColour: rgb })}
-                    onRef={ref => (this.colourWheel = ref)}
-                    spacers={{
-                        colour: '#FFFFFF',
-                        shadowColour: 'grey',
-                        shadowBlur: 5
-                    }}
-                    preset // You can set this bool depending on whether you have a pre-selected colour in state.
-                    presetColour={this.state.selectedColour}
-                    animated
-
-                />
-                <Popup
-                    open={this.getOpen()}
-                    onClose={this.handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                >
-
-                    <Card style={{ color: green[500] }} >
-                        <CardContent>
-                            <Typography>Fin de la partida.</Typography>
-                            <Button href={'/menu'}>Volver al menú</Button>
-                        </CardContent>
-                    </Card>
-
-
-                </Popup>
-
-
-                <div
-                    onClick={this.iniciarPartidaa}
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: 20,
-                        fontWeight: '500',
-                        color: '#FFFFFF',
-                        marginTop: 20
-                    }}>
-                    <Button disabled={!getSoyAdmin()}>Iniciar partida{console.log(getSoyAdmin())}</Button>
-                </div>
-                <div
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: 20,
-                        fontWeight: '500',
-                        color: '#FFFFFF',
-                        marginTop: 20
-                    }}
-                    onClick={this.togglePlay}
-
-                    >
-                    <Button onClick={()=>{this.reactDice.rollAll()}}>tirar dado</Button>
-                    <ReactDice
-                        numDice={1}
-                        rollDone={this.rollDoneCallback2}
-                        ref={dice => this.reactDice = dice}
-                        outline={true}
-                        faceColor={'white'}
-                        dotColor={'black'}
-                        rollTime={2}
-                        sound={'../music/dado.mp3'}
-
-                    />
-
-                </div>
-
-            </div>
-        )*/
 
         return (
             <Grid container>
-                <Grid item xs={2} direction="row">
+                <Grid item xs={4} direction="row">
                     <Card >
                         <CardContent>
                             <div style={{height: "fit-content"}}>

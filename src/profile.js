@@ -67,7 +67,6 @@ function Profile(props) {
 
 
     useEffect(() => {
-        console.log(getToken())
 
         axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
                 jwt: getToken()
@@ -160,7 +159,6 @@ function Profile(props) {
 
     function handleResponseFromItem(response){
 
-        console.log(response);
         if(response === "Avatar"){
             irATiendaAvatares();
         }else if(response === "Banner"){

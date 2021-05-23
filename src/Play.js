@@ -13,6 +13,8 @@ import {Card, CardContent} from "@material-ui/core";
 const ENDPOINT = "https://unitrivia.herokuapp.com/api/partida";
 //const ENDPOINT = "http://localhost:3000/api/partida";
 
+const debug = true;
+
 export let conn = undefined;
 
 const But=styled.button`
@@ -173,7 +175,7 @@ function Play(props) {
     }, []);
 
     const crearSala = ()=>{
-        console.log("comienza crearSala");
+        console.assert(!debug,"comienza crearSala");
         conn = io(ENDPOINT,{
             extraHeaders:{
                 jwt: getToken(),
@@ -182,15 +184,15 @@ function Play(props) {
             }
         });
         conn.on("connect",()=>{
-            console.log(conn.connected);
-            console.log(conn.disconnected);
-            console.log(conn.nsp);
-            console.log(conn);
+            console.assert(!debug,conn.connected);
+            console.assert(!debug,conn.disconnected);
+            console.assert(!debug,conn.nsp);
+            console.assert(!debug,conn);
             if(conn.connected === true){
-                console.log("Conectado");
+                console.assert(!debug,"Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("No conectado");
+                console.assert(!debug,"No conectado");
                 alert("Fallo al conectar con el servidor");
             }
         })
@@ -204,7 +206,7 @@ function Play(props) {
 
     const unirseSala = ()=>{
         let salaAct = code.value;
-        console.log(salaAct);
+        console.assert(!debug,salaAct);
 
         conn = io(ENDPOINT,{
             extraHeaders:{
@@ -214,15 +216,21 @@ function Play(props) {
             }
         });
         conn.on("connect",()=>{
-            console.log(conn.connected);
-            console.log(conn.disconnected);
-            console.log(conn.nsp);
-            console.log(conn);
-            if(conn.connected === true){
-                console.log("Conectado");
+            console.assert(!debug,conn.connected);
+            console.assert(!debug,conn.disconnected);
+            console.assert(!debug,conn.nsp);
+            console.assert(!debug,conn);
+            let sala="";
+            conn.emit("obtenerIdSala",(id)=>{
+                //this.state.codigoSala = id;
+                sala = id;
+            })
+            console.assert(!debug,sala)
+            if(conn.connected === true && sala !== ""){
+                console.assert(!debug,"Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("No conectado");
+                console.assert(!debug,"No conectado");
                 alert("Fallo al conectar con el servidor");
             }
         })
@@ -236,24 +244,24 @@ function Play(props) {
             }
         });
         conn.on("connect",()=>{
-            console.log(conn.connected);
-            console.log(conn.disconnected);
-            console.log(conn.nsp);
-            console.log(conn);
+            console.assert(!debug,conn.connected);
+            console.assert(!debug,conn.disconnected);
+            console.assert(!debug,conn.nsp);
+            console.assert(!debug,conn);
             if(conn.connected === true){
-                console.log("Conectado");
+                console.assert(!debug,"Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("No conectado");
+                console.assert(!debug,"No conectado");
                 alert("Fallo al conectar con el servidor");
             }
         })
     }
 
     const reconexion = () =>{
-        console.log(conn);
+        console.assert(!debug,conn);
         conn = undefined;
-        console.log(conn);
+        console.assert(!debug,conn);
         let conectado = undefined;
 
         conn = io(ENDPOINT,{
@@ -263,14 +271,14 @@ function Play(props) {
             }
         });
 
-        console.log(conn);
+        console.assert(!debug,conn);
         conn.on("connect",()=>{
             conectado=conn.connected;
             if(conectado==true){
-                console.log("Conectado");
+                console.assert(!debug,"Conectado");
                 props.history.push('/Game');
             }else{
-                console.log("no conectado");
+                console.assert(!debug,"no conectado");
                 alert("Fallo al reconectar a partida");
             }
         })
@@ -282,7 +290,7 @@ function Play(props) {
         setReconexion(response.data !== "");
 
     }).catch((code, message) => {
-        console.log(code.response)
+        console.assert(!debug,code.response)
     });
 
     return (

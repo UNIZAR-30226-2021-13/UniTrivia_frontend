@@ -187,7 +187,6 @@ class ColourWheel extends Component {
     })*/
 
     conn.on("jugada",(res)=>{
-      console.log(res)
       let indice=0;
       for(var i=0;i<this.state.numPlayers;i++){
         if(this.state.playerName[i]===res.user){
@@ -201,7 +200,6 @@ class ColourWheel extends Component {
       vecy[indice]=coords.y;
       this.setState({positionsX: vecx,positionsY: vecy})
       this.inicializarTablero()
-      console.log("AQUIIIII " + res.ques);
       this.props.onResponse({quesito: res.ques, user: res.user});
 
 
@@ -274,7 +272,6 @@ class ColourWheel extends Component {
     // returns an rgba array of the pixel-clicked.
     const rgbaArr = this.ctx.getImageData(evtPos.x, evtPos.y, 1, 1).data
     const [r, g, b,opac] = rgbaArr
-    console.log('opac='+opac)
 
     const rgb = { r, g, b }
 
@@ -283,7 +280,6 @@ class ColourWheel extends Component {
     this.pregunta=false;
     this.props.onColourSelected(rgbArg)
     let opa
-    console.log(rgbaArr)
     /*if (r == 255 && g == 255 && b == 255) {
       opa = 0.1
     } else {
@@ -291,17 +287,12 @@ class ColourWheel extends Component {
     }*/
     opa=1
 
-    console.log(getCasillaNumber(r, g, b))
-    console.log(colours[7])
-    console.log(convertObjToString(colours[7]))
-    console.log(evtPos.x+' '+evtPos.y)
-    console.log(this.state.puedoMover)
+
     this.state.desactivado=false
     if(opac===255 && this.state.puedoMover===true){
 
 
       for (let j=0; j<this.state.posiblesJugadas.length; j++){
-        console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
         var arrayPosiblesJugadas=this.state.posiblesJugadas
         if(arrayPosiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
           this.state.casillaActualInfo=this.state.posiblesJugadas[j];
@@ -384,11 +375,7 @@ class ColourWheel extends Component {
     const rgb = { r, g, b }
 
     const rgbArg = convertObjToString(rgb)
-    console.log(rgbaArr)
 
-
-    console.log(getCasillaNumber(r, g, b))
-    console.log(evtPos.x+' '+evtPos.y)
 
     this.props.onColourSelected(rgbArg)
     this.state.desactivado=false
@@ -402,11 +389,9 @@ class ColourWheel extends Component {
         }
     )
     if(opac===255 && this.state.puedoMover===true ){
-      console.log('asdf')
       this.state.puedoMover=false;
       this.handleOpen()
       for (let j=0; j<this.state.posiblesJugadas.length; j++){
-        console.log('nume'+this.state.posiblesJugadas[j].casilla.num)
         if(this.state.posiblesJugadas[j].casilla.num===getCasillaNumber(r, g, b)){
           this.state.casillaActualInfo=this.state.posiblesJugadas[j];
         }
@@ -450,7 +435,7 @@ class ColourWheel extends Component {
     this.drawRadius(0.1,casillasMarcadas)
     this.drawSpacers()
     this.drawCenterCircle()
-    this.drawPlayers()//añadido
+    //this.drawPlayers()//añadido
   }
 
   jugada (dado,callback = false) {
@@ -468,37 +453,28 @@ class ColourWheel extends Component {
           if (callback) callback()
         }
     )
-    console.log('dado'+dado)
 
 
     conn.emit("posiblesJugadas", dado, (res)=>{
-      console.log("Posibles jugadas con dado: " + dado.toString());
-      console.log(res['res']);
-      console.log(res['info']);
+
       this.state.posiblesJugadas=res['info'];
-      console.log(this.state.posiblesJugadas);
       if(res['res']!=='err'){
         if(res['info']==="No es el turno."){
-          console.log('no turno')
           this.state.puedoMover=false;
           alert('No es tu turno')
         }else{
           this.state.puedoMover=true;
         }
-        console.log(res['info'].length);
-        console.log(res['info'][0]);
         let casillas=[];
         for(var i=0;i<res['info'].length;i++){
 
           casillas[i]=res['info'][i].casilla.num
         }
-        console.log(casillas[0])
         if(this.state.puedoMover){//si es mi turno
           this.dibujarTablero(casillas)
         }
       }else{
         if(res['info']==="No es el turno."){
-          console.log('no turno')
           this.state.puedoMover=false;
           alert('No es tu turno')
         }
@@ -518,7 +494,6 @@ class ColourWheel extends Component {
     this.drawOuterWheel(1)//dibujar rueda
     this.drawRadius()//dibujar radios
     this.drawSpacers()//dibujar spacer
-    console.log('inicializando')
     this.drawCenterCircle()//dibujar circulo central con los jugadores
     //this.drawPlayers()
   }
@@ -530,7 +505,6 @@ class ColourWheel extends Component {
   setValores(players,numplayers,quiensoy){
     let imgs=[]
     let playernames=[]
-    console.log(players)
     for(var i=0;i<numplayers;i++){
       playernames.push(players[i].nombre)
       imgs.push(players[i].ficha)
@@ -538,11 +512,9 @@ class ColourWheel extends Component {
     /*this.state.playerName=playernames
     this.state.numPlayers=numplayers
     this.state.numPlayers=numplayers*/
-    console.log('quiensoy: '+quiensoy)
     this.setState({quienSoy: quiensoy})
     this.setState({playerName:playernames,numPlayers:numplayers})
     this.setState({imagenes: imgs})
-    console.log(this.state.imagenes)
   }
 
 
@@ -552,7 +524,6 @@ class ColourWheel extends Component {
 
     const { radius } = this.props
 
-    console.log(this.state.playerName)
     this.setState(
         {
 
@@ -569,11 +540,8 @@ class ColourWheel extends Component {
 
         }
     )
-    console.log(this.state.positionsX)
-    console.log(this.state.positionsY)
     //this.inicializarTablero()
     conn.emit("comenzarPartida", (res)=>{
-      console.log(res)
       console.log("Al comenzar partida: " + res.res + " " + res.info);
       //this.inicializarTablero()
       if(res.res==='ok'){
@@ -588,7 +556,6 @@ class ColourWheel extends Component {
   }
 
   cargarPartida(casillas,quiensoy){
-    console.log(casillas)
     for(var i=0; i< casillas.length;i++){
       let coords=getCoordByCasilla(casillas[i],i)
       //this.state.positionsX[player]=coords.x;
@@ -600,8 +567,6 @@ class ColourWheel extends Component {
       this.setState({positionsX: vecx,positionsY: vecy})
 
     }
-    console.log(this.state.positionsX)
-    console.log(this.state.playerName)
     this.inicializarTablero()
   }
 
@@ -642,8 +607,6 @@ class ColourWheel extends Component {
       //rgb.r=rgb.r-100;
       if (casillasMarcadas != null) {
         let op = 0.1
-        //console.log(casillasMarcadas)
-        //console.log(25% 24)
         casillasMarcadas.forEach((val, j) => {
           if (getCasillaNumber(rgb.r, rgb.g, rgb.b) === (val)) {
             op = 1
@@ -655,7 +618,6 @@ class ColourWheel extends Component {
           this.ctx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${op})`
 
         }
-        console.log('opacidad= '+op)
       }else{
         this.ctx.strokeStyle = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b},${opa})`
 
@@ -760,7 +722,6 @@ class ColourWheel extends Component {
     let coords=getCoordByCasilla(this.state.casillaActualInfo.casilla.num,player)
     //this.state.positionsX[player]=coords.x;
     //this.state.positionsY[player]=coords.y;
-    console.log('player'+player);
     const vecx=this.state.positionsX;
     vecx[player]=coords.x;
     const vecy=this.state.positionsY;
@@ -907,7 +868,6 @@ class ColourWheel extends Component {
   }
 
   drawPlayers () {
-    console.log('dibujando players')
     const { radius } = this.props
 
     const height = radius * 2
@@ -917,19 +877,14 @@ class ColourWheel extends Component {
     this.ctx.beginPath()
     //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
     //const imageObj1 = new Image();
-    console.log('imagen')
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
     //imageObj1.src= '/images/avatars/avatar_6.png';
     const imageObj1=this.cargarImagen()
-    console.log(this.state.numPlayers)
-    console.log('imagenes')
-    console.log(this.state.imagenes)
 
-    console.log(imageObj1)
+
     for(var i=0;i<this.state.numPlayers;i++){
       //console.log(this.state.playerName[i])
-      console.log(this.state.positionsX[i])
-      console.log(this.state.positionsY[i])
+
       /*this.ctx.fillText(
           this.state.playerName[i],
           this.state.positionsX[i],
@@ -956,8 +911,7 @@ class ColourWheel extends Component {
 
 
   handleResponseFromQuiz=(response)=>{
-    console.log(response);
-    console.log(response.result);
+
     this.setState({botonCerrar:false})
     this.setState({pintarQuesito:true})
 
@@ -975,7 +929,6 @@ class ColourWheel extends Component {
       axios.post('https://unitrivia.herokuapp.com/api/tienda/insertarMonedas',{},{headers: {
           cantidad: 1,jwt: getToken()
         }}).then((response) => {
-        console.log(response)
       }).catch((code) => {
         console.log(code.response)
       });
@@ -1046,7 +999,6 @@ class ColourWheel extends Component {
                           <div align={'right'}>
                           <CountdownCircleTimer
                               onComplete={() => {
-                                console.log('timer')
                                 if(!this.state.contestada){
                                   conn.emit("actualizarJugada", {casilla: this.state.casillaActualInfo.casilla.num,
                                     quesito: "",

@@ -27,43 +27,7 @@ const BackButtonListener = ({children}) => {
 
 
 function Game(props) {
-        console.log("Estoy en game");
-        console.log(conn);
-        //const classes = useStyles();
 
-    /*
-        return (
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={2} direction="row">
-                            <Room></Room>
-                        </Grid>
-                        <Grid item xs={8} >
-                         <Card style={{ color: green[500] }} >
-                             <CardContent>
-
-                                <div>
-                                    <IconButton color="secondary" variant="contained" aria-label="add an alarm" href={'/Play'}>
-                                        <ArrowBack color="primary"/>
-                                        Volver
-                                    </IconButton>
-                                    <IconButton color="secondary" variant="contained" >
-                                        <HelpOutline color="primary"/>
-
-                                    </IconButton>
-
-                                </div>
-                                <Board></Board>
-
-                             </CardContent>
-                         </Card>
-                        </Grid>
-                        <Chat></Chat>
-                        <BackButtonListener/>
-                    </Grid>
-
-        );
-        */
     return (
         <Grid container spacing={2}>
             <Board></Board>
