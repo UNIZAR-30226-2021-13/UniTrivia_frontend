@@ -26,11 +26,12 @@ import {
 import hexStrings from '../../utils/hexStrings'
 import {Box, Card, CardContent, Modal, Popover, Typography} from '@material-ui/core'
 import {conn} from '../../../../Play'
-import {getPlayers, getUser} from "../../../../Utils/Common";
+import {getPlayers, getToken, getUser} from "../../../../Utils/Common";
 import throttle from 'lodash.throttle';
 import Popup from "reactjs-popup";
 import {green} from "@material-ui/core/colors";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
+import axios from "axios";
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
@@ -979,6 +980,15 @@ class ColourWheel extends Component {
     });
     if(response.result===1){
       this.props.activarDado();
+
+      axios.post('https://unitrivia.herokuapp.com/api/tienda/insertarMonedas',{},{headers: {
+          cantidad: 1,jwt: getToken()
+        }}).then((response) => {
+        console.log(response)
+      }).catch((code) => {
+        console.log(code.response)
+      });
+
     }
     if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
       this.props.onResponse({quesito: response.casillaInfo.casilla.categoria,user: getUser()});

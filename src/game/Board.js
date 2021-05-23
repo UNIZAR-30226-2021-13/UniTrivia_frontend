@@ -271,10 +271,10 @@ class Board extends Component {
                 let ficha;
                 let banner;
                 let avatar;
-                if(user.imgs.ficha == "" || user.imgs.ficha == null){
-                    ficha = "avatar0";
+                if(user.imgs == null || user.imgs.ficha == ""){
+                    ficha = "ficha0";
                     banner = "banner0";
-                    avatar = "ficha0";
+                    avatar = "avatar0";
                 }else{
                     ficha = user.imgs.ficha;
                     banner = user.imgs.banner;
@@ -287,6 +287,7 @@ class Board extends Component {
                     avatar:avatar,
                     coloresAcertados: []
                 })
+                console.log(listDatos);
                 this.setState({datosJugadores:listDatos});
                 const list = this.state.jugadores.concat(usuario);
                 this.setState({jugadores:list})
@@ -303,9 +304,9 @@ class Board extends Component {
                 let banner;
                 let avatar;
                 if(users.jugadores[i].imgs == null || users.jugadores[i].imgs == ""){
-                    ficha = "avatar0";
+                    ficha = "ficha0";
                     banner = "banner0";
-                    avatar = "ficha0";
+                    avatar = "avatar0";
                 }else{
                     ficha = users.jugadores[i].imgs.ficha;
                     banner = users.jugadores[i].imgs.banner;
@@ -643,14 +644,6 @@ class Board extends Component {
             cantidad = 10;
         }
 
-        axios.get('https://unitrivia.herokuapp.com/api/profile',{headers: {
-                cantidad: cantidad,jwt: getToken()
-            }}).then((response) => {
-            console.log(response)
-        }).catch((code) => {
-            console.log(code.response)
-        });
-
     };
 
     getOpen(){
@@ -905,7 +898,7 @@ class Board extends Component {
                                     <h1><span>UniTrivia</span></h1>
                                 </div>
                                 <div style={{ textAlign: 'right', color: '#FFFFFF' }}>
-                                    {this.state.turno === getUser()?<h2>Tu turno!</h2>:<h2>Turno de :{this.state.turno}</h2>}
+                                    {this.state.turno === this.state.username?<h2>Tu turno!</h2>:<h2>Turno de :{this.state.turno}</h2>}
                                 </div>
 
                                 <ColourWheel
