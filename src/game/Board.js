@@ -29,7 +29,7 @@ import Sound from "react-sound";
 
 const yourDefaultColour = 'rgb(255, 255, 255)'
 
-const debug = false;
+const debug = true;
 
 const useStyles = (theme) => ({
     root: {
@@ -167,6 +167,7 @@ class Board extends Component {
 
         //datosJugadores.some((user) => desconectados.includes(user.nombre)) ? color = '#D64728' : color = '#000000';
         console.assert(!debug,desconectados)
+        console.assert(!debug,datosJugadores)
 
         return(
             <List dense className={classes.root}>
@@ -357,6 +358,7 @@ class Board extends Component {
             for(let i = 0; i < users.jugadores.length; i++){
                 let color=[];
                 for(let j=0; j< users.jugadores[i].quesitos.length ; j++){
+
                     switch (users.jugadores[i].quesitos[j]) {
                         case "Historia":
                             color.push( "yellow");
@@ -378,12 +380,24 @@ class Board extends Component {
                             break;
                     }
                 }
+                let ficha;
+                let banner;
+                let avatar;
+                if(users.jugadores[i].imgs == null || users.jugadores[i].imgs === ""){
+                    ficha = "ficha0";
+                    banner = "banner0";
+                    avatar = "avatar0";
+                }else{
+                    ficha = users.jugadores[i].imgs.ficha;
+                    banner = users.jugadores[i].imgs.banner;
+                    avatar = users.jugadores[i].imgs.avatar;
+                }
 
                 userList.push({
-                    ficha:users.jugadores[i].imgs.ficha,
+                    ficha:ficha,
                     nombre: users.jugadores[i].usuario,
-                    banner:users.jugadores[i].imgs.banner,
-                    avatar:users.jugadores[i].imgs.avatar,
+                    banner:banner,
+                    avatar:avatar,
                     coloresAcertados: color
                 })
             }
@@ -511,8 +525,9 @@ class Board extends Component {
             this.setState({codigoSala: id});
         })
 
-        conn.on('comienzoPartida', () => {
+        conn.on('comienzoPartida', (res) => {
             console.assert(!debug,"Comienza la partida");
+
             let quienSoy=0
             for(var i=0;i<this.state.datosJugadores.length;i++){
                 if(this.state.datosJugadores[i].nombre===getUser()){
@@ -524,6 +539,10 @@ class Board extends Component {
 
             //this.drawCenterCircle()
             this.colourWheel.inicializarTablero()
+
+            this.setState({partidaEmpezada:true})
+
+
 
         })
     }
@@ -554,7 +573,18 @@ class Board extends Component {
             // Do some other stuff in this callback if you want -- other than re-setting your selectedColour.
             this.setState({ selectedColour: yourDefaultColour })
         })
-        this.setState({partidaEmpezada:true})
+        conn.emit("comenzarPartida", (res)=>{
+            console.log("Al comenzar partida: " + res.res + " " + res.info);
+            //this.inicializarTablero()
+            if(res.res==='ok'){
+                //this.drawCenterCircle()
+                this.colourWheel.inicializarTablero()
+                this.setState({partidaEmpezada: true})
+            }
+
+
+        });
+
     }
 
     jugada = () => {

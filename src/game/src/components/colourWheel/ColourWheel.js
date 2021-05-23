@@ -541,16 +541,7 @@ class ColourWheel extends Component {
         }
     )
     //this.inicializarTablero()
-    conn.emit("comenzarPartida", (res)=>{
-      console.log("Al comenzar partida: " + res.res + " " + res.info);
-      //this.inicializarTablero()
-      if(res.res==='ok'){
-        //this.drawCenterCircle()
-        this.inicializarTablero()
-      }
 
-
-    });
 
 
   }
@@ -875,7 +866,7 @@ class ColourWheel extends Component {
 
     //this.ctx.beginPath()
     this.ctx.beginPath()
-    //this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
+    this.ctx.fillStyle = `rgb(${0}, ${0}, ${0})`
     //const imageObj1 = new Image();
     //imageObj1.src= 'http://i.stack.imgur.com/h5RjZ.png';
     //imageObj1.src= '/images/avatars/avatar_6.png';
