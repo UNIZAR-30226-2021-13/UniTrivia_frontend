@@ -49,7 +49,6 @@ const Question = styled.div`
 
 function Quiz(props) {
 
-    //console.log(props.pregunta)
     let question = props.pregunta.pregunta.pregunta; //se sacaría de props  pregunta.pregunta
     //let question = "preguntita brother"; //se sacaría de props
 
@@ -65,16 +64,11 @@ function Quiz(props) {
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
     const pickAnswer = (e) => {
-        console.log(e)
         var userAnswer = e.target.innerText;
-        console.log(e.target.innerText)
-        console.log(quiz[number])
-        console.log(userAnswer)
         if (quiz[number].answer === userAnswer){
             setPts(pts + 1);
             props.onResponse({result: 1, casillaInfo: props.pregunta});
         }else{
-            console.log('fallaste'+ quiz[number].answer +' '+userAnswer)
             props.onResponse({result: 0, casillaInfo: props.pregunta});
         }
         setNumber(number + 1);
