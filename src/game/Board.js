@@ -6,7 +6,7 @@ import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
 import {getToken} from "../Utils/Common";
-import dados from '../music/dado.mp3'
+import dados from '../music/dadoMusica.mp3'
 import {conn} from "../Play";
 import {Card, CardContent, Grid, ListItemAvatar, Typography} from "@material-ui/core";
 import {Modal} from "reactstrap";
@@ -731,7 +731,7 @@ class Board extends Component {
         }
         const {classes} = this.props
         const { selectedColour } = this.state
-        let audio = new Audio("../music/dado.mp3")
+        let audio = new Audio("../music/dadoMusica.mp3")
 
         const start = () => {
             audio.play()
@@ -899,7 +899,7 @@ class Board extends Component {
                                         faceColor={'white'}
                                         dotColor={'black'}
                                         rollTime={2}
-                                        sound={this.state.sounds?'../music/dado.mp3':''}
+                                        sound={this.state.sounds?'../music/dadoMusica.mp3':''}
                                         disableIndividual={!this.state.puedoTirar}
                                     />
 
