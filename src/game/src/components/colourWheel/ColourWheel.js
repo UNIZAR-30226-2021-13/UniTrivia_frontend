@@ -885,11 +885,11 @@ class ColourWheel extends Component {
     for(var i=0;i<this.state.numPlayers;i++){
       //console.log(this.state.playerName[i])
 
-      /*this.ctx.fillText(
+      this.ctx.fillText(
           this.state.playerName[i],
-          this.state.positionsX[i],
-          this.state.positionsY[i]
-      )*/
+          this.state.positionsX[i]+25,
+          this.state.positionsY[i]+12.5
+      )
 
 
       //imageObj1.crossOrigin = "Anonymous";

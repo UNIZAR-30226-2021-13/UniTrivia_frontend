@@ -186,8 +186,8 @@ class Board extends Component {
                     return (
                         <div style={{
                             backgroundImage: "url(" + "/images/banners/" + value.banner + ".jpg" + ")",
-                            backgroundSize: 'cover', color: error ,blockSize: 100, alignContent: 'stretch',
-                            border: 'solid', borderColor: 'black', textSizeAdjust: 'auto'
+                            backgroundSize: 'cover', color: error ,blockSize: 100, alignContent: 'center',
+                            border: 'solid', borderColor: 'black', textSizeAdjust: 'auto', boxSizing: 'inherit'
                         }}>
                             <ListItem key={value}>
                                 <ListItemAvatar>
@@ -708,7 +708,7 @@ class Board extends Component {
 
         return (
             <Grid container>
-                <Grid item xs={4} direction="row">
+                <Grid item xs={3} direction="row">
                     <Card >
                         <CardContent>
                             <div style={{height: "fit-content"}}>
