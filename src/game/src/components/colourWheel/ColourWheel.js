@@ -20,7 +20,7 @@ import {
 import hexStrings from '../../utils/hexStrings'
 import {Card, CardContent, Modal,  Typography} from '@material-ui/core'
 import {conn} from '../../../../Play'
-import {getToken, getUser} from "../../../../Utils/Common";
+import {getToken} from "../../../../Utils/Common";
 import {green} from "@material-ui/core/colors";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import axios from "axios";
@@ -926,7 +926,7 @@ class ColourWheel extends Component {
 
     }
     if(response.result===1 && response.casillaInfo.casilla.tipo==="Quesito"){
-      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria,user: getUser()});
+      this.props.onResponse({quesito: response.casillaInfo.casilla.categoria,user: this.props.username});
     }
     this.setState({contestada: true})
     //this.handleClose()

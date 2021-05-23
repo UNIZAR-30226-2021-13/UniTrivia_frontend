@@ -5,7 +5,7 @@ import ColourWheel from './src/components/colourWheel/ColourWheel'
 import ReactDice from 'react-dice-complete'
 import 'react-dice-complete/dist/react-dice-complete.css'
 import Button from '@material-ui/core/Button'
-import {getToken, getUser} from "../Utils/Common";
+import {getToken} from "../Utils/Common";
 import dados from '../music/dado.mp3'
 import {conn} from "../Play";
 import {Card, CardContent, Grid, ListItemAvatar, Typography} from "@material-ui/core";
@@ -507,14 +507,11 @@ class Board extends Component {
 
         conn.on('turno', (info) => {
             console.assert(!debug,"Turno de: " + info);
-            console.assert(!debug,getUser())
             //this.state.turno=info
             this.setState({turno:info})
-            if(info===getUser() || !getUser()){
+            if(info===this.state.username){
                 //alert('Es tu turno!')
                 this.activarDado()
-            }else{
-                //alert('Es el turno de '+info)
             }
         })
 
@@ -531,12 +528,9 @@ class Board extends Component {
         conn.on('comienzoPartida', (res) => {
             console.assert(!debug,"Comienza la partida");
 
-            let quienSoy=0
-            for(var i=0;i<this.state.datosJugadores.length;i++){
-                if(this.state.datosJugadores[i].nombre===getUser()){
-                    quienSoy=i
-                }
-            }
+            let quienSoy = this.state.datosJugadores.findIndex(
+                (jugador) => (jugador.nombre === this.state.username));
+
             this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
             console.assert(!debug,'dibujand')
 
@@ -572,12 +566,9 @@ class Board extends Component {
 
     iniciarPartidaa = () => {
 
-        let quienSoy=0
-        for(var i=0;i<this.state.jugadores.length;i++){
-            if(this.state.jugadores[i]===getUser()){
-                quienSoy=i
-            }
-        }
+        let quienSoy= this.state.datosJugadores.findIndex(
+            (jugador) => (jugador.nombre === this.state.username));
+
         console.assert(!debug,this.state.jugadores)
         console.assert(!debug,this.colourWheel)
         this.colourWheel.setValores(this.state.datosJugadores,this.state.datosJugadores.length,quienSoy)
@@ -856,6 +847,7 @@ class Board extends Component {
                                     desactivarDado={this.desactivarDado.bind(this)}
                                     activarDado={this.activarDado.bind(this)}
                                     onResponse={this.handleQuesitos}
+                                    username={this.state.username}
 
                                 />
 
