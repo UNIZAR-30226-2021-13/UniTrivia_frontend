@@ -697,20 +697,19 @@ class Board extends Component {
                 break;
         }
         var exito = false;
-        for(let i=0;i<this.state.coloresAcertados.length;i++){
+        var arrayDatosJugadores = this.state.datosJugadores;
+        let index = arrayDatosJugadores.findIndex((jugador) => (jugador.nombre === response.user));
+
+        for(let i=0; i<arrayDatosJugadores[index].coloresAcertados.length ;i++){
             console.assert(!debug,this.state.coloresAcertados[i])
             console.assert(!debug,response.quesito)
-            if(this.state.coloresAcertados[i]===color){
+            if(arrayDatosJugadores[index].coloresAcertados[i]===color){
                 exito = true
             }
         }
 
         if(response.quesito!=="" && !exito) {
 
-            let colors = this.state.coloresAcertados;
-            colors.push(color);
-            this.setState({coloresAcertados: colors});
-            var arrayDatosJugadores = this.state.datosJugadores;
             for (var i = 0; i < arrayDatosJugadores.length; i++) {
                 if (arrayDatosJugadores[i].nombre === response.user) {
                     arrayDatosJugadores[i].coloresAcertados.push(color)

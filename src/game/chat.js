@@ -8,9 +8,6 @@ import {conn} from "../Play";
 
 function Chat(props){
 
-    console.log("estoy en chat");
-    console.log(conn);
-
     /*let connTest1 = io(ENDPOINT,{
         extraHeaders:{
             jwt: getToken(),
@@ -44,7 +41,6 @@ function Chat(props){
 
 
     const handleNewUserMessage = (newMessage) => {
-        console.log(`New message incomig! ${newMessage}`);
         // Now send the message throught the backend API
         conn.emit("mensaje", `${newMessage}`);
         //end backend
