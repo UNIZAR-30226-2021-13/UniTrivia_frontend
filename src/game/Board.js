@@ -114,12 +114,10 @@ class Board extends Component {
                 jwt: getToken()
             }}).then((response) => {
 
-                console.log("Recuperando datos del usuario...")
             this.setState({username:response.data._id})
             conn.emit("obtenerIdSala",(id)=>{
                 //this.state.codigoSala = id
                 this.setState({codigoSala: id});
-                console.log("Ejecutando obtenerIdSala...")
             })
             console.assert(!debug,"no se que poner ", response.data._id, this.state.esprimero, this.state.jugadores.length, this.state.jugadores);
             if (this.state.jugadores.length === 0 &&  this.state.esprimero) {
@@ -420,7 +418,6 @@ class Board extends Component {
                 casillas.push(users.jugadores[i].casilla)
             }
 
-            console.log(this.state.username)
             await this.sleep(1000);
             let quienSoy = userList.findIndex((jugador) => (jugador.nombre === this.state.username));
 
@@ -548,7 +545,6 @@ class Board extends Component {
 
 
         conn.on('disconnect', () => {
-            console.log('disconection')
             this.setState({desconexion: true})
 
 
@@ -584,7 +580,6 @@ class Board extends Component {
             this.setState({ selectedColour: yourDefaultColour })
         })
         conn.emit("comenzarPartida", (res)=>{
-            console.log("Al comenzar partida: " + res.res + " " + res.info);
             //this.inicializarTablero()
             if(res.res==='ok'){
                 //this.drawCenterCircle()
@@ -674,7 +669,6 @@ class Board extends Component {
 
     handleQuesitos= (response)=>{
         console.assert(!debug,response);
-        console.log('quesito de '+ response.quesito + " de " +response.user );
         let color;
         switch (response.quesito) {
             case "Historia":
@@ -700,25 +694,27 @@ class Board extends Component {
         var arrayDatosJugadores = this.state.datosJugadores;
         let index = arrayDatosJugadores.findIndex((jugador) => (jugador.nombre === response.user));
 
-        for(let i=0; i<arrayDatosJugadores[index].coloresAcertados.length ;i++){
-            console.assert(!debug,this.state.coloresAcertados[i])
-            console.assert(!debug,response.quesito)
-            if(arrayDatosJugadores[index].coloresAcertados[i]===color){
-                exito = true
-            }
-        }
-
-        if(response.quesito!=="" && !exito) {
-
-            for (var i = 0; i < arrayDatosJugadores.length; i++) {
-                if (arrayDatosJugadores[i].nombre === response.user) {
-                    arrayDatosJugadores[i].coloresAcertados.push(color)
+        if(index > -1) {
+            for (let i = 0; i < arrayDatosJugadores[index].coloresAcertados.length; i++) {
+                console.assert(!debug, this.state.coloresAcertados[i])
+                console.assert(!debug, response.quesito)
+                if (arrayDatosJugadores[index].coloresAcertados[i] === color) {
+                    exito = true
                 }
             }
-            this.setState({datosJugadores: arrayDatosJugadores});
+
+            if (response.quesito !== "" && !exito) {
+
+                for (var i = 0; i < arrayDatosJugadores.length; i++) {
+                    if (arrayDatosJugadores[i].nombre === response.user) {
+                        arrayDatosJugadores[i].coloresAcertados.push(color)
+                    }
+                }
+                this.setState({datosJugadores: arrayDatosJugadores});
+            }
+            //this.setState({})
+            //console.assert(!debug,this.state.coloresAcertados)
         }
-        //this.setState({})
-        //console.assert(!debug,this.state.coloresAcertados)
     }
 
 
