@@ -27,6 +27,7 @@ import axios from "axios";
 // Global-vars:
 const fullCircle = 2 * Math.PI
 const quarterCircle = fullCircle / 4
+const debug = false;
 
 class ColourWheel extends Component {
 
@@ -307,7 +308,7 @@ class ColourWheel extends Component {
           quesito: "",
           finTurno: false ,
         }, (res)=>{
-          console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+          //console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
           this.props.activarDado();
         });
       }else{
@@ -844,8 +845,6 @@ class ColourWheel extends Component {
   }
 
   cargarImagen(){
-    console.log("Poniendo imagenes...")
-    console.log(this.state.imagenes)
     let images=[]
     for(var i=0; i<this.state.imagenes.length;i++){
       const imageObj1 = new Image();
@@ -861,8 +860,6 @@ class ColourWheel extends Component {
   }
 
   drawPlayers () {
-    console.log("Escribiendo jugadores...")
-    console.log(this.state.playerName)
 
     const { radius } = this.props
 
@@ -877,8 +874,6 @@ class ColourWheel extends Component {
     //imageObj1.src= '/images/avatars/avatar_6.png';
     //const imageObj1=this.cargarImagen()
 
-    console.log("Poniendo imagenes...")
-    console.log(this.state.imagenes)
     let images=[]
     for(var i=0; i<this.state.imagenes.length;i++){
       const imageObj1 = new Image();
@@ -917,23 +912,17 @@ class ColourWheel extends Component {
     return this.state.casillaActualInfo
   }
 
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  handleResponseFromQuiz= async (response)=>{
-
+  handleResponseFromQuiz=  (response)=>{
 
     this.setState({botonCerrar:false})
     this.setState({pintarQuesito:true})
-    await this.sleep(500)
 
     conn.emit("actualizarJugada", {casilla: response.casillaInfo.casilla.num,
       quesito: response.casillaInfo.casilla.tipo==="Quesito"&&response.result===1?response.casillaInfo.casilla.categoria:"",
       finTurno: response.result===0  //?true:false ,
     }, (res)=>{
-      console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
-      console.log(res['info']);
+      console.assert(!debug, "Jugada actualizada: " + res['res'] + " " + res['info']);
+      console.assert(!debug, res['info']);
 
     });
     if(response.result===1){
@@ -943,7 +932,7 @@ class ColourWheel extends Component {
           cantidad: 1,jwt: getToken()
         }}).then((response) => {
       }).catch((code) => {
-        console.log(code.response)
+        console.assert(!debug, code.response)
       });
 
     }
@@ -1017,7 +1006,7 @@ class ColourWheel extends Component {
                                     quesito: "",
                                     finTurno: true ,
                                   }, (res)=>{
-                                    console.log("Jugada actualizada: " + res['res'] + " " + res['info']);
+                                    console.assert(!debug, "Jugada actualizada: " + res['res'] + " " + res['info']);
                                     this.props.activarDado();
                                   });
                                 }

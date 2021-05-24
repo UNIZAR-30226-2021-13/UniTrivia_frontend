@@ -672,9 +672,9 @@ class Board extends Component {
     }
 
 
-    handleQuesitos= async (response)=>{
+    handleQuesitos= (response)=>{
         console.assert(!debug,response);
-        console.assert(!debug,'quesito de'+response.quesito);
+        console.log('quesito de '+ response.quesito + " de " +response.user );
         let color;
         switch (response.quesito) {
             case "Historia":
@@ -710,7 +710,6 @@ class Board extends Component {
             let colors = this.state.coloresAcertados;
             colors.push(color);
             this.setState({coloresAcertados: colors});
-            await this.sleep(500);
             var arrayDatosJugadores = this.state.datosJugadores;
             for (var i = 0; i < arrayDatosJugadores.length; i++) {
                 if (arrayDatosJugadores[i].nombre === response.user) {
